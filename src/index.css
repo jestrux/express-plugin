@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.app-ui {
+	box-shadow: 0 0 0 5px #151515, 0 0 0 6px var(--app-color-accent),
+		0 -7.5px 1.5px rgba(255, 255, 255, 0.4),
+		7.5px 0 1.5px rgba(255, 255, 255, 0.25),
+		-7.5px 0 1.5px rgba(255, 255, 255, 0.4),
+		0 7.5px 1.5px rgba(255, 255, 255, 0.25),
+		0 0 0 9px var(--app-color-accent), 6px 8px 16px rgba(0, 0, 0, 0.25),
+		20px 32px 72px rgba(0, 0, 0, 0.2);
+	/* width: 375px;
+	height: 812px; */
+	/* transition: opacity 50ms linear 0s; */
+	overflow: auto;
+	/* transform: scale(0.85); */
+	/* border-radius: 39px; */
+}

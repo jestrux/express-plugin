@@ -45,14 +45,14 @@ export default function PreviewElement({ element, selected, onTextChange }) {
 		);
 	}
 
-	const uiComponent = new uiElements[component](options);
+	const Component = uiElements[component].render;
 
 	return (
 		<div
 			id={`ArticulateElement${element.id}`}
 			class={`group relative overflow-hidden ${itemClass}`}
 		>
-			{h("div", { innerHTML: uiComponent.render() })}
+			<Component {...element} />
 
 			{editOnFocus && (
 				<button

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 
 import ArticulateConfig from "../ArticulateConfig";
 import PickComponent from "./PickComponent";
@@ -11,6 +11,21 @@ export default function App({ articulateRef }) {
 	const [selectedElement, setSelectedElement] = useState(elements?.[0]);
 	const [showComponentPicker, setShowComponentPicker] = useState(false);
 
+	const meta = () => {
+		const meta =
+			selectedElement &&
+			articulateRef.uiElements[selectedElement.component].meta;
+
+		if (!meta) {
+			console.log("No meta:");
+			return null;
+		}
+
+		if (meta.onPlay) meta.animate = () => meta.onPlay(selectedElement);
+
+		return meta;
+	};
+
 	useEffect(() => {
 		setElements(articulateRef.elements);
 	}, []);
@@ -20,7 +35,6 @@ export default function App({ articulateRef }) {
 	};
 
 	articulateRef.editElement = (element) => {
-		console.log("Ele: ", element);
 		setSelectedElement(element);
 
 		setTimeout(() => {
@@ -56,7 +70,7 @@ export default function App({ articulateRef }) {
 	function handleComponentPicked(component) {
 		setShowComponentPicker(false);
 
-		const { label, name, props, meta } = component;
+		const { label, name, props, meta = {} } = component;
 		const element = { label, component: name, options: {}, meta };
 
 		let editBeforeAdding = false;
@@ -70,7 +84,6 @@ export default function App({ articulateRef }) {
 	}
 
 	function handleSaveElement(element) {
-		console.log("Save el: ", element);
 		let newElements;
 
 		if (!element.id) {
@@ -104,6 +117,8 @@ export default function App({ articulateRef }) {
 		setSelectedElement(newElements?.[0]);
 		setShowEditor(true);
 		handleElementsChanged(newElements);
+
+		if (meta().animate) meta().animate();
 	}
 
 	return (
@@ -190,15 +205,32 @@ export default function App({ articulateRef }) {
 						</div>
 					</div>
 
-					<div class="max-w-3xl mx-auto flex-1 h-screen p-10 -mt-8 flex justify-center items-center relative">
-						<Preview
-							className={`shadow-lg rounded-xl overflow-hidden
-								${selectedElement?.meta?.aspectRatio == "portrait" ? "w-[300px]" : "w-full"}
+					<div className="flex-1 relative">
+						<div class="max-w-3xl mx-auto h-screen p-10 -mt-8 flex justify-center items-center relative">
+							<Preview
+								className={`shadow-lg rounded-xl overflow-hidden
+								${
+									meta().autosize
+										? ""
+										: meta().aspectRatio == "portrait"
+										? "w-[300px]"
+										: "w-full"
+								}
 							`}
-							elements={elements}
-							selectedElement={selectedElement}
-							onTextChange={handleSaveElement}
-						/>
+								elements={elements}
+								selectedElement={selectedElement}
+								onTextChange={handleSaveElement}
+							/>
+						</div>
+
+						{meta().animate && (
+							<button
+								className="absolute bottom-12 left-6"
+								onClick={meta().animate}
+							>
+								PLAY
+							</button>
+						)}
 					</div>
 
 					<EditComponent

@@ -2,6 +2,7 @@ import { useContext } from "preact/hooks";
 import ArticulateConfig from "../../ArticulateConfig";
 
 export default function PickComponent({
+	selectedElement,
 	opened = false,
 	onClose,
 	onComponentPicked,
@@ -54,7 +55,7 @@ export default function PickComponent({
 				}`}
 			>
 				<div class="px-4 py-4 border-bs flex items-center justify-between">
-					<h3 class="ml-0.5 text-lg font-medium">Pick a Component</h3>
+					<h3 class="ml-0.5 text-lg font-medium">Plugins</h3>
 
 					<button
 						class="focus:outline-none w-7 h-7 rounded-full p-0 flex items-center justify-center hover:bg-neutral-200/90"
@@ -77,41 +78,58 @@ export default function PickComponent({
 					</button>
 				</div>
 
-				<div class="mt-1 px-4 flex-1 overflow-y-auto">
+				<div class="flex-1 overflow-y-auto">
+					<div className="px-4 mb-2">
+						<input
+							class="py-2 px-3 w-full rounded shadow border"
+							type="text"
+							placeholder="Type to search your plugins"
+						/>
+					</div>
+
 					<div
 						class={`${
 							centerComponentPicker
 								? "grid grid-cols-3 gap-x-6"
-								: "flex flex-col gap-4"
+								: "flex flex-col border-b border-neutral-200/60 divide-y divide-neutral-200/60"
 						}`}
 					>
 						{Object.values(uiElements).map((el) => (
 							<button
-								class={`block w-full text-left border-none focus:outline-none bg-transparent ${
+								class={`block w-full text-sm text-left focus:outline-none ${
 									centerComponentPicker &&
 									"flex flex-col items-center"
-								}`}
+								}
+									${selectedElement?.component == el.label && "bg-neutral-100"}
+								`}
 								onClick={() => onComponentPicked(el)}
 							>
-								{centerComponentPicker && (
-									<span class="flex-1"></span>
-								)}
 								<div
-									class={`shadow border border-neutral-100 p-1 rounded bg-white ${
+									class={`py-2 px-4 flex items-center gap-3 ${
 										centerComponentPicker && "w-full"
 									}`}
 								>
-									{el.preview ? (
+									<div class="w-7 h-7 rounded-sm overflow-hidden bg-neutral-100">
+										{el.thumb && (
+											<div
+												dangerouslySetInnerHTML={{
+													__html: el.thumb(),
+												}}
+											></div>
+										)}
+									</div>
+
+									{el.preview && (
 										<div
 											dangerouslySetInnerHTML={{
 												__html: el.preview(),
 											}}
 										></div>
-									) : (
-										<span class="px-2.5 py-2 block font-medium">
-											{el.label}
-										</span>
 									)}
+
+									<span class="py-2 block font-medium">
+										{el.label}
+									</span>
 								</div>
 								{centerComponentPicker && (
 									<span class="flex-1"></span>

@@ -99,7 +99,7 @@ export default function EditComponent({
 			>
 				<div class="p-4 border-bs flex items-center justify-between">
 					<h3 class="ml-1 text-lg font-medium">
-						Customize {el ? el.label || "Component" : ""}
+						Customize {el ? el.component || "Component" : ""}
 					</h3>
 
 					<button

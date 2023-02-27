@@ -4,6 +4,8 @@ import ArticulateConfig from "../ArticulateConfig";
 import PickComponent from "./PickComponent";
 import EditComponent from "./EditComponent";
 import Preview from "./Preview";
+import Graduation from "../pages/graduation";
+import NoiseDemo from "../pages/noise-demo";
 
 export default function App({ articulateRef }) {
 	const [elements, setElements] = useState(articulateRef.elements || []);
@@ -16,10 +18,7 @@ export default function App({ articulateRef }) {
 			selectedElement &&
 			articulateRef.uiElements[selectedElement.component].meta;
 
-		if (!meta) {
-			console.log("No meta:");
-			return null;
-		}
+		if (!meta) return null;
 
 		if (meta.onPlay) meta.animate = () => meta.onPlay(selectedElement);
 
@@ -76,7 +75,7 @@ export default function App({ articulateRef }) {
 		let editBeforeAdding = false;
 		for (const [key, { defaultValue, optional }] of Object.entries(props)) {
 			element.options[key] = defaultValue;
-			if (!optional && !defaultValue) editBeforeAdding = true;
+			if (!optional && defaultValue == undefined) editBeforeAdding = true;
 		}
 
 		if (editBeforeAdding) articulateRef.onComponentPicked(element);
@@ -118,14 +117,14 @@ export default function App({ articulateRef }) {
 		setShowEditor(true);
 		handleElementsChanged(newElements);
 
-		if (meta().animate) meta().animate();
+		if (meta()?.animate) meta().animate();
 	}
 
 	return (
 		<ArticulateConfig.Provider value={articulateRef}>
 			<div class="bg-neutral-200/40 fixed inset-0">
 				<div class="h-16 flex items-center border-b z-10 shadow-xs bg-white">
-					<div class="w-20 flex justify-center">
+					<div class="w-[70px] flex justify-center">
 						<a aria-current="page" class="active" href="/">
 							<img
 								class="h-11 rounded-lg"
@@ -171,7 +170,7 @@ export default function App({ articulateRef }) {
 				</div>
 				<main class="overflow-hidden flex items-start">
 					<div class="flex-shrink-0 bg-white shadow border border-neutral-100 flex">
-						<div class="flex-shrink-0 w-20 border-r">
+						<div class="flex-shrink-0 w-[70px] border-r">
 							<ul class="py-1 flex flex-col space-y-4">
 								<a
 									class="active"
@@ -197,6 +196,7 @@ export default function App({ articulateRef }) {
 
 						<div class="flex-shrink-0">
 							<PickComponent
+								selectedElement={selectedElement}
 								// opened={showComponentPicker}
 								opened={true}
 								onClose={() => setShowComponentPicker(false)}
@@ -207,23 +207,22 @@ export default function App({ articulateRef }) {
 
 					<div className="flex-1 relative">
 						<div class="max-w-3xl mx-auto h-screen p-10 -mt-8 flex justify-center items-center relative">
-							<Preview
-								className={`shadow-lg rounded-xl overflow-hidden
-								${
-									meta().autosize
-										? ""
-										: meta().aspectRatio == "portrait"
-										? "w-[300px]"
-										: "w-full"
-								}
-							`}
-								elements={elements}
-								selectedElement={selectedElement}
-								onTextChange={handleSaveElement}
-							/>
+							<div
+								class="relative"
+								onClick={() => setShowEditor(true)}
+							>
+								{/* <Graduation /> */}
+								<NoiseDemo />
+								<div class="absolute inset-0 z-10 pointer-events-none">
+									<Preview
+										elements={elements}
+										selectedElement={selectedElement}
+									/>
+								</div>
+							</div>
 						</div>
 
-						{meta().animate && (
+						{meta()?.animate && (
 							<button
 								className="absolute bottom-12 left-6"
 								onClick={meta().animate}
@@ -235,6 +234,7 @@ export default function App({ articulateRef }) {
 
 					<EditComponent
 						selectedElement={selectedElement}
+						// opened
 						opened={showEditor}
 						onClose={() => {
 							setShowEditor(false);
@@ -243,7 +243,7 @@ export default function App({ articulateRef }) {
 						onSave={handleSaveElement}
 					/>
 
-					<div class="flex-shrink-0 h-screen w-20 border-l shadow bg-white">
+					<div class="flex-shrink-0 h-screen w-[70px] border-l shadow bg-white">
 						<ul class="py-1 flex flex-col space-y-4">
 							<a class="active" href="/ui" aria-current="page">
 								<div class="flex flex-col gap-1 items-center mx-1 py-2.5 justify-center rounded-md bg-black/10">

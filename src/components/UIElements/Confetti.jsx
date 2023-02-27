@@ -31,7 +31,7 @@ Confetti.meta = {
 			gravity: 0.7,
 			particleCount: 200,
 			origin: { y: 1.1 },
-			colors: ['FFE400', 'FFBD00', 'E89400', 'FFCA6C', 'FDFFB8'],
+			colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
 			// decay: 0.92,
 			// scalar: 1.2,
 			// spread: 100,
@@ -125,38 +125,12 @@ Confetti.render = ({ id, options }) => {
 		}, 50);
 	};
 
-	return (
-		<div class="relative">
-			<div class="w-[400px] aspect-[1/1.6] relative bg-blue-600 text-white flex flex-col items-center justify-around">
-				{/* <img
-					class="w-full h-full object-cover absolute top-0 left-0"
-					src="https://images.unsplash.com/photo-1625061770820-514e6228f4ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNjE2NXwwfDF8c2VhcmNofDEwfHxncmFkdWF0aW9ufGVufDB8fHx8MTY3NzE5NzkxNQ&ixlib=rb-4.0.3&q=80&w=1080"
-					alt=""
-				/> */}
-
-				<img
-					class="backdrop-blur-[3px] w-full h-full object-cover"
-					src="grad.png"
-					alt=""
-				/>
-
-				{/* <div class="absolute mx-6 top-8 font-semibold text-2xl text-center">
-					<span style="color: rgb(236 161 50); border-radius: 3px; background-color: currentColor; font-size: 18px; line-height : 42px; padding: 8px; padding-left:0px; box-shadow: -8px 0 0 currentColor; -webkit-box-decoration-break: clone;">
-						<span class="text-white">{options.text}</span>
-					</span>
-				</div> */}
-			</div>
-
-			<div class="absolute inset-0 z-10 pointer-events-none">
-				<canvas ref={canvas} class="w-full h-full"></canvas>
-			</div>
-		</div>
-	);
+	return <canvas ref={canvas} class="w-full h-full"></canvas>;
 };
 
-Confetti.preview = function () {
-	return `    
-        <img class="h-20 w-full object-cover" src="confetti.png" />
+Confetti.thumb = function () {
+	return ` 
+		<img class="" src="logos/confetti.png" />
     `;
 };
 

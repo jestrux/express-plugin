@@ -47,29 +47,5 @@ export default function PreviewElement({ element, selected, onTextChange }) {
 
 	const Component = uiElements[component].render;
 
-	return (
-		<div
-			id={`ArticulateElement${element.id}`}
-			class={`group relative overflow-hidden ${itemClass}`}
-		>
-			<Component {...element} />
-
-			{editOnFocus && (
-				<button
-					type="button"
-					class={`absolute p-0 inset-0 block w-full h-full z-10 focus:outline-none ${
-						highlightSelected && selected
-							? "border-4"
-							: "border-none"
-					} border-blue-500 rounded-lg`}
-					onClick={(e) => {
-						e.stopPropagation();
-						editElement(element);
-					}}
-				></button>
-			)}
-
-			{renderActionButtons(editOnFocus)}
-		</div>
-	);
+	return <Component {...element} />;
 }

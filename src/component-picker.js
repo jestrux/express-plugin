@@ -1,47 +1,45 @@
 import "./main.css";
-import { h, render } from 'preact';
+import { h, render } from "preact";
 import { useState } from "preact/hooks";
 
 import ArticulateConfig from "./ArticulateConfig";
 import PickComponent from "./components/PickComponent";
 
-
-function ComponentPicker({articulateRef}){
+function ComponentPicker({ articulateRef }) {
 	const [showPickComponent, setShowPickComponent] = useState(false);
 
-	articulateRef.pickComponent = (callback = _ => {}) => {
+	articulateRef.pickComponent = (callback = (_) => {}) => {
 		articulateRef.onComponentPicked = callback;
-		
+
 		setTimeout(() => {
 			setShowPickComponent(true);
 		});
-	}
+	};
 
-	function handleOnClose(){
+	function handleOnClose() {
 		setShowPickComponent(false);
 		articulateRef.onComponentPicked(undefined);
 	}
 
-	function handleComponentPicked(component){
-        setShowComponentPicker(false);
-        
-        const { label, name, props, meta } = component;
-        const element = { label, component: name, options: {}, meta };
+	function handleComponentPicked(component) {
+		setShowComponentPicker(false);
 
-        let editBeforeAdding = false;
-        for (const [key, {defaultValue, optional}] of Object.entries(props)) {
-            element.options[key] = defaultValue;
-            if(!optional && !defaultValue)
-                editBeforeAdding = true;
-        }
+		const { label, name, props, meta } = component;
+		const element = { label, component: name, options: {}, meta };
 
-        articulateRef.onComponentPicked(element, editBeforeAdding);
-    }
+		let editBeforeAdding = false;
+		for (const [key, { defaultValue, optional }] of Object.entries(props)) {
+			element.options[key] = defaultValue;
+			if (!optional && defaultValue == undefined) editBeforeAdding = true;
+		}
+
+		articulateRef.onComponentPicked(element, editBeforeAdding);
+	}
 
 	return (
 		<ArticulateConfig.Provider value={articulateRef}>
-			<PickComponent 
-				opened={showPickComponent} 
+			<PickComponent
+				opened={showPickComponent}
 				onClose={handleOnClose}
 				onComponentPicked={handleComponentPicked}
 			/>
@@ -49,17 +47,17 @@ function ComponentPicker({articulateRef}){
 	);
 }
 
-function ArticulateComponentPicker(userOptions = {}){
+function ArticulateComponentPicker(userOptions = {}) {
 	const defaultOptions = {
-		uiElements: {}
+		uiElements: {},
 	};
 
-	if(!userOptions.uiElements){
+	if (!userOptions.uiElements) {
 		import("./components/UIElements")
-			.then(uiElements => {
-				this.uiElements = {...uiElements, ...this.uiElements};
+			.then((uiElements) => {
+				this.uiElements = { ...uiElements, ...this.uiElements };
 			})
-			.catch(error => {
+			.catch((error) => {
 				console.log("Failed to import UIElements", error);
 			});
 	}
@@ -68,26 +66,23 @@ function ArticulateComponentPicker(userOptions = {}){
 
 	const fullOptions = {
 		...defaultOptions,
-		...options
+		...options,
 	};
 
 	for (const [key, value] of Object.entries(fullOptions)) {
-		if(!extend || !extend[key])
-			this[key] = value;
-		else{
-			if(Array.isArray(value))
-				this[key] = [...value, ...extend[key]];
-			else if(typeof value === "object")
-				this[key] = {...value, ...extend[key]};
-			else
-				this[key] = value;
+		if (!extend || !extend[key]) this[key] = value;
+		else {
+			if (Array.isArray(value)) this[key] = [...value, ...extend[key]];
+			else if (typeof value === "object")
+				this[key] = { ...value, ...extend[key] };
+			else this[key] = value;
 		}
 	}
 
 	let wrapperEl = document.createElement("div");
 	document.body.appendChild(wrapperEl);
 
-    render(<ComponentPicker articulateRef={this} />, wrapperEl);
+	render(<ComponentPicker articulateRef={this} />, wrapperEl);
 }
 
 export default ArticulateComponentPicker;

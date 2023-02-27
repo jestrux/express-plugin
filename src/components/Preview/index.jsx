@@ -1,6 +1,7 @@
 import { useContext } from "preact/hooks";
 import PreviewElement from "./PreviewElement";
 import ArticulateConfig from "../../ArticulateConfig";
+import { Fragment } from "preact";
 
 export default function Preview({
 	className,
@@ -11,25 +12,21 @@ export default function Preview({
 	const { wrapperClass } = useContext(ArticulateConfig);
 
 	return (
-		<div class={`${wrapperClass} ${className}`}>
+		<Fragment>
 			{elements.map((el) => (
-				<div class={`articulate-element ${el.component}`}>
-					<PreviewElement
-						element={el}
-						selected={
-							el.id &&
-							selectedElement &&
-							el.id == selectedElement.id
-						}
-						onTextChange={(value) =>
-							onTextChange({
-								...el,
-								options: { ...el.options, text: value },
-							})
-						}
-					/>
-				</div>
+				<PreviewElement
+					element={el}
+					selected={
+						el.id && selectedElement && el.id == selectedElement.id
+					}
+					onTextChange={(value) =>
+						onTextChange({
+							...el,
+							options: { ...el.options, text: value },
+						})
+					}
+				/>
 			))}
-		</div>
+		</Fragment>
 	);
 }

@@ -212,13 +212,13 @@ export default function App({ articulateRef }) {
 								onClick={() => setShowEditor(true)}
 							>
 								{/* <Graduation /> */}
-								<NoiseDemo />
-								<div class="absolute inset-0 z-10 pointer-events-none">
+								{/* <NoiseDemo /> */}
+								{/* <div class="absolute inset-0 z-10 pointer-events-none"> */}
 									<Preview
 										elements={elements}
 										selectedElement={selectedElement}
 									/>
-								</div>
+								{/* </div> */}
 							</div>
 						</div>
 

@@ -12,6 +12,8 @@
 		"EventEmitter": "^1.0.0",
 		"autosize": "^4.0.2",
 		"axios": "^0.21.0",
+		"highcharts": "^10.3.3",
+		"highcharts-react-official": "^3.1.0",
 		"highlight.js": "^11.3.1",
 		"micromodal": "^0.4.6",
 		"preact": "^10.11.3",

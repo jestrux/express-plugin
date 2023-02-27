@@ -45,6 +45,18 @@ function ArticulateRef(userOptions = {}) {
 
 const articulateRef = new ArticulateRef({
 	elements: [
+		{
+			component: "Graph",
+			options: {
+				color: "white",
+				density: 1,
+				contrast: 0,
+				opacity: 1,
+			},
+			label: "Graph",
+			id: "12wff9rnb0fafa1s",
+			meta: {},
+		},
 		// {
 		// 	component: "Noise",
 		// 	options: {

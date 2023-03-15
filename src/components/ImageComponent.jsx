@@ -42,10 +42,31 @@ function dragElement(elmnt, callback) {
 	}
 }
 
+function crop(canvas, aspectRatio) {
+	const inputWidth = canvas.width;
+	const inputHeight = canvas.height;
+	const inputImageAspectRatio = inputWidth / inputHeight;
+	let outputWidth = inputWidth;
+	let outputHeight = inputHeight;
+	if (inputImageAspectRatio > aspectRatio)
+		outputWidth = inputHeight * aspectRatio;
+	else if (inputImageAspectRatio < aspectRatio)
+		outputHeight = inputWidth / aspectRatio;
+
+	const outputImage = document.createElement("canvas");
+	outputImage.width = outputWidth;
+	outputImage.height = outputHeight;
+
+	const ctx = outputImage.getContext("2d");
+	ctx.drawImage(canvas, 0, 0);
+	return outputImage;
+}
+
 class ImageDrawer {
 	crop = false;
 	cropHeightPercent = 1;
-	constructor(canvas) {
+	constructor() {
+		const canvas = document.createElement("canvas");
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 	}
@@ -85,8 +106,15 @@ class ImageDrawer {
 		}
 		ctx.lineTo(canvas.width, 0);
 		ctx.closePath();
-		ctx.lineWidth = 10;
-		ctx.stroke();
+		// ctx.lineWidth = 10;
+		// ctx.stroke();
+
+		ctx.shadowColor = "rgba(0,0,0,0.16)";
+		ctx.shadowBlur = 15;
+		ctx.shadowOffsetX = 5;
+		ctx.shadowOffsetY = 5;
+		ctx.fill();
+
 		ctx.clip();
 		ctx.drawImage(img, 0, 0);
 		ctx.restore();
@@ -107,7 +135,13 @@ class ImageDrawer {
 				img.src = this.src;
 
 				setTimeout(() => {
-					resolve(this.canvas.toDataURL());
+					const res = crop(
+						this.canvas,
+						this.canvas.width /
+							this.canvas.height /
+							this.cropHeightPercent
+					);
+					resolve(res.toDataURL());
 				}, 100);
 			} catch (error) {
 				console.log("Error processing: ", error);
@@ -118,11 +152,11 @@ class ImageDrawer {
 
 export default function ImageComponent() {
 	const [height, setHeight] = useState("30vh");
+	const [cutUrl, setCutUrl] = useState();
 	const [url, setUrl] = useState();
 	const [src, setSrc] = useState();
-	const [cropHeightPercent, setCropHeightPercent] = useState(1);
-	const [crop, setCrop] = useState(false);
-	const canvasRef = useRef(null);
+	const [cropHeightPercent, setCropHeightPercent] = useState(0.5);
+	const [crop, setCrop] = useState(true);
 	const previewRef = useRef(null);
 	const rangeRef = useRef(null);
 
@@ -130,7 +164,7 @@ export default function ImageComponent() {
 		if (!window.imageDrawer) {
 			// dragElement(rangeRef.current, setCropHeightPercent);
 
-			window.imageDrawer = new ImageDrawer(canvasRef.current);
+			window.imageDrawer = new ImageDrawer();
 			window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 				previewCallback: (element) => {
 					return new URL(element.src);
@@ -145,14 +179,13 @@ export default function ImageComponent() {
 	}, [src, cropHeightPercent, crop]);
 
 	const exportImage = async (e) => {
-		const blob = await new Promise((resolve, reject) => {
-			canvasRef.current.toBlob(resolve);
-		});
-
 		const fromDrag = e?.target?.nodeName != "IMG";
+		const blob = await fetch(previewRef.current.src).then((response) =>
+			response.blob()
+		);
 
 		if (fromDrag) return [{ blob }];
-		else sdk.app.document.addImage(blob);
+		else window.AddOnSdk?.app.document.addImage(blob);
 	};
 
 	const processImage = (e) => {
@@ -179,25 +212,31 @@ export default function ImageComponent() {
 
 	return (
 		<>
-			<canvas
-				ref={canvasRef}
-				className="hidden"
-				width="320px"
-				height="120px"
-			></canvas>
-
-			<div
-				className="relative border-b flex center-center"
-				// style={{ height }}
-			>
-				<div className="image-item relative h-full" draggable="true">
+			<div className="relative border-b flex center-center">
+				<div className="relative">
 					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target object-contain object-top max-w-full"
-						src={url}
-						style={{ maxHeight: "30vh", opacity: url?.length ? 1 : 0 }}
+						className="max-w-full object-contain object-top"
+						src={src || url}
+						style={{
+							maxHeight: "30vh",
+							opacity: src?.length ? 0.1 : 0,
+						}}
 					/>
+
+					<div
+						className="absolute top-0 left-0 w-full image-item relative"
+						draggable="true"
+					>
+						<img
+							onClick={exportImage}
+							ref={previewRef}
+							className="drag-target w-full"
+							src={url}
+							style={{
+								opacity: url?.length ? 1 : 0,
+							}}
+						/>
+					</div>
 				</div>
 
 				{/* <div
@@ -244,6 +283,7 @@ export default function ImageComponent() {
 								<input
 									type="checkbox"
 									name="crop"
+									defaultChecked={crop}
 									onChange={handleChange}
 								/>
 							</td>

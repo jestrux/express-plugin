@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Input from "./Input";
+import ComponentFieldEditor from "./tokens/ComponentFieldEditor";
+import ComponentFields from "./tokens/ComponentFields";
 
 function dragElement(elmnt, callback) {
 	const maxHeight = elmnt.parentElement.offsetHeight - elmnt.offsetHeight;
@@ -64,7 +66,6 @@ function crop(canvas, aspectRatio) {
 
 class ImageDrawer {
 	crop = false;
-	cropHeightPercent = 1;
 	constructor() {
 		const canvas = document.createElement("canvas");
 		canvas.width = 320;
@@ -94,7 +95,7 @@ class ImageDrawer {
 		randY =
 			((Math.floor(Math.random() * 8) + 85) / 100) *
 			canvas.height *
-			this.cropHeightPercent;
+			this.crop.percent;
 		ctx.lineTo(0, randY);
 
 		while (lastX <= canvas.width) {
@@ -102,7 +103,7 @@ class ImageDrawer {
 			randY =
 				((Math.floor(Math.random() * 8) + 85) / 100) *
 				canvas.height *
-				this.cropHeightPercent;
+				this.crop.percent;
 			lastX = lastX + randX;
 			ctx.lineTo(lastX, randY);
 		}
@@ -121,8 +122,7 @@ class ImageDrawer {
 		ctx.drawImage(img, 0, 0);
 		ctx.restore();
 
-		const aspectRatio =
-			canvas.width / canvas.height / this.cropHeightPercent;
+		const aspectRatio = canvas.width / canvas.height / this.crop.percent;
 		return crop(canvas, aspectRatio).toDataURL();
 	}
 
@@ -156,19 +156,12 @@ class ImageDrawer {
 }
 
 export default function ImageComponent() {
-	const [height, setHeight] = useState("30vh");
-	const [cutUrl, setCutUrl] = useState();
+	const [data, setData] = useState({});
 	const [url, setUrl] = useState();
-	const [src, setSrc] = useState();
-	const [cropHeightPercent, setCropHeightPercent] = useState(0.5);
-	const [crop, setCrop] = useState(true);
 	const previewRef = useRef(null);
-	const rangeRef = useRef(null);
 
 	useEffect(() => {
 		if (!window.imageDrawer) {
-			// dragElement(rangeRef.current, setCropHeightPercent);
-
 			window.imageDrawer = new ImageDrawer();
 			window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 				previewCallback: (element) => {
@@ -178,10 +171,6 @@ export default function ImageComponent() {
 			});
 		}
 	}, []);
-
-	useEffect(() => {
-		window.imageDrawer.draw({ src, cropHeightPercent, crop }).then(setUrl);
-	}, [src, cropHeightPercent, crop]);
 
 	const exportImage = async (e) => {
 		const fromDrag = e?.target?.nodeName != "IMG";
@@ -199,21 +188,22 @@ export default function ImageComponent() {
 
 		const file = files[0];
 
-		setSrc(null);
+		updateField("src", null);
 		var reader = new FileReader();
-		reader.onload = (e) => setSrc(e.target.result);
+		reader.onload = (e) => updateField("src", e.target.result);
 		reader.readAsDataURL(file);
 
 		e.target.value = "";
 	};
 
-	const handleChange = (e) => {
-		const { name, value, checked } = e.target;
+	function updateField(field, newValue) {
+		const updatedProps =
+			typeof field == "string" ? { [field]: newValue } : field;
+		const newData = { ...data, ...updatedProps };
+		setData(newData);
 
-		if (name == "image") processImage(e);
-		if (name == "crop") setCrop(checked);
-		if (name == "cropHeightPercent") setCropHeightPercent(value / 100);
-	};
+		window.imageDrawer.draw(newData).then(setUrl);
+	}
 
 	return (
 		<>
@@ -221,10 +211,10 @@ export default function ImageComponent() {
 				<div className="relative">
 					<img
 						className="max-w-full object-contain object-top"
-						src={src || url}
+						src={data.src || url}
 						style={{
 							maxHeight: "30vh",
-							opacity: src?.length ? 0.1 : 0,
+							opacity: data.src?.length ? 0.1 : 0,
 						}}
 					/>
 
@@ -251,69 +241,43 @@ export default function ImageComponent() {
 				></div> */}
 			</div>
 
-			<div className="p-2 flex flec-col">
-				<table className="w-full" cellPadding={5}>
-					<thead>
-						<tr>
-							<th></th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<span className="text-lg font-medium">
-									Image
-								</span>
-							</td>
-							<td>
-								<label className="cursor-pointer p-2 bg-gray text-md">
-									<Input
-										className="hidden"
-										type="file"
-										name="image"
-										onChange={handleChange}
-									/>
-									Pick photo
-								</label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span className="text-lg font-medium">
-									Cut off
-								</span>
-							</td>
-							<td>
-								<input
-									type="checkbox"
-									name="crop"
-									defaultChecked={crop}
-									onChange={handleChange}
-								/>
-							</td>
-						</tr>
-						{crop && (
-							<tr>
-								<td>
-									<span className="text-lg font-medium">
-										Cut off distance
-									</span>
-								</td>
-								<td>
-									<input
-										type="range"
-										name="cropHeightPercent"
-										min="0"
-										max="100"
-										defaultValue={cropHeightPercent * 100}
-										onChange={handleChange}
-									/>
-								</td>
-							</tr>
-						)}
-					</tbody>
-				</table>
+			<div className="px-12px">
+				<label className="cursor-pointer my-3 p-2 bg-gray text-md block w-full text-center">
+					<Input
+						className="hidden"
+						type="file"
+						name="image"
+						onChange={processImage}
+					/>
+					Pick photo
+				</label>
+
+				<ComponentFields
+					title="Some Props"
+					schema={{
+						crop: {
+							type: "section",
+							optional: true,
+							children: {
+								percent: {
+									label: "Cut off distance",
+									type: "range",
+									defaultValue: 0.5,
+									min: 0,
+									max: 1,
+									step: 1,
+									meta: {
+										min: 0,
+										max: 1,
+										step: 0.1,
+									},
+								},
+							},
+						},
+					}}
+					onChange={updateField}
+					data={data}
+				/>
 			</div>
 		</>
 	);

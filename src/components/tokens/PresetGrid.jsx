@@ -1,23 +1,14 @@
 import React from "react";
 import { camelCaseToSentenceCase } from "../utils";
-// import contour from "../../images/contour.png";
-// import spiral from "../../images/spiral.png";
-// import clippedImage from "../../images/crop.webp";
-// import polaroidCard from "../../images/polaroid.webp";
-// // const Creators = require('../Creators');
-
-// const images = {
-// 	clippedImage,
-// 	polaroidCard,
-// 	contour,
-// 	spiral,
-// };
 
 const images = {
-	contour: "static/images/contour.png",
-	spiral: "static/images/spiral.png",
 	clippedImage: "static/images/crop.webp",
+	cloud: "static/images/cloud.png",
+	contour: "static/images/contour.png",
 	polaroidCard: "static/images/polaroid.webp",
+	ribbon: "static/images/ribbon.png",
+	spiral: "static/images/spiral.png",
+	spring: "static/images/spring.png",
 };
 
 const PresetGrid = ({ component, presets, onPresetScreen }) => {

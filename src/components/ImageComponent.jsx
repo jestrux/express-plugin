@@ -67,6 +67,8 @@ class ImageDrawer {
 	cropHeightPercent = 1;
 	constructor() {
 		const canvas = document.createElement("canvas");
+		canvas.width = 320;
+		canvas.height = 120;
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 	}
@@ -77,7 +79,7 @@ class ImageDrawer {
 		return this.drawImage();
 	}
 
-	tornPaper(img) {
+	async tornPaper(img) {
 		const canvas = this.canvas;
 		const ctx = this.ctx;
 
@@ -118,35 +120,38 @@ class ImageDrawer {
 		ctx.clip();
 		ctx.drawImage(img, 0, 0);
 		ctx.restore();
+
+		const aspectRatio =
+			canvas.width / canvas.height / this.cropHeightPercent;
+		return crop(canvas, aspectRatio).toDataURL();
 	}
 
-	drawImage() {
-		return new Promise((resolve) => {
+	async drawImage() {
+		const img = await new Promise((resolve) => {
 			try {
 				const img = new Image();
 				img.crossOrigin = "anonymous";
-				img.onload = () => {
+				img.onload = async () => {
 					this.canvas.width = img.naturalWidth;
 					this.canvas.height = img.naturalHeight;
 
-					if (this.crop) this.tornPaper(img);
-					else this.ctx.drawImage(img, 0, 0);
+					resolve(img);
 				};
 				img.src = this.src;
-
-				setTimeout(() => {
-					const res = crop(
-						this.canvas,
-						this.canvas.width /
-							this.canvas.height /
-							this.cropHeightPercent
-					);
-					resolve(res.toDataURL());
-				}, 100);
 			} catch (error) {
 				console.log("Error processing: ", error);
 			}
 		});
+
+		let processedImage;
+
+		if (this.crop) processedImage = this.tornPaper(img);
+		else {
+			this.ctx.drawImage(img, 0, 0);
+			processedImage = this.canvas.toDataURL();
+		}
+
+		return processedImage;
 	}
 }
 

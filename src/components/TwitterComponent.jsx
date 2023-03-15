@@ -1,74 +1,9 @@
+// https://api.twitter.com/2/tweets/1583048374575472640?tweet.fields=attachments,author_id,created_at&expansions=author_id
+// export const TWITTER = "Bearer AAAAAAAAAAAAAAAAAAAAAHBdBwEAAAAA%2Bo%2FTAnCI0zQzph66GfSOIMugbvg%3DAq5TXfjOGQLboO5vtNU1UbscNVLpQC4siYoJeBhBe5qrSEfx1U";
+
 import React, { useEffect, useRef, useState } from "react";
 import Input from "./Input";
 import ComponentFields from "./tokens/ComponentFields";
-
-function dragElement(elmnt, callback) {
-	const maxHeight = elmnt.parentElement.offsetHeight - elmnt.offsetHeight;
-	var pos1 = 0,
-		pos2 = 0,
-		pos3 = 0,
-		pos4 = 0;
-	elmnt.onmousedown = dragMouseDown;
-
-	function dragMouseDown(e) {
-		e = e || window.event;
-		e.preventDefault();
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-		document.onmouseup = closeDragElement;
-		document.onmousemove = elementDrag;
-	}
-
-	function elementDrag(e) {
-		e = e || window.event;
-		e.preventDefault();
-		pos1 = pos3 - e.clientX;
-		pos2 = pos4 - e.clientY;
-		pos3 = e.clientX;
-		pos4 = e.clientY;
-
-		const newTop = elmnt.offsetTop - pos2;
-
-		if (newTop < maxHeight && newTop / maxHeight > 0.5) {
-			elmnt.style.top = newTop + "px";
-			// elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
-		}
-	}
-
-	function closeDragElement() {
-		document.onmouseup = null;
-		document.onmousemove = null;
-
-		callback(Number(elmnt.style.top.replace("px", "")) / maxHeight);
-	}
-}
-
-function toasterGradient(width, height) {
-	var texture = document.createElement("canvas");
-	var ctx = texture.getContext("2d");
-
-	texture.width = width;
-	texture.height = height;
-
-	// Fill a Radial Gradient
-	// https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient
-	var gradient = ctx.createRadialGradient(
-		width / 2,
-		height / 2,
-		0,
-		width / 2,
-		height / 2,
-		width * 0.6
-	);
-
-	gradient.addColorStop(0, "#804e0f");
-	gradient.addColorStop(1, "#3b003b");
-
-	ctx.fillStyle = gradient;
-	ctx.fillRect(0, 0, width, height);
-
-	return texture;
-}
 
 function crop(canvas, aspectRatio) {
 	const inputWidth = canvas.width;
@@ -106,7 +41,7 @@ class ImageDrawer {
 		return this.drawImage();
 	}
 
-	tornPaper(img) {
+	async tornPaper(img) {
 		const canvas = this.canvas;
 		const ctx = this.ctx;
 
@@ -149,58 +84,7 @@ class ImageDrawer {
 		ctx.restore();
 
 		const aspectRatio = canvas.width / canvas.height / this.crop.percent;
-		return crop(canvas, aspectRatio);
-	}
-
-	addPolaroid(img) {
-		const width = img.width;
-		const height = img.height;
-		const landScape = width > height;
-
-		// const padding = landScape ? 30 : 20;
-		// const paddingBottom = landScape ? 120 : 60;
-		const px = landScape ? width * 0.03 : width * 0.04;
-		const pt = this.polaroid?.even ? px : height * 0.03;
-		const pb = this.polaroid?.even ? pt : pt * 5;
-
-		const polaroid = document.createElement("canvas");
-		polaroid.width = width;
-		polaroid.height = height;
-
-		const ctx = polaroid.getContext("2d");
-
-		ctx.save();
-		ctx.rect(5, 5, width - 10, height - 10);
-		ctx.fillStyle = "white";
-		ctx.shadowColor = "rgba(0,0,0,0.2)";
-		ctx.shadowBlur = 10;
-		ctx.shadowOffsetX = 2;
-		ctx.shadowOffsetY = 2;
-		ctx.fill();
-		ctx.restore();
-
-		ctx.drawImage(
-			toasterGradient(width, height),
-			px + 5,
-			pt + 5,
-			width - 10 - px * 2,
-			height - 10 - pt - pb
-		);
-
-		ctx.save();
-		if (this.polaroid?.filter)
-			ctx.globalCompositeOperation = this.polaroid.filter;
-
-		ctx.drawImage(
-			img,
-			px + 5,
-			pt + 5,
-			width - 10 - px * 2,
-			height - 10 - pt - pb
-		);
-		ctx.restore();
-
-		return polaroid;
+		return crop(canvas, aspectRatio).toDataURL();
 	}
 
 	async drawImage() {
@@ -225,16 +109,14 @@ class ImageDrawer {
 		if (this.crop) processedImage = this.tornPaper(img);
 		else {
 			this.ctx.drawImage(img, 0, 0);
-			processedImage = this.canvas;
+			processedImage = this.canvas.toDataURL();
 		}
 
-		if (this.polaroid) processedImage = this.addPolaroid(processedImage);
-
-		return processedImage.toDataURL();
+		return processedImage;
 	}
 }
 
-export default function ImageComponent() {
+export default function TwitterComponent() {
 	const [data, setData] = useState({});
 	const [url, setUrl] = useState();
 	const previewRef = useRef(null);
@@ -286,15 +168,14 @@ export default function ImageComponent() {
 
 	return (
 		<>
-			<div className="relative border-b flex center-center p-3">
+			<div className="relative border-b flex center-center">
 				<div className="relative">
 					<img
 						className="max-w-full object-contain object-top"
 						src={data.src || url}
 						style={{
 							maxHeight: "30vh",
-							// opacity: data.src?.length ? 0.1 : 0,
-							opacity: 0,
+							opacity: data.src?.length ? 0.1 : 0,
 						}}
 					/>
 
@@ -313,6 +194,12 @@ export default function ImageComponent() {
 						/>
 					</div>
 				</div>
+
+				{/* <div
+					ref={rangeRef}
+					className="bg-dark-gray rounded-lg shadow absolute inset-x-0 bottom-0"
+					style={{ height: "8px", cursor: "move" }}
+				></div> */}
 			</div>
 
 			<div className="px-12px">
@@ -327,6 +214,7 @@ export default function ImageComponent() {
 				</label>
 
 				<ComponentFields
+					title="Some Props"
 					schema={{
 						crop: {
 							type: "section",
@@ -344,37 +232,6 @@ export default function ImageComponent() {
 										max: 1,
 										step: 0.1,
 									},
-								},
-							},
-						},
-					}}
-					onChange={updateField}
-					data={data}
-				/>
-
-				<ComponentFields
-					schema={{
-						polaroid: {
-							type: "section",
-							optional: true,
-							children: {
-								even: {
-									label: "Even spaces",
-									type: "boolean",
-									defaultValue: false,
-								},
-								filter: {
-									type: "tag",
-									optional: true,
-									defaultValue: "color-dodge",
-									// offValue: "screen",
-									choices: [
-										"color-dodge",
-										"exclusion",
-										"lighten",
-										"luminosity",
-										"screen",
-									],
 								},
 							},
 						},

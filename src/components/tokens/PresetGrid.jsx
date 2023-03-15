@@ -1,5 +1,24 @@
 import React from "react";
-// const Creators = require('../Creators');
+import { camelCaseToSentenceCase } from "../utils";
+// import contour from "../../images/contour.png";
+// import spiral from "../../images/spiral.png";
+// import clippedImage from "../../images/crop.webp";
+// import polaroidCard from "../../images/polaroid.webp";
+// // const Creators = require('../Creators');
+
+// const images = {
+// 	clippedImage,
+// 	polaroidCard,
+// 	contour,
+// 	spiral,
+// };
+
+const images = {
+	contour: "static/images/contour.png",
+	spiral: "static/images/spiral.png",
+	clippedImage: "static/images/crop.webp",
+	polaroidCard: "static/images/polaroid.webp",
+};
 
 const PresetGrid = ({ component, presets, onPresetScreen }) => {
 	function handlePresetClicked(name) {
@@ -16,7 +35,8 @@ const PresetGrid = ({ component, presets, onPresetScreen }) => {
 					fullWidth,
 					floatingLabel = true,
 				} = styles || {};
-				const image = `images/presets/${component.toLowerCase()}/${name}.png`;
+				// const image = `images/presets/${component.toLowerCase()}/${name}.png`;
+				const image = images[name];
 
 				return (
 					<div
@@ -49,17 +69,22 @@ const PresetGrid = ({ component, presets, onPresetScreen }) => {
 								style={{
 									maxWidth: "95%",
 									maxHeight: `${height}px`,
+									filter: "drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.2))",
 								}}
 							/>
 						</div>
 
 						{floatingLabel ? (
 							<span className="show-on-parent-hover absolute inset-x-0 bottom-0 mb-1 font-normal block text-center text-sm">
-								{name.replaceAll("-", " ")}
+								{camelCaseToSentenceCase(
+									name.replaceAll("-", " ")
+								)}
 							</span>
 						) : (
 							<span className="font-normal block text-center mt-1 text-sm">
-								{name.replaceAll("-", " ")}
+								{camelCaseToSentenceCase(
+									name.replaceAll("-", " ")
+								)}
 							</span>
 						)}
 					</div>

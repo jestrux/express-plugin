@@ -55,7 +55,14 @@ function ComponentFieldSection({ field, data, rootLevel = false, onChange }) {
 		const newProps = !newValue
 			? null
 			: schemaToFields(field.children, data).reduce((agg, child) => {
-					return { ...agg, [child.__id]: child.defaultValue || true };
+					return {
+						...agg,
+						[child.__id]: child.optional
+							? child.offValue || false
+							: child.defaultValue == undefined
+							? true
+							: child.defaultValue,
+					};
 			  }, {});
 
 		onChange({
@@ -70,7 +77,7 @@ function ComponentFieldSection({ field, data, rootLevel = false, onChange }) {
 		<div
 			className={
 				rootLevel
-					? "RootSection border-t-2 border-b-2 mb-3 -mx-12px pb-1"
+					? "RootSection border-t sborder-b-2 smb-3 -mx-12px pb-1"
 					: "pb-1"
 			}
 		>
@@ -142,7 +149,11 @@ function ComponentFieldGroup({ field, data, onChange }) {
 
 			return {
 				...agg,
-				[child.__id]: !newValue ? offValue : child.defaultValue || true,
+				[child.__id]: !newValue
+					? offValue
+					: child.defaultValue == undefined
+					? true
+					: child.defaultValue,
 			};
 		}, {});
 		onChange(newProps);
@@ -156,7 +167,7 @@ function ComponentFieldGroup({ field, data, onChange }) {
 		<div
 			className={`${
 				field.section
-					? "mb-3 border-t-2 border-b-2 -mx-12px px-12px pb-1"
+					? "mb-3s border-t sborder-b-2 -mx-12px px-12px pb-1"
 					: "mb-2"
 			}`}
 		>

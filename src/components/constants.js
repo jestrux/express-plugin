@@ -2,9 +2,10 @@ export const PLUGIN_ID = "f6e24b19";
 
 export const DEFAULT_COLORS = [
 	"#007bff",
-	"#28a745",
 	"#DC3535",
+	"#28a745",
 	"#ffc107",
+	"#ff2e6d",
 	"black",
 	"white",
 ];

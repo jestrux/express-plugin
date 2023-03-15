@@ -7,6 +7,7 @@
 	/* color: #2b475d; */
 	/* color: #f48634; */
 	/* color: #6e490e; */
+	accent-color: #5258e4;
 }
 
 .group:not(:hover) .show-on-group-hover {
@@ -74,7 +75,7 @@ button {
 .button[uxp-variant="action"] {
 	width: 24px;
 	border-radius: 50%;
-	background: #1473e6;
+	background: #5258e4;
 }
 .button[uxp-variant="action"] svg path {
 	fill: #fff;
@@ -87,7 +88,7 @@ button {
 	line-height: 28px;
 	font-weight: 600;
 	font-size: 13px;
-	background: #1473e6;
+	background: #5258e4;
 	color: #fff;
 	border-radius: 14px;
 	margin: 0;
@@ -105,7 +106,7 @@ button {
 	background: white;
 }
 .bg-blue {
-	background-color: #1473e6;
+	background-color: #5258e4;
 }
 .bg-black {
 	background: black;
@@ -129,7 +130,7 @@ button {
 	background: #888;
 }
 .text-blue {
-	color: #1473e6;
+	color: #5258e4;
 }
 .text-white {
 	color: white;
@@ -529,7 +530,7 @@ img.inset-0 {
 	border-color: transparent;
 }
 .border-blue {
-	border-color: #1473e6;
+	border-color: #5258e4;
 }
 .border-black {
 	border-color: black;
@@ -606,6 +607,10 @@ img.inset-0 {
 
 hr {
 	background-color: #cfcfcf;
+}
+
+.mix-multiply {
+	mix-blend-mode: multiply;
 }
 
 .mix-screen {

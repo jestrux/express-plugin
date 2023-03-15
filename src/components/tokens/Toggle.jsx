@@ -2,7 +2,7 @@ import React from 'react';
 
 function Toggle({checked, onChange}){
     return (
-        <div className={`cursor-pointer flex border ${checked ? 'border-dark-gray bg-dark-gray' : 'bg-black54 border-gray'}`}
+        <div className={`cursor-pointer flex border ${checked ? 'border-dark-gray bg-blue' : 'bg-black26 border-gray'}`}
             style={{width: "28px", padding: "1px", borderRadius: "8px"}}
             onClick={() => onChange(!checked)}
         >

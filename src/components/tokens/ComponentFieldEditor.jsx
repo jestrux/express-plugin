@@ -5,6 +5,7 @@ import ColorList from "./ColorList";
 import IconList from "./IconPicker/IconList";
 // import ImageEditorField from "./ImageEditorField";
 import LogoEditorField from "./LogoEditorField";
+import TagList from "./TagList";
 import Toggle from "./Toggle";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
@@ -195,6 +196,7 @@ const ComponentFieldEditor = function ({ field = {}, onChange }) {
 		"color",
 		"icon",
 		"radio",
+		"tag",
 		"image",
 		"logo",
 	].includes(type);
@@ -221,6 +223,15 @@ const ComponentFieldEditor = function ({ field = {}, onChange }) {
 
 			{(!optional || value) && (
 				<React.Fragment>
+					{type == "tag" && (
+						<TagList
+							value={value}
+							choices={choices}
+							onChange={handleChange}
+							{...meta}
+						/>
+					)}
+
 					{type == "radio" && (
 						<ButtonGroup
 							value={value}

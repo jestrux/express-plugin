@@ -1,10 +1,11 @@
 import React from "react";
 import FontsComponent from "./FontsComponent";
+import ImageComponent from "./ImageComponent";
 
 const App = () => {
 	return (
 		<div>
-			<FontsComponent />
+			<ImageComponent />
 		</div>
 	);
 };

@@ -2,15 +2,11 @@ import React from "react";
 import staticImages from "../../staticImages";
 import { camelCaseToSentenceCase } from "../utils";
 
-const PresetGrid = ({ component, presets, onPresetScreen }) => {
-	function handlePresetClicked(name) {
-		// Creators[component](presets[name].props, { fromPreset: onPresetScreen });
-	}
-
+const PresetGrid = ({ presets, onSelect }) => {
 	return (
 		<div className="flex flex-wrap">
 			{Object.entries(presets).map(([name, value], index) => {
-				const { props, ...styles } = presets[name];
+				const { props, component, ...styles } = value;
 				const {
 					height = 70,
 					noContainer,
@@ -21,16 +17,13 @@ const PresetGrid = ({ component, presets, onPresetScreen }) => {
 				return (
 					<div
 						key={index}
-						className={`
-                        parent relative py-3 flex-shrink-0 font-bold text-center bg-gray-100 overflow-hidden relative flex flex-col center-center
-                        ${!floatingLabel ? "hoverable" : "cursor-pointer"}
-                    `}
+						className="hoverable parent relative py-3 flex-shrink-0 font-bold text-center bg-gray-100 overflow-hidden relative flex flex-col center-center"
 						style={{
 							width: fullWidth ? "100%" : "50%",
 							border: "solid #e5e5e5",
 							borderWidth: "0 1px 1px 0",
 						}}
-						onClick={() => handlePresetClicked(name)}
+						onClick={() => onSelect(component)}
 					>
 						<div
 							className="flex center-center"

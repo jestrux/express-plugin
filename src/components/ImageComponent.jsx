@@ -240,15 +240,13 @@ export default function ImageComponent() {
 	const previewRef = useRef(null);
 
 	useEffect(() => {
-		if (!window.imageDrawer) {
-			window.imageDrawer = new ImageDrawer();
-			window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-				previewCallback: (element) => {
-					return new URL(element.src);
-				},
-				completionCallback: exportImage,
-			});
-		}
+		window.imageDrawer = new ImageDrawer();
+		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
+			previewCallback: (element) => {
+				return new URL(element.src);
+			},
+			completionCallback: exportImage,
+		});
 	}, []);
 
 	const exportImage = async (e) => {

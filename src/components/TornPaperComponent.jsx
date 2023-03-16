@@ -152,19 +152,36 @@ export default function TornPaperComponent() {
 
 	return (
 		<>
-			{url && (
-				<div className="relative relative border-b flex center-center p-3">
-					<div className="image-item relative" draggable="true">
+			<div
+				className="p-3 border-b"
+				style={{ display: data?.src || url ? "" : "none" }}
+			>
+				<div className="relative relative flex center-center">
+					<img
+						className="max-w-full object-contain object-top"
+						src={data.src}
+						style={{
+							maxHeight: "30vh",
+							opacity: 0.1,
+						}}
+					/>
+
+					<div
+						className="absolute top-0 left-0 w-full image-item relative"
+						draggable="true"
+					>
 						<img
 							onClick={exportImage}
 							ref={previewRef}
-							className="drag-target max-w-full"
+							className="drag-target w-full"
 							src={url}
-							style={{ maxHeight: "30vh" }}
+							style={{
+								opacity: url?.length ? 1 : 0,
+							}}
 						/>
 					</div>
 				</div>
-			)}
+			</div>
 
 			<div className="px-12px">
 				<label className="cursor-pointer my-3 p-2 bg-gray text-md block w-full text-center">

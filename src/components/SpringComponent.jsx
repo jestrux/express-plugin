@@ -44,17 +44,15 @@ export default function SpringComponent() {
 	const previewRef = useRef(null);
 
 	useEffect(() => {
-		if (!window.springDrawer) {
-			window.springDrawer = new SpringDrawer();
-			window.springDrawer.draw(data).then(setUrl);
+		window.springDrawer = new SpringDrawer();
+		window.springDrawer.draw(data).then(setUrl);
 
-			window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-				previewCallback: (element) => {
-					return new URL(element.src);
-				},
-				completionCallback: exportImage,
-			});
-		}
+		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
+			previewCallback: (element) => {
+				return new URL(element.src);
+			},
+			completionCallback: exportImage,
+		});
 	}, []);
 
 	const exportImage = async (e) => {

@@ -64,17 +64,15 @@ export default function ContourComponent() {
 	const previewRef = useRef(null);
 
 	useEffect(() => {
-		if (!window.contourDrawer) {
-			window.contourDrawer = new ContourDrawer();
-			window.contourDrawer.draw().then(setUrl);
+		window.contourDrawer = new ContourDrawer();
+		window.contourDrawer.draw().then(setUrl);
 
-			window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-				previewCallback: (element) => {
-					return new URL(element.src);
-				},
-				completionCallback: exportImage,
-			});
-		}
+		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
+			previewCallback: (element) => {
+				return new URL(element.src);
+			},
+			completionCallback: exportImage,
+		});
 	}, []);
 
 	const exportImage = async (e) => {

@@ -133,19 +133,20 @@ export default function SpotifyComponent() {
 
 	return (
 		<>
-			{url && (
-				<div className="relative relative border-b flex center-center p-3">
-					<div className="image-item relative" draggable="true">
-						<img
-							onClick={exportImage}
-							ref={previewRef}
-							className="drag-target max-w-full"
-							src={url}
-							style={{ maxHeight: "30vh" }}
-						/>
-					</div>
+			<div
+				className="relative relative border-b flex center-center p-3"
+				style={{ display: !url ? "none" : "" }}
+			>
+				<div className="image-item relative" draggable="true">
+					<img
+						onClick={exportImage}
+						ref={previewRef}
+						className="drag-target max-w-full"
+						src={url}
+						style={{ maxHeight: "30vh" }}
+					/>
 				</div>
-			)}
+			</div>
 
 			<div className="px-12px"></div>
 		</>

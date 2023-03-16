@@ -44,17 +44,15 @@ export default function CloudComponent() {
 	const previewRef = useRef(null);
 
 	useEffect(() => {
-		if (!window.cloudDrawer) {
-			window.cloudDrawer = new CloudDrawer();
-			window.cloudDrawer.draw(data).then(setUrl);
+		window.cloudDrawer = new CloudDrawer();
+		window.cloudDrawer.draw(data).then(setUrl);
 
-			window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-				previewCallback: (element) => {
-					return new URL(element.src);
-				},
-				completionCallback: exportImage,
-			});
-		}
+		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
+			previewCallback: (element) => {
+				return new URL(element.src);
+			},
+			completionCallback: exportImage,
+		});
 	}, []);
 
 	const exportImage = async (e) => {

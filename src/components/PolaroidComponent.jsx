@@ -165,19 +165,20 @@ export default function PolaroidComponent() {
 
 	return (
 		<>
-			{url && (
-				<div className="relative relative border-b flex center-center p-3">
-					<div className="image-item relative" draggable="true">
-						<img
-							onClick={exportImage}
-							ref={previewRef}
-							className="drag-target max-w-full"
-							src={url}
-							style={{ maxHeight: "30vh" }}
-						/>
-					</div>
+			<div
+				className="relative relative border-b flex center-center p-3"
+				style={{ display: !url ? "none" : "" }}
+			>
+				<div className="image-item relative" draggable="true">
+					<img
+						onClick={exportImage}
+						ref={previewRef}
+						className="drag-target max-w-full"
+						src={url}
+						style={{ maxHeight: "30vh" }}
+					/>
 				</div>
-			)}
+			</div>
 
 			<div className="px-12px">
 				<label className="cursor-pointer my-3 p-2 bg-gray text-md block w-full text-center">

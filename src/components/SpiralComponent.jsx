@@ -54,17 +54,15 @@ export default function SpiralComponent() {
 	const previewRef = useRef(null);
 
 	useEffect(() => {
-		if (!window.spiralDrawer) {
-			window.spiralDrawer = new SpiralDrawer();
-			window.spiralDrawer.draw().then(setUrl);
+		window.spiralDrawer = new SpiralDrawer();
+		window.spiralDrawer.draw().then(setUrl);
 
-			window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-				previewCallback: (element) => {
-					return new URL(element.src);
-				},
-				completionCallback: exportImage,
-			});
-		}
+		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
+			previewCallback: (element) => {
+				return new URL(element.src);
+			},
+			completionCallback: exportImage,
+		});
 	}, []);
 
 	const exportImage = async (e) => {

@@ -60,9 +60,9 @@ class SpotifyDrawer {
 		);
 		ctx.restore();
 
-		if (!this.img || props.src != this.src)
+		// if (!this.img || props.src != this.src)
 			await loadImage(this, props.src, { updateDimensions: false });
-		if (!this.visualizer || props.wave != this.wave)
+		// if (!this.visualizer || props.wave != this.wave)
 			this.visualizer = await loadImageFromUrl(props.wave);
 
 		return this.drawImage();

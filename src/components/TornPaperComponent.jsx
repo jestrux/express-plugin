@@ -83,7 +83,7 @@ class TornPaperDrawer {
 		Object.assign(this, props);
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-		if (!this.img || props.src != this.src)
+		// if (!this.img || props.src != this.src)
 			await loadImage(this, props.src);
 		return this.drawImage();
 	}

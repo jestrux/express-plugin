@@ -4,7 +4,7 @@ import ButtonGroup from "./ButtonGroup";
 import ColorList from "./ColorList";
 import IconList from "./IconPicker/IconList";
 // import ImageEditorField from "./ImageEditorField";
-import LogoEditorField from "./LogoEditorField";
+// import LogoEditorField from "./LogoEditorField";
 import TagList from "./TagList";
 import Toggle from "./Toggle";
 
@@ -263,9 +263,9 @@ const ComponentFieldEditor = function ({ field = {}, onChange }) {
 						</div>
 					)}
 
-					{type == "logo" && (
+					{/* {type == "logo" && (
 						<LogoEditorField {...meta} onChange={handleChange} />
-					)}
+					)} */}
 
 					{/* {type == "image" && (
 						<ImageEditorField key={meta} {...meta} />

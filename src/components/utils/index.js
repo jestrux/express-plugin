@@ -1,3 +1,5 @@
+export { default as tinyColor } from "./tinycolor";
+
 export function shuffle(array) {
 	return [...array].sort((_) => Math.random() - 0.5);
 }
@@ -13,3 +15,46 @@ export function someTime(duration = 10) {
 		setTimeout(res, duration);
 	});
 }
+
+export const loadImageFromUrl = (url) => {
+	return new Promise((resolve) => {
+		try {
+			const img = new Image();
+			img.crossOrigin = "anonymous";
+			img.onload = async () => {
+				resolve(img);
+			};
+			img.src = url;
+		} catch (error) {
+			console.log("Error loading image: ", error);
+		}
+	});
+};
+
+export const loadImage = async (
+	instance,
+	src,
+	{ updateDimensions = true } = {}
+) => {
+	instance.src = src;
+
+	const img = await loadImageFromUrl(src);
+
+	instance.img = img;
+
+	if (updateDimensions) {
+		instance.canvas.width = img.naturalWidth;
+		instance.canvas.height = img.naturalHeight;
+	}
+
+	return instance;
+};
+
+export const pathFromPoints = (points) =>
+	new Path2D(
+		points
+			.map(
+				(entry, index) => `${index == 0 ? "M" : "L"}${entry.join(",")}`
+			)
+			.join("") + "Z"
+	);

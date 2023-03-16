@@ -1,15 +1,6 @@
 import React from "react";
+import staticImages from "../../staticImages";
 import { camelCaseToSentenceCase } from "../utils";
-
-const images = {
-	clippedImage: "static/images/crop.webp",
-	cloud: "static/images/cloud.png",
-	contour: "static/images/contour.png",
-	polaroidCard: "static/images/polaroid.webp",
-	ribbon: "static/images/ribbon.png",
-	spiral: "static/images/spiral.png",
-	spring: "static/images/spring.png",
-};
 
 const PresetGrid = ({ component, presets, onPresetScreen }) => {
 	function handlePresetClicked(name) {
@@ -21,13 +12,11 @@ const PresetGrid = ({ component, presets, onPresetScreen }) => {
 			{Object.entries(presets).map(([name, value], index) => {
 				const { props, ...styles } = presets[name];
 				const {
-					height = 30,
+					height = 70,
 					noContainer,
 					fullWidth,
-					floatingLabel = true,
+					floatingLabel = false,
 				} = styles || {};
-				// const image = `images/presets/${component.toLowerCase()}/${name}.png`;
-				const image = images[name];
 
 				return (
 					<div
@@ -55,7 +44,7 @@ const PresetGrid = ({ component, presets, onPresetScreen }) => {
 							<img
 								loading="lazy"
 								className="object-contain object-center w-full"
-								src={image}
+								src={staticImages.posters[name]}
 								alt=""
 								style={{
 									maxWidth: "95%",

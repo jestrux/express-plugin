@@ -1,13 +1,15 @@
 import React from "react";
+import staticImages from "../../staticImages";
 import { DEFAULT_COLORS } from "../constants";
+import { tinyColor } from "../utils";
 
 const ColorList = ({
 	colors = DEFAULT_COLORS,
 	centerColors = false,
 	selectedColor,
-	small = true,
-	choiceSize,
-	spacing = 4,
+	small = false,
+	choiceSize = 22,
+	spacing = 3.5,
 	showCustomPicker = true,
 	showTransparent,
 	onChange,
@@ -19,26 +21,23 @@ const ColorList = ({
 			colors = [...colors, selectedColor];
 	}
 
-	let customColorIconSize = choiceSize;
-	if (!choiceSize) customColorIconSize = small ? 12 : 14;
-	customColorIconSize += 4;
+	const customColorIconSize = choiceSize + 4;
 
 	return (
 		<div
 			className={`flex flex-wrap items-center ${
 				centerColors && "justify-center"
 			}`}
-			style={{ margin: `-${spacing}px` }}
+			style={{ gap: `${spacing}px` }}
 		>
 			{showCustomPicker && (
 				<label
 					title="Pick color"
-					className="flex center-center cursor-pointer rounded-full ml-2 mr-1"
+					className="flex center-center cursor-pointer rounded-full"
 					style={{
 						width: customColorIconSize,
 						height: customColorIconSize,
 					}}
-					// onClick={() => colorDialog(handleCustomColorChanged)}
 				>
 					<svg height={customColorIconSize} viewBox="0 0 24 24">
 						<path
@@ -58,55 +57,41 @@ const ColorList = ({
 
 			{colors.map((color, index) => {
 				const selected = selectedColor == color;
-				let size = choiceSize + "px";
-				if (!choiceSize) size = small ? "12px" : "14px";
-				const unselectedBgColor =
-					color == "white" ? "#EEE" : "transparent";
+				const transparent = color == "transparent";
 
 				return (
 					<div
 						title={color}
 						key={index}
-						style={{ padding: spacing + "px" }}
+						className={`cursor-pointer rounded-full ${
+							small ? "border" : "border-2"
+						}`}
+						style={{
+							borderColor:
+								transparent ||
+								tinyColor(color).getLuminance() > 0.95
+									? selected
+										? "#bbb"
+										: "#e7e7e7"
+									: color,
+							background: transparent
+								? `url(${staticImages.transparency})`
+								: color,
+							backgroundSize: choiceSize,
+						}}
+						onClick={() => onChange(color)}
 					>
 						<div
-							className={`cursor-pointer rounded-full ${
-								small ? "border" : "border-2"
-							}`}
+							className="rounded-full border-2"
 							style={{
-								padding: "2px",
+								width: choiceSize,
+								height: choiceSize,
 								borderColor:
-									color == "transparent"
-										? selected
-											? "#bbb"
-											: "#e7e7e7"
-										: color,
-								backgroundColor: selected
-									? unselectedBgColor
-									: color,
-							}}
-							onClick={() => onChange(color)}
-						>
-							<div
-								className="rounded-full overflow-hidden"
-								style={{
-									width: size,
-									height: size,
-									backgroundColor: color,
-									borderColor: selected
+									selected && !transparent
 										? "white"
 										: "transparent",
-								}}
-							>
-								{color == "transparent" && (
-									<img
-										className="bg-white w-full h-full object-cover"
-										src="images/transparency.jpg"
-										alt=""
-									/>
-								)}
-							</div>
-						</div>
+							}}
+						></div>
 					</div>
 				);
 			})}

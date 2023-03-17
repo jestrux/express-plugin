@@ -58,3 +58,8 @@ export const pathFromPoints = (points) =>
 			)
 			.join("") + "Z"
 	);
+
+export const showPreview = (url) => {
+	const previewer = document.querySelector("#previewStuff img");
+	if (previewer) previewer.src = url;
+};

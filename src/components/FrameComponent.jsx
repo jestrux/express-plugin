@@ -3,7 +3,7 @@ import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import Input from "./Input";
 import ComponentFields from "./tokens/ComponentFields";
-import { loadImage, pathFromPoints, tinyColor } from "./utils";
+import { loadImage, pathFromPoints, showPreview, tinyColor } from "./utils";
 
 class FrameDrawer {
 	constructor() {
@@ -37,15 +37,30 @@ class FrameDrawer {
 			height - shadowSpread * 2
 		);
 
-		return canvas;
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		this.ctx.drawImage(canvas, 0, 0);
+
+		return this.canvas;
 	}
 
 	addFrame() {
-		const canvas = this.canvas;
-		const ctx = this.ctx;
-		const width = canvas.width;
-		const height = canvas.height;
+		const canvas = document.createElement("canvas");
+		const ctx = canvas.getContext("2d");
+		canvas.width = this.canvas.width;
+		canvas.height = this.canvas.height;
+
+		const width = this.canvas.width;
+		const height = this.canvas.height;
+
 		const inset = this.inset || 10;
+
+		this.ctx.drawImage(this.img, 0, 0, width, height);
+
+		// ctx.strokeStyle = colors[0];
+		// ctx.rect(inset, inset, width - inset * 2, height - inset * 2)
+		// ctx.stroke();
+		// ctx.restore();
 
 		const colorProp = tinyColor(this.color);
 		const luminance = colorProp.getLuminance();
@@ -83,36 +98,42 @@ class FrameDrawer {
 			],
 		];
 
+		ctx.save();
+		// ctx.globalAlpha = 0.6;
+		const region = new Path2D();
 		borderPoints.forEach((points, index) => {
 			ctx.fillStyle = colors[index];
-			ctx.fill(pathFromPoints(points));
+			// ctx.fill(pathFromPoints(points));
+			region.addPath(pathFromPoints(points));
 		});
+		ctx.clip(region, "evenodd");
 
-		ctx.save();
+		ctx.drawImage(this.img, 0, 0, width, height);
+		ctx.fillStyle = this.color;
+
+		ctx.globalAlpha = 0.35;
+		ctx.fillRect(0, 0, width, height);
+		ctx.restore();
+
+		this.ctx.save();
 		const rx = width / 2;
 		const ry = height / 2;
-		ctx.translate(rx, ry);
-		ctx.rotate(Math.PI);
-		ctx.translate(-rx, -ry);
+		this.ctx.translate(rx, ry);
+		this.ctx.rotate(Math.PI);
+		this.ctx.translate(-rx, -ry);
 
-		ctx.drawImage(
+		this.ctx.drawImage(
 			canvas,
 			inset,
 			inset,
 			width - inset * 2,
 			height - inset * 2
 		);
-		ctx.restore();
+		this.ctx.restore();
 
-		ctx.drawImage(
-			this.img,
-			inset * 2,
-			inset * 2,
-			width - inset * 4,
-			height - inset * 4
-		);
+		this.ctx.drawImage(canvas, 0, 0);
 
-		return this.addShadow();
+		this.canvas;
 	}
 
 	async draw(props = {}) {
@@ -120,13 +141,17 @@ class FrameDrawer {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		// if (!this.img || props.src != this.src)
-			await loadImage(this, props.src);
+		await loadImage(this, props.src);
 
 		return this.drawImage();
 	}
 
 	async drawImage() {
-		return this.addFrame().toDataURL();
+		this.addFrame();
+
+		if (this.shadow) this.addShadow();
+
+		return this.canvas.toDataURL();
 	}
 }
 
@@ -135,12 +160,17 @@ export default function FrameComponent() {
 	const frameDrawerRef = useRef((data) => {
 		if (!window.frameDrawer) window.frameDrawer = new FrameDrawer();
 
-		window.frameDrawer.draw(data).then(setUrl);
+		window.frameDrawer.draw(data).then((url) => {
+			setUrl(url);
+			showPreview(url);
+		});
 	});
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			src: staticImages.presets.frame,
+			src: staticImages.flowers2,
+			// color: "white",
+			// src: staticImages.presets.frame,
 			color: "cyan",
 			inset: 20,
 			effect: "bevel",
@@ -185,7 +215,8 @@ export default function FrameComponent() {
 
 	return (
 		<>
-			<div className="relative relative border-b flex center-center p-3"
+			<div
+				className="relative relative border-b flex center-center p-3"
 				style={{ display: !url ? "none" : "" }}
 			>
 				<div className="image-item relative" draggable="true">
@@ -212,7 +243,10 @@ export default function FrameComponent() {
 
 				<ComponentFields
 					schema={{
-						color: "color",
+						color: {
+							type: "color",
+							meta: { showTransparent: true },
+						},
 						effect: {
 							type: "radio",
 							choices: ["bevel", "ridge"],

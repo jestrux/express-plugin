@@ -19,7 +19,23 @@
 
 // https://ipf-website.s3.amazonaws.com/Screenshot%202023-03-17%20at%2005.47.18.png
 
-import AddOnSdk from "https://preview.projectx.corp.adobe.com/static/add-on-sdk/sdk.js";
+// https://medium.muz.li/weekly-design-inspiration-394-b314ba59d54b
+// https://miro.medium.com/v2/resize:fit:1400/0*3DhYCKqIY2Ezs2Dh
+// https://miro.medium.com/v2/resize:fit:1400/0*hZ2yFsoH48d3uhNE
+
+// Gradients:
+// https://dribbble.com/shots/13662178-Gradients/attachments/5267324?mode=media
+
+// Components
+// Charts: http://extensions.wysiwygwebbuilder.com/pictures/chartist.jpg
+// Image / Gradient clipping: http://extensions.wysiwygwebbuilder.com/pictures/ClipText.jpg
+// Clock: http://extensions.wysiwygwebbuilder.com/pictures/flipclock.jpg
+// Party text: http://extensions.wysiwygwebbuilder.com/pictures/4d05ede72de41.jpg
+// Ransom note: http://extensions.wysiwygwebbuilder.com/pictures/4d05ecfb755bf.jpg
+// Ransom note alt: https://cms-assets.tutsplus.com/cdn-cgi/image/width=1700/uploads/users/166/posts/29186/final_image/Newspaper%20Ransom%20Note%20Text%20Effect%20-%20850.jpg
+// Pin: https://pbs.twimg.com/media/Fsize9OX0AMFOyM?format=jpg&name=4096x4096
+
+import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js"
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";

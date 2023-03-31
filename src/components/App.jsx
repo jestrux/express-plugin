@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import PresetGrid from "./tokens/PresetGrid";
 import ContourComponent from "./ContourComponent";
 import SpiralComponent from "./SpiralComponent";
-import RibbonComponent from "./RibbonComponent";
+import PoppyFlowerComponent from "./PoppyFlowerComponent";
 import CloudComponent from "./CloudComponent";
 import SpringComponent from "./SpringComponent";
 import TornPaperComponent from "./TornPaperComponent";
@@ -16,7 +16,7 @@ const componentMap = {
 	PolaroidComponent,
 	SpiralComponent,
 	FrameComponent,
-	RibbonComponent,
+	PoppyFlowerComponent,
 	SpotifyComponent,
 	SpringComponent,
 	CloudComponent,
@@ -43,9 +43,9 @@ const presets = {
 		props: {},
 		component: "FrameComponent",
 	},
-	ribbon: {
+	poppyFlower: {
 		props: {},
-		component: "RibbonComponent",
+		component: "PoppyFlowerComponent",
 	},
 	spotifyCard: {
 		props: {},

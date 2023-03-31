@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ComponentFieldEditor from "./tokens/ComponentFieldEditor";
 
-class RibbonDrawer {
+class PoppyFlowerDrawer {
 	constructor() {
 		const canvas = document.createElement("canvas");
 		canvas.width = 300;
@@ -13,10 +13,10 @@ class RibbonDrawer {
 	draw(props = {}) {
 		Object.assign(this, props);
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		return this.drawRibbon();
+		return this.drawPoppyFlower();
 	}
 
-	async drawRibbon() {
+	async drawPoppyFlower() {
 		const ctx = this.ctx;
 		ctx.lineWidth = 10;
 		ctx.strokeStyle = "#000";
@@ -41,14 +41,14 @@ class RibbonDrawer {
 	}
 }
 
-export default function RibbonComponent() {
+export default function PoppyFlowerComponent() {
 	const [data, setData] = useState({ color: "#DC3535" });
 	const [url, setUrl] = useState();
 	const previewRef = useRef(null);
 
 	useEffect(() => {
-		window.ribbonDrawer = new RibbonDrawer();
-		window.ribbonDrawer.draw(data).then(setUrl);
+		window.poppyFlowerDrawer = new PoppyFlowerDrawer();
+		window.poppyFlowerDrawer.draw(data).then(setUrl);
 
 		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 			previewCallback: (element) => {
@@ -74,7 +74,7 @@ export default function RibbonComponent() {
 		const newData = { ...data, ...updatedProps };
 		setData(newData);
 
-		window.ribbonDrawer.draw(newData).then(setUrl);
+		window.poppyFlowerDrawer.draw(newData).then(setUrl);
 	}
 
 	return (

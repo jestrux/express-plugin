@@ -9,7 +9,7 @@ export default {
 		contour: "static/images/posters/contour.png",
 		framedImage: "static/images/posters/frame.png",
 		polaroidCard: "static/images/posters/polaroid.webp",
-		ribbon: "static/images/posters/ribbon.png",
+		poppyFlower: "static/images/posters/poppyFlower.png",
 		spiral: "static/images/posters/spiral.png",
 		spotifyCard: "static/images/posters/spotify.png",
 		spring: "static/images/posters/spring.png",

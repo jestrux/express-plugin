@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vite + React</title>
+	</head>
+	<body style="margin: 0" class="flex">
+		<div
+			id="root"
+			class="border-r flex-shrink-0"
+			style="width: 280px; height: 100vh"
+		></div>
+
+		<div
+			class="flex-1 flex justify-center items-center"
+		>
+			<!-- style="
+				display: grid;
+				place-content: center;
+				grid-template-columns: 1fr 250px 1fr;
+			" -->
+			<div class="flex-1">
+				<!-- <div
+					class="mb-3"
+					id="waveform"
+					style="width: 200px; height: 50px"
+				></div>
+				<div id="waveform2" style="width: 200px; height: 50px"></div> -->
+			</div>
+
+			<div id="previewStuff" style="width: 750px">
+				<img class="w-full" src="" alt="" />
+			</div>
+
+			<div class="flex-1"></div>
+		</div>
+
+		<script type="module" src="/src/main.jsx"></script>
+		<script src="/public/wfplayer.min.js"></script>
+
+		<script>
+			// var wf = new WFPlayer({
+			// 	container: document.querySelector("#waveform"),
+			// });
+
+			// wf.load("public/fall-again.mp3").seek(15);
+		</script>
+	</body>
+</html>

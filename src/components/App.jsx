@@ -10,6 +10,7 @@ import TornPaperComponent from "./TornPaperComponent";
 import PolaroidComponent from "./PolaroidComponent";
 import FrameComponent from "./FrameComponent";
 import SpotifyComponent from "./SpotifyComponent";
+import CylinderComponent from "./CylinderComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -20,6 +21,7 @@ const componentMap = {
 	SpotifyComponent,
 	SpringComponent,
 	CloudComponent,
+	CylinderComponent,
 	ContourComponent,
 };
 
@@ -61,6 +63,10 @@ const presets = {
 	cloud: {
 		props: {},
 		component: "CloudComponent",
+	},
+	cylinder: {
+		props: {},
+		component: "CylinderComponent",
 	},
 	contour: {
 		props: {},

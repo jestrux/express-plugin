@@ -20,8 +20,8 @@
 // https://ipf-website.s3.amazonaws.com/Screenshot%202023-03-17%20at%2005.47.18.png
 
 // https://medium.muz.li/weekly-design-inspiration-394-b314ba59d54b
-// https://miro.medium.com/v2/resize:fit:1400/0*3DhYCKqIY2Ezs2Dh
-// https://miro.medium.com/v2/resize:fit:1400/0*hZ2yFsoH48d3uhNE
+// Grid,3D: https://miro.medium.com/v2/resize:fit:1400/0*3DhYCKqIY2Ezs2Dh
+// Cylinder: https://miro.medium.com/v2/resize:fit:1400/0*hZ2yFsoH48d3uhNE
 
 // Gradients:
 // https://dribbble.com/shots/13662178-Gradients/attachments/5267324?mode=media

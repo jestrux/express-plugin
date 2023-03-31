@@ -6,6 +6,7 @@ export default {
 	posters: {
 		clippedImage: "static/images/posters/crop.webp",
 		cloud: "static/images/posters/cloud.png",
+		cylinder: "static/images/posters/cylinder.png",
 		contour: "static/images/posters/contour.png",
 		framedImage: "static/images/posters/frame.png",
 		polaroidCard: "static/images/posters/polaroid.webp",
@@ -16,6 +17,7 @@ export default {
 	},
 	presets: {
 		clippedImage: "static/images/presets/tornPaper.png",
+		cylinder: "static/images/presets/cylinder.jpg",
 		polaroid: "static/images/presets/polaroid.jpg",
 		frame: "static/images/presets/frame.jpg",
 		spotify: "static/images/presets/spotify.jpg",

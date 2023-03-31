@@ -75,24 +75,22 @@ function ComponentFieldSection({ field, data, rootLevel = false, onChange }) {
 
 	return (
 		<div
-			className={
-				rootLevel
-					? "RootSection border-t sborder-b-2 smb-3 -mx-12px pb-1"
-					: "pb-1"
-			}
+			className={`overflow-hidden -mx-12px -mt-2 ${
+				data && " bg-black26"
+				// rootLevel
+				// 	? "RootSection border-t sborder-b-2 smb-3 -mx-12px pb-1"
+				// 	: "pb-1"
+			}`}
 		>
 			<div
-				className={`flex items-center justify-between
-        ${rootLevel ? "mt-3 mb-1 px-12px" : `-mx-12px px-12px py-2 bg-black26`}
-      `}
+				className={`flex items-center justify-between px-12px py-2 ${
+					// rootLevel
+					// 	? "mt-3 mb-1 px-12px"
+					// 	: "-mx-12px px-12px py-2 bg-black26"
+					data && " bg-black26"
+				}`}
 			>
-				<label
-					className={`text-sm tracking-widest ${
-						rootLevel && "text-blue"
-					}`}
-				>
-					{camelCaseToSentenceCase(field.label).toUpperCase()}
-				</label>
+				<label>{camelCaseToSentenceCase(field.label)}</label>
 
 				{field.optional && (
 					<Toggle checked={data} onChange={handleToggle} />
@@ -123,8 +121,9 @@ function ComponentFieldSection({ field, data, rootLevel = false, onChange }) {
 								);
 
 							return (
-								<div className="mb-1" key={index}>
+								<div className="mb-4" key={index}>
 									<ComponentFieldEditor
+										inset
 										field={{ ...field, __data: data }}
 										onChange={handleChange}
 									/>
@@ -204,8 +203,12 @@ function ComponentFields({ schema, data, onChange }) {
 	const fields = schemaToFields(schema, data);
 
 	return (
-		<div>
+		<div className="flex flex-col gap-3">
 			{fields.map((field, index) => {
+				if (typeof field.show == "function" && !field.show(data)) {
+					return null;
+				}
+
 				if (field.type == "section")
 					return (
 						<ComponentFieldSection
@@ -227,7 +230,7 @@ function ComponentFields({ schema, data, onChange }) {
 					);
 
 				return (
-					<div className="mb-1" key={index}>
+					<div key={index}>
 						<ComponentFieldEditor
 							field={{ ...field, __data: data }}
 							onChange={onChange}

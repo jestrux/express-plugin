@@ -18,14 +18,14 @@
 	border-top: 0px solid transparent !important;
 }
 
-label {
+/* label {
 	color: #737373;
 	font-weight: 500;
 }
 
 label:not(.text-sm) {
 	font-size: 0.75rem !important;
-}
+} */
 
 h1 {
 	font-size: 1.25rem;
@@ -117,6 +117,8 @@ button {
 .bg-white {
 	background: white;
 }
+
+.bg-primary,
 .bg-blue {
 	background-color: #5258e4;
 }
@@ -147,6 +149,7 @@ button {
 .bg-dark-gray {
 	background: #888;
 }
+.text-primary,
 .text-blue {
 	color: #5258e4;
 }
@@ -294,6 +297,12 @@ button {
 }
 .fixed {
 	position: fixed;
+}
+.gap-3 {
+	gap: 0.75rem;
+}
+.gap-4 {
+	gap: 1rem;
 }
 
 img.inset-0 {
@@ -480,6 +489,14 @@ img.inset-0 {
 	margin-top: 0.75rem;
 	margin-bottom: 0.75rem;
 }
+.my-4 {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+.my-5 {
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+}
 .mt-0 {
 	margin-top: 0;
 }
@@ -492,6 +509,12 @@ img.inset-0 {
 .mt-3 {
 	margin-top: 0.75rem;
 }
+.mt-4 {
+	margin-top: 1rem;
+}
+.mt-5 {
+	margin-top: 1.25rem;
+}
 .mb-1 {
 	margin-bottom: 0.25rem;
 }
@@ -500,6 +523,12 @@ img.inset-0 {
 }
 .mb-3 {
 	margin-bottom: 0.75rem;
+}
+.mb-4 {
+	margin-bottom: 1rem;
+}
+.mb-5 {
+	margin-bottom: 1.25rem;
 }
 
 .opacity-0 {
@@ -593,6 +622,7 @@ img.inset-0 {
 .border-transparent {
 	border-color: transparent;
 }
+.border-primary,
 .border-blue {
 	border-color: #5258e4;
 }
@@ -615,7 +645,7 @@ img.inset-0 {
 	border-color: #888;
 }
 .rounded-full {
-	border-radius: 50%;
+	border-radius: 2000px;
 }
 .rounded {
 	border-radius: 12px;
@@ -680,9 +710,12 @@ hr {
 	mix-blend-mode: screen;
 }
 
-.hoverable:hover {
-	opacity: 0.55 !important;
+.hoverable {
 	cursor: pointer !important;
+}
+
+.hoverable:hover {
+	opacity: 0.85 !important;
 }
 
 .parent:not(:hover) .show-on-parent-hover {

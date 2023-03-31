@@ -148,7 +148,7 @@ function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	);
 }
 
-const ComponentFieldEditor = function ({ field = {}, onChange }) {
+const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 	const {
 		__id,
 		__data,
@@ -208,7 +208,7 @@ const ComponentFieldEditor = function ({ field = {}, onChange }) {
 					className="mt-2 flex items-center justify-between"
 					style={{ marginBottom: isCustomFieldType ? "0.1rem" : 0 }}
 				>
-					<label className="text-md">
+					<label className={` ${inset && "text-md"}`}>
 						{camelCaseToSentenceCase(label)}
 					</label>
 
@@ -242,12 +242,14 @@ const ComponentFieldEditor = function ({ field = {}, onChange }) {
 					)}
 
 					{type == "color" && (
-						<ColorList
-							colors={choices}
-							selectedColor={value}
-							onChange={handleChange}
-							{...meta}
-						/>
+						<div className={`${inset ? "mt-1" : "mt-2"}`}>
+							<ColorList
+								colors={choices}
+								selectedColor={value}
+								onChange={handleChange}
+								{...meta}
+							/>
+						</div>
 					)}
 
 					{type == "icon" && (

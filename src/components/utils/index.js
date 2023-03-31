@@ -63,3 +63,24 @@ export const showPreview = (url) => {
 	const previewer = document.querySelector("#previewStuff img");
 	if (previewer) previewer.src = url;
 };
+
+export const resizeToAspectRatio = (input, aspectRatio = 1) => {
+	const isImage = input?.nodeName != "IMG";
+	const inputWidth = isImage ? input.naturalWidth : input.width;
+	const inputHeight = isImage ? input.naturalHeight : input.height;
+	const inputAspectRatio = inputWidth / inputHeight;
+	let outputWidth = inputWidth;
+	let outputHeight = inputHeight;
+	if (inputAspectRatio > aspectRatio) outputWidth = inputHeight * aspectRatio;
+	else if (inputAspectRatio < aspectRatio)
+		outputHeight = inputWidth / aspectRatio;
+
+	const output = document.createElement("canvas");
+	output.width = outputWidth;
+	output.height = outputHeight;
+
+	const ctx = output.getContext("2d");
+	ctx.drawImage(input, 0, 0);
+
+	return output;
+};

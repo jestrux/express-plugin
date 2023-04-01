@@ -101,6 +101,13 @@ function ComponentFieldSection({ field, data, rootLevel = false, onChange }) {
 				<div className={`${rootLevel ? "px-12px" : "-mx-12px"}`}>
 					<div className={rootLevel ? "" : "px-12px"}>
 						{children.map((field, index) => {
+							if (
+								typeof field.show == "function" &&
+								!field.show(data)
+							) {
+								return null;
+							}
+
 							if (field.type == "section")
 								return (
 									<ComponentFieldSection

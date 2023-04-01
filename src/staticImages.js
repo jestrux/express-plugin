@@ -1,3 +1,4 @@
+import brushPoster from "./images/posters/brush.png";
 import clippedImagePoster from "./images/posters/crop.webp";
 import cloudPoster from "./images/posters/cloud.png";
 import cylinderPoster from "./images/posters/cylinder.png";
@@ -26,6 +27,7 @@ export default {
 	flowers2,
 	spotifyWave,
 	posters: {
+		brushBackground: brushPoster,
 		clippedImage: clippedImagePoster,
 		cloud: cloudPoster,
 		cylinder: cylinderPoster,

@@ -74,10 +74,12 @@ const ColorList = ({
 										? "#bbb"
 										: "#e7e7e7"
 									: color,
-							background: transparent
-								? `url(${staticImages.transparency})`
-								: color,
-							backgroundSize: choiceSize,
+							...(transparent
+								? {
+										background: `url(${staticImages.transparency})`,
+										backgroundSize: choiceSize,
+								  }
+								: { backgroundColor: color }),
 						}}
 						onClick={() => onChange(color)}
 					>

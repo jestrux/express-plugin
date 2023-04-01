@@ -3,7 +3,14 @@ import gradients from "./gradients";
 
 const GradientList = ({ value, onChange }) => {
 	return (
-		<div className="flex flex-wrap" style={{ margin: "-0.3rem" }}>
+		<div
+			className=""
+			style={{
+				display: "grid",
+				gridTemplateColumns: "1fr 1fr 1fr 1fr",
+				gap: "0.35rem",
+			}}
+		>
 			{Object.keys(gradients).map((name, index) => {
 				const colors = gradients[name];
 				const gradient = colors
@@ -15,11 +22,10 @@ const GradientList = ({ value, onChange }) => {
 				return (
 					<div
 						key={index}
-						className="cursor-pointer p-1"
-						style={{ width: "33.333%" }}
-						onClick={() => onChange({ name, colors })}
+						className="cursor-pointer"
+						onClick={() => onChange(colors)}
 					>
-						<div className="flex-shrink-0 bg-white rounded-sm px-1 pt-1">
+						<div className="flex-shrink-0 bg-white rounded-sm p-1">
 							<div
 								className="bg-gray rounded-sm relative overflow-hidden"
 								style={{
@@ -28,7 +34,7 @@ const GradientList = ({ value, onChange }) => {
 								}}
 							></div>
 
-							<div className="p-1 text-center">{name}</div>
+							{/* <div className="p-1 text-center text-xs">{name}</div> */}
 						</div>
 					</div>
 				);

@@ -2,6 +2,7 @@ import React from "react";
 import { camelCaseToSentenceCase } from "../utils";
 import ButtonGroup from "./ButtonGroup";
 import ColorList from "./ColorList";
+import GradientList from "./GradientPicker/GradientList";
 import IconList from "./IconPicker/IconList";
 // import ImageEditorField from "./ImageEditorField";
 // import LogoEditorField from "./LogoEditorField";
@@ -194,6 +195,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 	const isCustomFieldType = [
 		"boolean",
 		"color",
+		"gradient",
 		"icon",
 		"radio",
 		"tag",
@@ -248,6 +250,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 								selectedColor={value}
 								onChange={handleChange}
 								{...meta}
+							/>
+						</div>
+					)}
+
+					{type == "gradient" && (
+						<div className={`${inset ? "mt-1" : "mt-2"}`}>
+							<GradientList
+								value={value}
+								onChange={handleChange}
 							/>
 						</div>
 					)}

@@ -4,6 +4,7 @@ export default {
 	flowers: "static/images/flowers.jpg",
 	spotifyWave: "static/images/spotify-wave.png",
 	posters: {
+		brushBackground: "static/images/posters/brush.png",
 		clippedImage: "static/images/posters/crop.webp",
 		cloud: "static/images/posters/cloud.png",
 		cylinder: "static/images/posters/cylinder.png",

@@ -11,6 +11,7 @@ import PolaroidComponent from "./PolaroidComponent";
 import FrameComponent from "./FrameComponent";
 import SpotifyComponent from "./SpotifyComponent";
 import CylinderComponent from "./CylinderComponent";
+import BrushComponent from "./BrushComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -23,6 +24,7 @@ const componentMap = {
 	CloudComponent,
 	CylinderComponent,
 	ContourComponent,
+	BrushComponent,
 };
 
 const presets = {
@@ -45,16 +47,17 @@ const presets = {
 		props: {},
 		component: "FrameComponent",
 	},
+	cylinder: {
+		props: {},
+		component: "CylinderComponent",
+	},
+	brushBackground: {
+		props: {},
+		component: "BrushComponent",
+	},
 	poppyFlower: {
 		props: {},
 		component: "PoppyFlowerComponent",
-	},
-	spotifyCard: {
-		props: {},
-		height: 90,
-		fullWidth: true,
-		floatingLabel: false,
-		component: "SpotifyComponent",
 	},
 	spring: {
 		props: {},
@@ -64,19 +67,23 @@ const presets = {
 		props: {},
 		component: "CloudComponent",
 	},
-	cylinder: {
-		props: {},
-		component: "CylinderComponent",
-	},
 	contour: {
 		props: {},
 		component: "ContourComponent",
+	},
+	spotifyCard: {
+		props: {},
+		height: 90,
+		fullWidth: true,
+		floatingLabel: false,
+		component: "SpotifyComponent",
 	},
 };
 
 export default function App() {
 	const [lastUpdate, setLastUpdate] = useState();
-	const component = useRef(null);
+	// const component = useRef(BrushComponent);
+	const component = useRef();
 
 	function setCurrentComponent(currentComponent) {
 		component.current = componentMap[currentComponent];

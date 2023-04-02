@@ -244,23 +244,16 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					)}
 
 					{type == "color" && (
-						<div className={`${inset ? "mt-1" : "mt-2"}`}>
-							<ColorList
-								colors={choices}
-								selectedColor={value}
-								onChange={handleChange}
-								{...meta}
-							/>
-						</div>
+						<ColorList
+							colors={choices}
+							selectedColor={value}
+							onChange={handleChange}
+							{...meta}
+						/>
 					)}
 
 					{type == "gradient" && (
-						<div className={`${inset ? "mt-1" : "mt-2"}`}>
-							<GradientList
-								value={value}
-								onChange={handleChange}
-							/>
-						</div>
+						<GradientList value={value} onChange={handleChange} />
 					)}
 
 					{type == "icon" && (

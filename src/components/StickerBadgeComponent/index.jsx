@@ -4,11 +4,13 @@ import staticImages from "../../staticImages";
 import ImagePicker from "../ImagePicker";
 import ComponentFields from "../tokens/ComponentFields";
 import { backgroundSpec, solidGradientBg } from "../utils";
-import * as brushes from "./brushes";
+import * as stickers from "./stickers";
 
-class BrushDrawer {
+class StickerBadgeDrawer {
 	constructor() {
 		const canvas = document.createElement("canvas");
+		canvas.width = 1000;
+		canvas.height = 1000;
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 	}
@@ -16,10 +18,7 @@ class BrushDrawer {
 	async draw(props = {}) {
 		Object.assign(this, props);
 
-		this.brush = brushes[props.brush];
-
-		this.canvas.width = this.brush.width;
-		this.canvas.height = this.brush.height;
+		this.sticker = stickers[props.sticker];
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -28,38 +27,43 @@ class BrushDrawer {
 
 	async drawImage() {
 		const ctx = this.ctx;
+
 		ctx.fillStyle = solidGradientBg(this.canvas, this.background);
 
-		const p = new Path2D(this.brush.path);
+		const p = new Path2D();
+		p.addPath(new Path2D(this.sticker[0]));
+		p.addPath(new Path2D(this.sticker[1]));
 		ctx.fill(p);
 
 		return this.canvas.toDataURL();
 	}
 }
 
-export default function BrushComponent() {
+export default function StickerBadgeComponent() {
 	const previewRef = useRef(null);
-	const brushDrawerRef = useRef((data) => {
-		if (!window.brushDrawer) window.brushDrawer = new BrushDrawer();
+	const stickerBadgeDrawerRef = useRef((data) => {
+		if (!window.stickerBadgeDrawer)
+			window.stickerBadgeDrawer = new StickerBadgeDrawer();
 
-		window.brushDrawer.draw(data).then(setUrl);
+		window.stickerBadgeDrawer.draw(data).then(setUrl);
 	});
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
 			src: staticImages.presets.cylinder,
-			brush: "splotch",
+			sticker: "new",
+			border: "transparent",
 			background: {
 				type: "gradient",
 				color: "#ff2e6d",
-				gradient: ["#9055FF", "#13E2DA"],
+				gradient: ["#E233FF", "#FF6B00"],
 			},
 		},
-		brushDrawerRef.current
+		stickerBadgeDrawerRef.current
 	);
 
 	useEffect(() => {
-		brushDrawerRef.current(data);
+		stickerBadgeDrawerRef.current(data);
 
 		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 			previewCallback: (element) => {
@@ -96,16 +100,20 @@ export default function BrushComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px">
-				<div className="my-4">
-					{/* <ImagePicker onChange={(src) => updateField("src", src)} /> */}
-				</div>
+			<div className="px-12px mt-2">
+				{/* <div className="my-4">
+					<ImagePicker onChange={(src) => updateField("src", src)} />
+				</div> */}
 
 				<ComponentFields
 					schema={{
-						brush: {
+						sticker: {
 							type: "tag",
-							choices: Object.keys(brushes),
+							choices: Object.keys(stickers),
+						},
+						border: {
+							type: "color",
+							meta: { showTransparent: true },
 						},
 						background: backgroundSpec(),
 					}}

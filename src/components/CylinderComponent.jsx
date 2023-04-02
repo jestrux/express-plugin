@@ -3,10 +3,15 @@ import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ImagePicker from "./ImagePicker";
 import ComponentFields from "./tokens/ComponentFields";
-import { loadImage, loadImageFromUrl, resizeToAspectRatio } from "./utils";
+import {
+	backgroundSpec,
+	loadImageFromUrl,
+	resizeToAspectRatio,
+	solidGradientBg,
+} from "./utils";
 
 class CylinderDrawer {
-	padding = 70;
+	padding = 40;
 	strokeWidth = 5;
 	smoothCorners = false;
 	constructor() {
@@ -21,8 +26,8 @@ class CylinderDrawer {
 		const canvas = document.createElement("canvas");
 		const ctx = canvas.getContext("2d");
 		const padding = this.padding;
-		const width = this.canvas.width + padding;
-		const height = this.canvas.height + padding;
+		const width = this.canvas.width + padding + this.strokeWidth * 2;
+		const height = this.canvas.height + padding + this.strokeWidth * 2;
 		let radius = Math.max(width, height, 1000);
 		const cornerRadius = this.smoothCorners ? 120 : 0;
 		radius = this.half
@@ -33,7 +38,8 @@ class CylinderDrawer {
 		canvas.height = height;
 
 		ctx.strokeStyle = this.inset?.border || "transparent";
-		ctx.fillStyle = this.inset?.background || "transparent";
+		ctx.fillStyle =
+			solidGradientBg(canvas, this.inset?.background) || "transparent";
 		ctx.lineWidth = this.strokeWidth;
 		ctx.lineCap = "round";
 		ctx.lineJoin = "round";
@@ -68,7 +74,6 @@ class CylinderDrawer {
 
 		// if (!this.img || props.src != this.src)
 		this.img = await loadImageFromUrl(props.src);
-		// if (!this.visualizer || props.wave != this.wave)
 
 		return this.drawImage();
 	}
@@ -79,13 +84,14 @@ class CylinderDrawer {
 		const ctx = this.ctx;
 
 		let radius = Math.max(width, height, 1000);
-		const cornerRadius = this.smoothCorners ? 120 : 0;
+		const cornerRadius = this.smoothCorners ? 80 : 0;
 		radius = this.half
 			? [radius, radius, cornerRadius, cornerRadius]
 			: radius;
 
 		ctx.clearRect(0, 0, width, height);
-		ctx.fillStyle = "#333";
+		ctx.fillStyle =
+			solidGradientBg(this.canvas, this.inset?.background) || "#333";
 		ctx.beginPath();
 		ctx.roundRect(0, 0, width, height, radius);
 		ctx.fill();
@@ -177,16 +183,12 @@ export default function CylinderComponent() {
 							type: "section",
 							optional: true,
 							children: {
-								background: {
-									type: "color",
-									defaultValue: "transparent",
-									meta: { showTransparent: true },
-								},
 								border: {
 									type: "color",
 									defaultValue: "#888",
 									meta: { showTransparent: true },
 								},
+								background: backgroundSpec(),
 							},
 						},
 					}}

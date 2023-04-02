@@ -1,27 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import staticImages from "../../staticImages";
 import { DEFAULT_COLORS } from "../constants";
 import { tinyColor } from "../utils";
 
 const ColorList = ({
-	colors = DEFAULT_COLORS,
 	centerColors = false,
 	selectedColor,
 	small = false,
 	choiceSize = 22,
-	spacing = 3.5,
-	showCustomPicker = true,
+	// spacing = 3.5,
+	spacing = 0,
+	showCustomPicker = false,
 	showTransparent,
 	onChange,
+	...props
 }) => {
+	const [colors, setColors] = useState([
+		...(showTransparent ? ["transparent"] : []),
+		...(props.colors || DEFAULT_COLORS),
+	]);
 	if (colors && colors.length) {
-		if (showTransparent) colors = ["transparent", ...colors];
-
-		if (selectedColor && !colors.includes(selectedColor))
-			colors = [...colors, selectedColor];
+		// if (showTransparent) colors = ["transparent", ...colors];
+		// if (selectedColor && !colors.includes(selectedColor)) {
+		// 	colors = [...colors, selectedColor];
+		// }
 	}
 
 	const customColorIconSize = choiceSize + 4;
+
+	const updateColor = (index, newColor) => {
+		setColors(
+			colors.map((color, i) => {
+				if (i == index) return newColor;
+				return color;
+			})
+		);
+
+		onChange(newColor);
+	};
 
 	return (
 		<div
@@ -33,7 +49,7 @@ const ColorList = ({
 			{showCustomPicker && (
 				<label
 					title="Pick color"
-					className="flex center-center cursor-pointer rounded-full"
+					className="flex center-center cursor-pointer"
 					style={{
 						width: customColorIconSize,
 						height: customColorIconSize,
@@ -60,10 +76,10 @@ const ColorList = ({
 				const transparent = color == "transparent";
 
 				return (
-					<div
+					<label
 						title={color}
 						key={index}
-						className={`cursor-pointer rounded-full ${
+						className={`relative cursor-pointer ${
 							small ? "border" : "border-2"
 						}`}
 						style={{
@@ -83,8 +99,19 @@ const ColorList = ({
 						}}
 						onClick={() => onChange(color)}
 					>
+						{!transparent && (
+							<input
+								className="hidden"
+								type="color"
+								defaultValue={color}
+								onChange={(e) =>
+									updateColor(index, e.target.value)
+								}
+							/>
+						)}
+
 						<div
-							className="rounded-full border-2"
+							className="border-2"
 							style={{
 								width: choiceSize,
 								height: choiceSize,
@@ -94,7 +121,7 @@ const ColorList = ({
 										: "transparent",
 							}}
 						></div>
-					</div>
+					</label>
 				);
 			})}
 		</div>

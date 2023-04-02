@@ -84,3 +84,53 @@ export const resizeToAspectRatio = (input, aspectRatio = 1) => {
 
 	return output;
 };
+
+export const solidGradientBg = (canvas, background) => {
+	if (!canvas || !background) return;
+
+	const ctx = canvas.getContext("2d");
+	let fillStyle = background.color;
+
+	if (background.type == "gradient" && background.gradient) {
+		const gradient = ctx.createLinearGradient(
+			0,
+			0,
+			canvas.width,
+			canvas.height
+		);
+
+		const gradientColors = background.gradient;
+		gradientColors.map((color, index) =>
+			gradient.addColorStop(
+				index / Math.max(gradientColors.length - 1, 1),
+				color
+			)
+		);
+
+		fillStyle = gradient;
+	}
+
+	return fillStyle;
+};
+
+export const backgroundSpec = () => ({
+	type: "section",
+	children: {
+		type: {
+			type: "radio",
+			choices: ["color", "gradient"],
+			defaultValue: "color",
+		},
+		color: {
+			type: "color",
+			defaultValue: "#ff2e6d",
+			show: (state) => state.type == "color",
+			meta: { showTransparent: true },
+		},
+		gradient: {
+			type: "gradient",
+			defaultValue: ["#E233FF", "#FF6B00"],
+			show: (state) => state.type == "gradient",
+		},
+	},
+});

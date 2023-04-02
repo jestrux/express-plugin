@@ -11,6 +11,7 @@ import spotifyCardPoster from "./images/posters/spotify.png";
 import springPoster from "./images/posters/spring.png";
 import stickerBadgePoster from "./images/posters/sticker-badge.png";
 import weatherWidgetPoster from "./images/posters/weather.png";
+import wavesPoster from "./images/posters/waves.png";
 
 import clippedImagePreset from "./images/presets/tornPaper.png";
 import cylinderPreset from "./images/presets/cylinder.jpg";
@@ -42,6 +43,7 @@ export default {
 		spring: springPoster,
 		stickerBadge: stickerBadgePoster,
 		weatherWidget: weatherWidgetPoster,
+		waves: wavesPoster,
 	},
 	presets: {
 		clippedImage: clippedImagePreset,

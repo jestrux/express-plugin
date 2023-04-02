@@ -15,6 +15,7 @@ import CylinderComponent from "./components/CylinderComponent";
 import BrushComponent from "./components/BrushComponent";
 import StickerBadgeComponent from "./components/StickerBadgeComponent";
 import WeatherWidgetComponent from "./components/WeatherWidgetComponent";
+import WaveComponent from "./components/WaveComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -30,6 +31,7 @@ const componentMap = {
 	BrushComponent,
 	StickerBadgeComponent,
 	WeatherWidgetComponent,
+	WaveComponent,
 };
 
 const presets = {
@@ -76,6 +78,10 @@ const presets = {
 		props: {},
 		component: "SpringComponent",
 	},
+	waves: {
+		props: {},
+		component: "WaveComponent",
+	},
 	contour: {
 		props: {},
 		component: "ContourComponent",
@@ -95,7 +101,7 @@ const presets = {
 
 export default function App() {
 	const [lastUpdate, setLastUpdate] = useState();
-	// const component = useRef(WeatherWidgetComponent);
+	// const component = useRef(WaveComponent);
 	const component = useRef();
 
 	function setCurrentComponent(currentComponent) {

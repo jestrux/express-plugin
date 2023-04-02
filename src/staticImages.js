@@ -17,6 +17,7 @@ export default {
 		spring: "static/images/posters/spring.png",
 		stickerBadge: "static/images/posters/sticker-badge.png",
 		weatherWidget: "static/images/posters/weather.png",
+		waves: "static/images/posters/waves.png",
 	},
 	presets: {
 		clippedImage: "static/images/presets/tornPaper.png",

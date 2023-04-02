@@ -64,8 +64,48 @@ export const showPreview = (url) => {
 	if (previewer) previewer.src = url;
 };
 
+export const resizeImage = (input, { width, height } = {}) => {
+	const isImage = input?.nodeName == "IMG";
+	const inputWidth = isImage ? input.naturalWidth : input.width;
+	const inputHeight = isImage ? input.naturalHeight : input.height;
+	const inputAspectRatio = inputWidth / inputHeight;
+	const outputAspectRatio = width / height;
+
+	var canvas = document.createElement("canvas"),
+		ctx = canvas.getContext("2d"),
+		oc = document.createElement("canvas"),
+		octx = oc.getContext("2d");
+
+	canvas.width = width;
+	canvas.height = (canvas.width * inputHeight) / inputWidth;
+
+	var cur = {
+		width: Math.floor(inputWidth * 0.5),
+		height: Math.floor(inputHeight * 0.5),
+	};
+
+	oc.width = cur.width;
+	oc.height = cur.height;
+
+	octx.drawImage(input, 0, 0, cur.width, cur.height);
+
+	ctx.drawImage(
+		oc,
+		0,
+		0,
+		cur.width,
+		cur.height,
+		0,
+		0,
+		canvas.width,
+		canvas.height
+	);
+
+	return canvas;
+};
+
 export const resizeToAspectRatio = (input, aspectRatio = 1) => {
-	const isImage = input?.nodeName != "IMG";
+	const isImage = input?.nodeName == "IMG";
 	const inputWidth = isImage ? input.naturalWidth : input.width;
 	const inputHeight = isImage ? input.naturalHeight : input.height;
 	const inputAspectRatio = inputWidth / inputHeight;

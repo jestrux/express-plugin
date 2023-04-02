@@ -10,6 +10,7 @@ import spiralPoster from "./images/posters/spiral.png";
 import spotifyCardPoster from "./images/posters/spotify.png";
 import springPoster from "./images/posters/spring.png";
 import stickerBadgePoster from "./images/posters/sticker-badge.png";
+import weatherWidgetPoster from "./images/posters/weather.png";
 
 import clippedImagePreset from "./images/presets/tornPaper.png";
 import cylinderPreset from "./images/presets/cylinder.jpg";
@@ -40,6 +41,7 @@ export default {
 		spotifyCard: spotifyCardPoster,
 		spring: springPoster,
 		stickerBadge: stickerBadgePoster,
+		weatherWidget: weatherWidgetPoster,
 	},
 	presets: {
 		clippedImage: clippedImagePreset,

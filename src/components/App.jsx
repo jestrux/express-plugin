@@ -13,6 +13,7 @@ import SpotifyComponent from "./SpotifyComponent";
 import CylinderComponent from "./CylinderComponent";
 import BrushComponent from "./BrushComponent";
 import StickerBadgeComponent from "./StickerBadgeComponent";
+import WeatherWidgetComponent from "./WeatherWidgetComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -27,6 +28,7 @@ const componentMap = {
 	ContourComponent,
 	BrushComponent,
 	StickerBadgeComponent,
+	WeatherWidgetComponent,
 };
 
 const presets = {
@@ -61,6 +63,10 @@ const presets = {
 		props: {},
 		component: "CylinderComponent",
 	},
+	weatherWidget: {
+		props: {},
+		component: "WeatherWidgetComponent",
+	},
 	poppyFlower: {
 		props: {},
 		component: "PoppyFlowerComponent",
@@ -88,7 +94,7 @@ const presets = {
 
 export default function App() {
 	const [lastUpdate, setLastUpdate] = useState();
-	// const component = useRef(StickerBadgeComponent);
+	// const component = useRef(WeatherWidgetComponent);
 	const component = useRef();
 
 	function setCurrentComponent(currentComponent) {

@@ -16,6 +16,7 @@ export default {
 		spotifyCard: "static/images/posters/spotify.png",
 		spring: "static/images/posters/spring.png",
 		stickerBadge: "static/images/posters/sticker-badge.png",
+		weatherWidget: "static/images/posters/weather.png",
 	},
 	presets: {
 		clippedImage: "static/images/presets/tornPaper.png",

@@ -34,6 +34,15 @@
 // https://www.google.com/imgres?imgurl=https://devbeep.com/wp-content/uploads/2022/03/nnnnnn-1.png&tbnid=0w9lUFC6MmTVgM&vet=1&imgrefurl=https://devbeep.com/bootstrap-weather/&docid=vk3Pc2bI5DLyxM&w=914&h=520&hl=en-GB&source=sh/x/im
 // https://lh3.googleusercontent.com/PEU3HDtLICWJ0Zqa7aIRuQXonKzY1C_gLWjQ-O6xD0t0gSYuF0IIOXwNyz5Q5uE8TFtE-f77j61aMd9yBmt8M0aLBYIcjodU9zJY5iQXUC8nX3Zpfg=w460-rw-e365-v1
 
+// Calendar
+// https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/e8ed2b74808535.5c3b40d61cd55.png
+// https://i.pinimg.com/564x/21/85/6c/21856cd5266f7c030b262d8f6089e7a9.jpg
+// https://i.pinimg.com/564x/7e/17/56/7e17561992260c6d73307f8bae365cd2.jpg
+// https://cdn-bastani.stunning.kr/prod/portfolios/3365a9fd-0b25-4005-9ac7-9fe099429f42/contents/27aa18e528b6bb4b3d353ee84905f2b67126e298bfacfacf7c196cf04c8ee53c_v2.jpg
+// https://cdn.dribbble.com/users/1032059/screenshots/5719837/6_dribbble.png?compress=1&resize=800x600&vertical=top
+// https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjEwNTMtY2FsZW5kYXItMDI3LWt1NHU3cjM3LmpwZw.jpg
+// https://cdn.cssauthor.com/wp-content/uploads/2013/01/Art-Calendar-2013_2.png?strip=all&lossy=1&ssl=1
+
 // Components
 // Charts: http://extensions.wysiwygwebbuilder.com/pictures/chartist.jpg
 // Image / Gradient clipping: http://extensions.wysiwygwebbuilder.com/pictures/ClipText.jpg

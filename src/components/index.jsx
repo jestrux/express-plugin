@@ -26,6 +26,14 @@
 // Gradients:
 // https://dribbble.com/shots/13662178-Gradients/attachments/5267324?mode=media
 
+// Weather
+// https://cdn.dribbble.com/users/2860592/screenshots/14182664/media/574844ec57ff59cde0b836f2362d2457.jpg?compress=1&resize=1600x1200&vertical=top
+// https://www.instagram.com/p/vqqRL8q-pd/?igshid=YmMyMTA2M2Y=
+// https://cdn.dribbble.com/users/2673969/screenshots/17998271/media/7ccc4173a19494916b958d3ddcf81cdb.png?compress=1&resize=1600x1200&vertical=top
+// https://www.pinterest.com/pin/854065516826963892/
+// https://www.google.com/imgres?imgurl=https://devbeep.com/wp-content/uploads/2022/03/nnnnnn-1.png&tbnid=0w9lUFC6MmTVgM&vet=1&imgrefurl=https://devbeep.com/bootstrap-weather/&docid=vk3Pc2bI5DLyxM&w=914&h=520&hl=en-GB&source=sh/x/im
+// https://lh3.googleusercontent.com/PEU3HDtLICWJ0Zqa7aIRuQXonKzY1C_gLWjQ-O6xD0t0gSYuF0IIOXwNyz5Q5uE8TFtE-f77j61aMd9yBmt8M0aLBYIcjodU9zJY5iQXUC8nX3Zpfg=w460-rw-e365-v1
+
 // Components
 // Charts: http://extensions.wysiwygwebbuilder.com/pictures/chartist.jpg
 // Image / Gradient clipping: http://extensions.wysiwygwebbuilder.com/pictures/ClipText.jpg

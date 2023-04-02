@@ -15,6 +15,7 @@ export default {
 		spiral: "static/images/posters/spiral.png",
 		spotifyCard: "static/images/posters/spotify.png",
 		spring: "static/images/posters/spring.png",
+		stickerBadge: "static/images/posters/sticker-badge.png",
 	},
 	presets: {
 		clippedImage: "static/images/presets/tornPaper.png",

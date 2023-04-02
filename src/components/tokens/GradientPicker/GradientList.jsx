@@ -2,6 +2,12 @@ import React from "react";
 import gradients from "./gradients";
 
 const GradientList = ({ value, onChange }) => {
+	const valueString = (value || [])
+		.map((color, idx) => {
+			return `${color} ${(idx * 100) / (value.length - 1)}%`;
+		})
+		.join(", ");
+
 	return (
 		<div
 			className=""
@@ -19,13 +25,43 @@ const GradientList = ({ value, onChange }) => {
 					})
 					.join(", ");
 
+				const selected = gradient == valueString;
+
 				return (
 					<div
 						key={index}
-						className="cursor-pointer"
+						className={`relative cursor-pointer border rounded-sm ${
+							selected && "bg-primary"
+						}`}
+						style={{ padding: "0.125rem" }}
 						onClick={() => onChange(colors)}
 					>
-						<div className="flex-shrink-0 bg-white rounded-sm p-1">
+						{selected && (
+							<div
+								className="absolute top-0 right-0 bg-primary rounded-sm flex center-center"
+								style={{
+									width: "12px",
+									height: "12px",
+									zIndex: 1,
+								}}
+							>
+								<svg
+									width={6}
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="#fff"
+									strokeWidth={5}
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M4.5 12.75l6 6 9-13.5"
+									/>
+								</svg>
+							</div>
+						)}
+
+						<div className="flex-shrink-0">
 							<div
 								className="bg-gray rounded-sm relative overflow-hidden"
 								style={{

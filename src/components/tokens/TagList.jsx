@@ -3,9 +3,7 @@ import { camelCaseToSentenceCase } from "../utils";
 
 function TagList({ choices = [], onChange, ...props }) {
 	return (
-		<div
-			className="flex flex-wrap rounded-xs overflow-hidden py-1"
-		>
+		<div className="flex flex-wrap gap-1 mt-1 rounded-xs overflow-hidden">
 			{choices.map((choice, index) => {
 				const isObject = typeof choice == "object";
 				const label = isObject ? choice.label : choice;
@@ -15,7 +13,7 @@ function TagList({ choices = [], onChange, ...props }) {
 				return (
 					<span
 						key={index}
-						className={`mb-1 mr-1 cursor-pointer py-1 px-2 border rounded-lg text-sm font-medium ${
+						className={`cursor-pointer py-1 px-2 border rounded-lg text-sm font-medium ${
 							selected
 								? "bg-dark-gray text-white"
 								: "text-dark-gray"

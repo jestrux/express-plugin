@@ -298,6 +298,12 @@ button {
 .fixed {
 	position: fixed;
 }
+.gap-1 {
+	gap: 0.25rem;
+}
+.gap-2 {
+	gap: 0.5rem;
+}
 .gap-3 {
 	gap: 0.75rem;
 }

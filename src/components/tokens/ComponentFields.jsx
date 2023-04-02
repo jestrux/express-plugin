@@ -41,7 +41,13 @@ function schemaToFields(schema, data) {
 	return fields;
 }
 
-function ComponentFieldSection({ field, data, rootLevel = false, onChange }) {
+function ComponentFieldSection({
+	field,
+	data,
+	isLast = false,
+	rootLevel = false,
+	onChange,
+}) {
 	function handleChange(key, newValue) {
 		const updatedProps = typeof key == "string" ? { [key]: newValue } : key;
 
@@ -75,71 +81,81 @@ function ComponentFieldSection({ field, data, rootLevel = false, onChange }) {
 
 	return (
 		<div
-			className={`overflow-hidden -mx-12px -mt-2 ${
-				data && " bg-black26"
-				// rootLevel
-				// 	? "RootSection border-t sborder-b-2 smb-3 -mx-12px pb-1"
-				// 	: "pb-1"
+			className={`-mx-12px ${
+				data && (rootLevel || !isLast) && "border-b"
 			}`}
 		>
-			<div
-				className={`flex items-center justify-between px-12px py-2 ${
-					// rootLevel
-					// 	? "mt-3 mb-1 px-12px"
-					// 	: "-mx-12px px-12px py-2 bg-black26"
-					data && " bg-black26"
-				}`}
-			>
-				<label>{camelCaseToSentenceCase(field.label)}</label>
-
-				{field.optional && (
-					<Toggle checked={data} onChange={handleToggle} />
+			<div className="relative">
+				{data && (
+					<div
+						className="absolute inset-0"
+						style={{
+							background: "#E6E6E6",
+							top: "-0.25rem",
+							bottom: "-0.25rem",
+						}}
+					>
+						<div className="bg-light-gray w-full h-full"></div>
+					</div>
 				)}
+
+				<div className="relative flex items-center justify-between px-12px py-2">
+					<label>{camelCaseToSentenceCase(field.label)}</label>
+
+					{field.optional && (
+						<Toggle checked={data} onChange={handleToggle} />
+					)}
+				</div>
 			</div>
 
-			{data && (
-				<div className={`${rootLevel ? "px-12px" : "-mx-12px"}`}>
-					<div className={rootLevel ? "" : "px-12px"}>
-						{children.map((field, index) => {
-							if (
-								typeof field.show == "function" &&
-								!field.show(data)
-							) {
-								return null;
-							}
+			<div className="mt-1 overflow-hidden">
+				{data && (
+					<div className={`${rootLevel ? "px-12px" : ""}`}>
+						<div className={rootLevel ? "" : "px-12px"}>
+							{children.map((field, index) => {
+								if (
+									typeof field.show == "function" &&
+									!field.show(data)
+								) {
+									return null;
+								}
 
-							if (field.type == "section")
-								return (
-									<ComponentFieldSection
-										key={index}
-										field={field}
-										data={data[field.__id]}
-										onChange={handleChange}
-									/>
-								);
-							else if (field.type == "group")
-								return (
-									<ComponentFieldGroup
-										key={index}
-										field={field}
-										data={data}
-										onChange={handleChange}
-									/>
-								);
+								if (field.type == "section")
+									return (
+										<ComponentFieldSection
+											key={index}
+											isLast={
+												index == children.length - 1
+											}
+											field={field}
+											data={data[field.__id]}
+											onChange={handleChange}
+										/>
+									);
+								else if (field.type == "group")
+									return (
+										<ComponentFieldGroup
+											key={index}
+											field={field}
+											data={data}
+											onChange={handleChange}
+										/>
+									);
 
-							return (
-								<div className="mb-4" key={index}>
-									<ComponentFieldEditor
-										inset
-										field={{ ...field, __data: data }}
-										onChange={handleChange}
-									/>
-								</div>
-							);
-						})}
+								return (
+									<div className="mb-4" key={index}>
+										<ComponentFieldEditor
+											inset
+											field={{ ...field, __data: data }}
+											onChange={handleChange}
+										/>
+									</div>
+								);
+							})}
+						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	);
 }
@@ -210,7 +226,7 @@ function ComponentFields({ schema, data, onChange }) {
 	const fields = schemaToFields(schema, data);
 
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col gap-4">
 			{fields.map((field, index) => {
 				if (typeof field.show == "function" && !field.show(data)) {
 					return null;
@@ -237,11 +253,22 @@ function ComponentFields({ schema, data, onChange }) {
 					);
 
 				return (
-					<div key={index}>
+					<div key={index} className="relative">
 						<ComponentFieldEditor
 							field={{ ...field, __data: data }}
 							onChange={onChange}
 						/>
+
+						<div
+							className="border-b absolute"
+							style={{
+								top: "auto",
+								left: "-12px",
+								right: "-12px",
+								bottom: "-0.75rem",
+								opacity: 0.5,
+							}}
+						></div>
 					</div>
 				);
 			})}

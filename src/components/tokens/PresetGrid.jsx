@@ -8,7 +8,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 			{Object.entries(presets).map(([name, value], index) => {
 				const { props, component, ...styles } = value;
 				const {
-					height = 70,
+					height = 50,
 					noContainer,
 					fullWidth,
 					floatingLabel = false,

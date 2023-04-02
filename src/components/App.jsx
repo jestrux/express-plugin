@@ -12,6 +12,7 @@ import FrameComponent from "./FrameComponent";
 import SpotifyComponent from "./SpotifyComponent";
 import CylinderComponent from "./CylinderComponent";
 import BrushComponent from "./BrushComponent";
+import StickerBadgeComponent from "./StickerBadgeComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -25,12 +26,13 @@ const componentMap = {
 	CylinderComponent,
 	ContourComponent,
 	BrushComponent,
+	StickerBadgeComponent,
 };
 
 const presets = {
 	clippedImage: {
 		props: {},
-		height: 90,
+		height: 70,
 		fullWidth: true,
 		floatingLabel: false,
 		component: "TornPaperComponent",
@@ -47,13 +49,17 @@ const presets = {
 		props: {},
 		component: "FrameComponent",
 	},
-	cylinder: {
+	stickerBadge: {
 		props: {},
-		component: "CylinderComponent",
+		component: "StickerBadgeComponent",
 	},
 	brushBackground: {
 		props: {},
 		component: "BrushComponent",
+	},
+	cylinder: {
+		props: {},
+		component: "CylinderComponent",
 	},
 	poppyFlower: {
 		props: {},
@@ -63,17 +69,17 @@ const presets = {
 		props: {},
 		component: "SpringComponent",
 	},
-	cloud: {
-		props: {},
-		component: "CloudComponent",
-	},
 	contour: {
 		props: {},
 		component: "ContourComponent",
 	},
+	cloud: {
+		props: {},
+		component: "CloudComponent",
+	},
 	spotifyCard: {
 		props: {},
-		height: 90,
+		height: 70,
 		fullWidth: true,
 		floatingLabel: false,
 		component: "SpotifyComponent",
@@ -82,7 +88,7 @@ const presets = {
 
 export default function App() {
 	const [lastUpdate, setLastUpdate] = useState();
-	// const component = useRef(BrushComponent);
+	// const component = useRef(StickerBadgeComponent);
 	const component = useRef();
 
 	function setCurrentComponent(currentComponent) {

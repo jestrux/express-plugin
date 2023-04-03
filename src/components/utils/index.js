@@ -153,8 +153,9 @@ export const solidGradientBg = (canvas, background) => {
 	return fillStyle;
 };
 
-export const backgroundSpec = () => ({
+export const backgroundSpec = ({ showTransparent = true, show } = {}) => ({
 	type: "section",
+	show,
 	children: {
 		type: {
 			type: "radio",
@@ -165,7 +166,7 @@ export const backgroundSpec = () => ({
 			type: "color",
 			defaultValue: "#ff2e6d",
 			show: (state) => state.type == "color",
-			meta: { showTransparent: true },
+			meta: { showTransparent },
 		},
 		gradient: {
 			type: "gradient",

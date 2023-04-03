@@ -1,4 +1,5 @@
 import brushPoster from "./images/posters/brush.png";
+import calendarPoster from "./images/posters/calendar.png";
 import clippedImagePoster from "./images/posters/crop.webp";
 import cloudPoster from "./images/posters/cloud.png";
 import cylinderPoster from "./images/posters/cylinder.png";
@@ -13,6 +14,7 @@ import stickerBadgePoster from "./images/posters/sticker-badge.png";
 import weatherWidgetPoster from "./images/posters/weather.png";
 import wavesPoster from "./images/posters/waves.png";
 
+import calendarPreset from "./images/presets/calendar.jpg";
 import clippedImagePreset from "./images/presets/tornPaper.png";
 import cylinderPreset from "./images/presets/cylinder.jpg";
 import polaroidPreset from "./images/presets/polaroid.jpg";
@@ -31,6 +33,7 @@ export default {
 	spotifyWave,
 	posters: {
 		brushBackground: brushPoster,
+		calendar: calendarPoster,
 		clippedImage: clippedImagePoster,
 		cloud: cloudPoster,
 		cylinder: cylinderPoster,
@@ -46,6 +49,7 @@ export default {
 		waves: wavesPoster,
 	},
 	presets: {
+		calendar: calendarPreset,
 		clippedImage: clippedImagePreset,
 		cylinder: cylinderPreset,
 		polaroid: polaroidPreset,

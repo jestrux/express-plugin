@@ -16,6 +16,7 @@ import BrushComponent from "./components/BrushComponent";
 import StickerBadgeComponent from "./components/StickerBadgeComponent";
 import WeatherWidgetComponent from "./components/WeatherWidgetComponent";
 import WaveComponent from "./components/WaveComponent";
+import CalendarComponent from "./components/CalendarComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -32,6 +33,7 @@ const componentMap = {
 	StickerBadgeComponent,
 	WeatherWidgetComponent,
 	WaveComponent,
+	CalendarComponent,
 };
 
 const presets = {
@@ -39,7 +41,6 @@ const presets = {
 		props: {},
 		height: 70,
 		fullWidth: true,
-		floatingLabel: false,
 		component: "TornPaperComponent",
 	},
 	polaroidCard: {
@@ -65,6 +66,10 @@ const presets = {
 	cylinder: {
 		props: {},
 		component: "CylinderComponent",
+	},
+	calendar: {
+		props: {},
+		component: "CalendarComponent",
 	},
 	weatherWidget: {
 		props: {},
@@ -94,14 +99,13 @@ const presets = {
 		props: {},
 		height: 70,
 		fullWidth: true,
-		floatingLabel: false,
 		component: "SpotifyComponent",
 	},
 };
 
 export default function App() {
 	const [lastUpdate, setLastUpdate] = useState();
-	// const component = useRef(WaveComponent);
+	// const component = useRef(CalendarComponent);
 	const component = useRef();
 
 	function setCurrentComponent(currentComponent) {

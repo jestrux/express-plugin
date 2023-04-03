@@ -119,6 +119,10 @@ function ComponentFieldSection({
 					<label>{camelCaseToSentenceCase(field.label)}</label>
 
 					<div className="flex items-center gap-3">
+						{field.optional && (
+							<Toggle checked={data} onChange={handleToggle} />
+						)}
+
 						{rootLevel && (!field.optional || data) && (
 							<button
 								className="cursor-pointer"
@@ -146,10 +150,6 @@ function ComponentFieldSection({
 									/>
 								</svg>
 							</button>
-						)}
-
-						{field.optional && (
-							<Toggle checked={data} onChange={handleToggle} />
 						)}
 					</div>
 				</div>

@@ -8,11 +8,11 @@ const ColorList = ({
 	selectedColor,
 	small = false,
 	choiceSize = 22,
-	// spacing = 3.5,
 	spacing = 0,
 	showCustomPicker = false,
 	showTransparent,
 	showIndicator = true,
+	fullWidth = false,
 	onChange,
 	...props
 }) => {
@@ -20,12 +20,6 @@ const ColorList = ({
 		...(showTransparent ? ["transparent"] : []),
 		...(props.colors || DEFAULT_COLORS),
 	]);
-	if (colors && colors.length) {
-		// if (showTransparent) colors = ["transparent", ...colors];
-		// if (selectedColor && !colors.includes(selectedColor)) {
-		// 	colors = [...colors, selectedColor];
-		// }
-	}
 
 	const customColorIconSize = choiceSize + 4;
 
@@ -45,7 +39,7 @@ const ColorList = ({
 			className={`flex flex-wrap items-center rounded-xs overflow-hidden ${
 				centerColors && "justify-center"
 			}`}
-			style={{ gap: `${spacing}px` }}
+			style={{ gap: `${spacing}px`, width: fullWidth ? "100%" : "" }}
 		>
 			{showCustomPicker && (
 				<label
@@ -84,6 +78,7 @@ const ColorList = ({
 							small ? "border" : "border-2"
 						}`}
 						style={{
+							width: fullWidth ? "100%" : "",
 							borderColor:
 								transparent ||
 								tinyColor(color).getLuminance() > 0.95
@@ -114,7 +109,7 @@ const ColorList = ({
 						<div
 							className="border-2"
 							style={{
-								width: choiceSize,
+								width: fullWidth ? "100%" : choiceSize,
 								height: choiceSize,
 								borderColor: !showIndicator
 									? "transparent"

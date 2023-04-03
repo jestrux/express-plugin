@@ -153,30 +153,74 @@ export const solidGradientBg = (canvas, background) => {
 	return fillStyle;
 };
 
+export const solidGradientImageBg = async (source, background) => {
+	if (!source || !background) return;
+
+	const { width, height } = source;
+	const canvas = document.createElement("canvas");
+	canvas.width = width;
+	canvas.height = height;
+	const ctx = canvas.getContext("2d");
+
+	if (background.type == "image") {
+		if (!background.image) return;
+
+		const image = await loadImageFromUrl(background.image);
+		ctx.drawImage(
+			resizeImage(resizeToAspectRatio(image, width / height), {
+				width,
+				height,
+			}),
+			0,
+			0
+		);
+	} else {
+		ctx.fillStyle = solidGradientBg(source, background);
+		ctx.fillRect(0, 0, width, height);
+	}
+
+	return canvas;
+};
+
 export const backgroundSpec = ({
-	show,
+	imageAsOption = false,
+	imageProps = {},
 	colorProps = { meta: { showTransparent: true } },
+	...backgroundProps
 } = {}) => ({
 	type: "section",
-	show,
+	...backgroundProps,
 	children: {
 		type: {
 			label: "",
 			type: "tag",
 			inline: true,
-			choices: ["color", "gradient"],
+			noMargin: true,
+			choices: ["color", "gradient", ...(imageAsOption ? ["image"] : [])],
 			defaultValue: "color",
 		},
 		color: {
 			type: "color",
+			label: "",
 			defaultValue: "#ff2e6d",
 			show: (state) => state.type == "color",
 			...colorProps,
 		},
 		gradient: {
+			label: "",
 			type: "gradient",
 			defaultValue: ["#E233FF", "#FF6B00"],
 			show: (state) => state.type == "gradient",
 		},
+		...(imageAsOption
+			? {
+					image: {
+						label: "",
+						type: "image",
+						show: (state) => state.type == "image",
+						...imageProps,
+					},
+			  }
+			: {}),
 	},
 });

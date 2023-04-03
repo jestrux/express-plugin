@@ -116,13 +116,7 @@ function ComponentFieldSection({
 				)}
 
 				<div className="relative flex items-center justify-between px-12px py-2">
-					<label>{camelCaseToSentenceCase(field.label)}</label>
-
-					<div className="flex items-center gap-3">
-						{field.optional && (
-							<Toggle checked={data} onChange={handleToggle} />
-						)}
-
+					<div className="flex items-center gap-2">
 						{rootLevel && (!field.optional || data) && (
 							<button
 								className="cursor-pointer"
@@ -151,7 +145,13 @@ function ComponentFieldSection({
 								</svg>
 							</button>
 						)}
+
+						<label>{camelCaseToSentenceCase(field.label)}</label>
 					</div>
+
+					{field.optional && (
+						<Toggle checked={data} onChange={handleToggle} />
+					)}
 				</div>
 			</div>
 
@@ -190,7 +190,12 @@ function ComponentFieldSection({
 									);
 
 								return (
-									<div className="mb-4" key={index}>
+									<div
+										className={
+											!field.noMargin ? "mb-4" : ""
+										}
+										key={index}
+									>
 										<ComponentFieldEditor
 											inset
 											field={{

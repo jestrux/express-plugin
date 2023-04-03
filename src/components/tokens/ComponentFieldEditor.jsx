@@ -218,7 +218,12 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					className="flex items-center justify-between"
 					style={{ marginBottom: isCustomFieldType ? "0.1rem" : 0 }}
 				>
-					<label className={` ${inset && "text-md"}`}>
+					<label
+						className={` ${inset && "text-md"}`}
+						style={{
+							paddingTop: inline ? "2px" : "",
+						}}
+					>
 						{camelCaseToSentenceCase(label)}
 					</label>
 

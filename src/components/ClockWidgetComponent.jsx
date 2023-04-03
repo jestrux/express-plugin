@@ -2,12 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
-import {
-	loadImageFromUrl,
-	resizeImage,
-	resizeToAspectRatio,
-	showPreview,
-} from "./utils";
+import { backgroundSpec, showPreview, solidGradientImageBg } from "./utils";
+import * as stickers from "./StickerBadgeComponent/stickers";
 
 function getClock(source, { date, colors, showNumbers }) {
 	function drawFace(ctx, radius) {
@@ -119,18 +115,42 @@ const shapeMap = {
 	rect: [1000, 900],
 	square: [1000, 1000],
 	circle: [1000, 1000, 2000],
+	bottleCap: [800, 800],
+	new: [750, 750],
+	gear: [750, 750],
 };
 
+const shapesWithNumbers = ["square", "circle", "bottleCap", "new", "gear"];
+
 class ClockWidgetDrawer {
-	temperature = 72;
-	background = "#333";
-	color = "#fff";
 	constructor() {
+		const canvas = document.createElement("canvas");
+		this.canvas = canvas;
+		this.ctx = canvas.getContext("2d");
+	}
+
+	async clipWithBottleCap() {
 		const canvas = document.createElement("canvas");
 		canvas.width = 1000;
 		canvas.height = 1000;
-		this.canvas = canvas;
-		this.ctx = canvas.getContext("2d");
+		const ctx = canvas.getContext("2d");
+
+		const paths = stickers[this.shape];
+		const p = new Path2D();
+		p.addPath(new Path2D(paths[0]));
+		p.addPath(new Path2D(paths[1]));
+		ctx.clip(p);
+
+		const background = await solidGradientImageBg(canvas, this.background);
+		if (background) ctx.drawImage(background, 0, 0);
+
+		ctx.drawImage(
+			this.canvas,
+			(1000 - this.canvas.width) / 2,
+			(1000 - this.canvas.height) / 2
+		);
+
+		return canvas;
 	}
 
 	async draw(userProps = {}) {
@@ -153,9 +173,6 @@ class ClockWidgetDrawer {
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-		if (props.image) this.img = await loadImageFromUrl(props.image);
-		else this.img = null;
-
 		return this.drawImage();
 	}
 
@@ -165,39 +182,31 @@ class ClockWidgetDrawer {
 		const ctx = this.ctx;
 		const shadowSpread = 5;
 
-		ctx.save();
-		ctx.roundRect(
-			shadowSpread,
-			shadowSpread,
-			width - shadowSpread * 2,
-			height - shadowSpread * 2,
-			this.cornerRadius
-		);
-		ctx.fillStyle = "transparent"; // this.backgroundColor;
+		const isStickerShape = Object.keys(stickers).includes(this.shape);
 
-		ctx.shadowColor = "rgba(0,0,0,0.2)";
-		ctx.shadowBlur = shadowSpread;
-		ctx.shadowOffsetX = 0.8;
-		ctx.shadowOffsetY = 0.8;
-		ctx.fill();
-		ctx.restore();
-		ctx.clip();
+		if (!isStickerShape) {
+			ctx.save();
+			ctx.roundRect(
+				shadowSpread,
+				shadowSpread,
+				width - shadowSpread * 2,
+				height - shadowSpread * 2,
+				this.cornerRadius
+			);
+			ctx.shadowColor = "rgba(0,0,0,0.2)";
+			ctx.shadowBlur = shadowSpread;
+			ctx.shadowOffsetX = 0.8;
+			ctx.shadowOffsetY = 0.8;
+			ctx.restore();
+			ctx.clip();
 
-		if (this.img) {
-			const img = resizeToAspectRatio(this.img, width / height);
-			ctx.drawImage(resizeImage(img, { width, height }), 0, 0);
+			const background = await solidGradientImageBg(
+				this.canvas,
+				this.background
+			);
+
+			if (background) ctx.drawImage(background, 0, 0);
 		}
-
-		// const text = "09:34";
-		// const fontSize = 180;
-		// ctx.fillStyle = this.textColor || this.color;
-		// ctx.font = `bold ${fontSize}px Helvetica`;
-		// const metrics = ctx.measureText(text);
-		// ctx.fillText(
-		// 	text,
-		// 	(width - metrics.width) / 2,
-		// 	(height - fontSize) / 2
-		// );
 
 		const date = new Date();
 		date.setHours(this.time.hour);
@@ -208,7 +217,7 @@ class ClockWidgetDrawer {
 			date,
 			colors: this.colors,
 			showNumbers:
-				["square", "circle"].includes(this.shape) && this.showNumbers,
+				shapesWithNumbers.includes(this.shape) && this.showNumbers,
 		});
 		ctx.drawImage(
 			clock,
@@ -216,7 +225,9 @@ class ClockWidgetDrawer {
 			(height - clock.height) / 2
 		);
 
-		const res = this.canvas.toDataURL();
+		let res = isStickerShape ? await this.clipWithBottleCap() : this.canvas;
+
+		res = res.toDataURL();
 		showPreview(res);
 
 		return res;
@@ -235,7 +246,12 @@ export default function ClockWidgetComponent() {
 	const [data, updateField] = useDataSchema(
 		{
 			shape: "circle",
-			image: staticImages.presets.clock,
+			background: {
+				type: "image",
+				image: staticImages.presets.clock,
+				color: "#ffb514",
+				gradient: ["#737DFE", "#FFCAC9"],
+			},
 			showNumbers: true,
 			time: {
 				hour: 13,
@@ -291,24 +307,13 @@ export default function ClockWidgetComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-2">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						shape: {
-							type: "tag",
-							choices: ["tallRect", "rect", "square", "circle"],
-						},
-						image: {
-							type: "image",
-							optional: true,
-						},
-						showNumbers: {
-							type: "boolean",
-							show: (state) =>
-								["square", "circle"].includes(state.shape),
-						},
 						time: {
 							type: "section",
+							collapsed: true,
+							label: "Set clock time",
 							children: {
 								hour: {
 									type: "number",
@@ -338,6 +343,38 @@ export default function ClockWidgetComponent() {
 									},
 								},
 							},
+						},
+						shape: {
+							type: "tag",
+							choices: [
+								"tallRect",
+								"rect",
+								"square",
+								"circle",
+								"bottleCap",
+								"new",
+								"gear",
+							],
+						},
+						background: backgroundSpec({
+							optional: true,
+							imageAsOption: true,
+							imageProps: {
+								defaultValue: staticImages.presets.clock,
+							},
+							colorProps: {
+								inline: true,
+								meta: {
+									colors: ["#ffb514"],
+									showIndicator: false,
+									fullWidth: true,
+								},
+							},
+						}),
+						showNumbers: {
+							type: "boolean",
+							show: (state) =>
+								shapesWithNumbers.includes(state.shape),
 						},
 						colors: "swatch",
 					}}

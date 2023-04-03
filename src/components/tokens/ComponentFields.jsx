@@ -155,59 +155,57 @@ function ComponentFieldSection({
 				</div>
 			</div>
 
-			{!collapsed && (
-				<div className="mt-1 overflow-hidden">
-					{data && (
-						<div className={`${rootLevel ? "px-12px" : ""}`}>
-							<div className={rootLevel ? "" : "px-12px"}>
-								{children.map((field, index) => {
-									if (
-										typeof field.show == "function" &&
-										!field.show(data)
-									) {
-										return null;
-									}
+			<div className="mt-1 overflow-hidden">
+				{!collapsed && data && (
+					<div className={`${rootLevel ? "px-12px" : ""}`}>
+						<div className={rootLevel ? "" : "px-12px"}>
+							{children.map((field, index) => {
+								if (
+									typeof field.show == "function" &&
+									!field.show(data)
+								) {
+									return null;
+								}
 
-									if (field.type == "section")
-										return (
-											<ComponentFieldSection
-												key={index}
-												isLast={
-													index == children.length - 1
-												}
-												field={field}
-												data={data[field.__id]}
-												onChange={handleChange}
-											/>
-										);
-									else if (field.type == "group")
-										return (
-											<ComponentFieldGroup
-												key={index}
-												field={field}
-												data={data}
-												onChange={handleChange}
-											/>
-										);
-
+								if (field.type == "section")
 									return (
-										<div className="mb-4" key={index}>
-											<ComponentFieldEditor
-												inset
-												field={{
-													...field,
-													__data: data,
-												}}
-												onChange={handleChange}
-											/>
-										</div>
+										<ComponentFieldSection
+											key={index}
+											isLast={
+												index == children.length - 1
+											}
+											field={field}
+											data={data[field.__id]}
+											onChange={handleChange}
+										/>
 									);
-								})}
-							</div>
+								else if (field.type == "group")
+									return (
+										<ComponentFieldGroup
+											key={index}
+											field={field}
+											data={data}
+											onChange={handleChange}
+										/>
+									);
+
+								return (
+									<div className="mb-4" key={index}>
+										<ComponentFieldEditor
+											inset
+											field={{
+												...field,
+												__data: data,
+											}}
+											onChange={handleChange}
+										/>
+									</div>
+								);
+							})}
 						</div>
-					)}
-				</div>
-			)}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }

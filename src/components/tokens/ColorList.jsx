@@ -12,6 +12,7 @@ const ColorList = ({
 	spacing = 0,
 	showCustomPicker = false,
 	showTransparent,
+	showIndicator = true,
 	onChange,
 	...props
 }) => {
@@ -115,10 +116,11 @@ const ColorList = ({
 							style={{
 								width: choiceSize,
 								height: choiceSize,
-								borderColor:
-									selected && !transparent
-										? "white"
-										: "transparent",
+								borderColor: !showIndicator
+									? "transparent"
+									: selected && !transparent
+									? "white"
+									: "transparent",
 							}}
 						></div>
 					</label>

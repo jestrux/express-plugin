@@ -8,6 +8,7 @@ import IconList from "./IconPicker/IconList";
 // import LogoEditorField from "./LogoEditorField";
 import TagList from "./TagList";
 import Toggle from "./Toggle";
+import ImagePicker from "./ImagePicker";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -162,6 +163,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		min,
 		max,
 		value,
+		inline,
 		meta = {},
 	} = {
 		...(field ? field : {}),
@@ -204,7 +206,11 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 	].includes(type);
 
 	return (
-		<div className="ComponentFieldEditor">
+		<div
+			className={`ComponentFieldEditor mt-2 ${
+				inline && "flex items-center justify-between"
+			}`}
+		>
 			{label && label.length && (
 				<div
 					className="mt-2 flex items-center justify-between"
@@ -273,9 +279,11 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 						<LogoEditorField {...meta} onChange={handleChange} />
 					)} */}
 
-					{/* {type == "image" && (
-						<ImageEditorField key={meta} {...meta} />
-					)} */}
+					{type == "image" && (
+						<div className="mt-1">
+							<ImagePicker onChange={handleChange} {...meta} />
+						</div>
+					)}
 
 					{!isCustomFieldType && (
 						// <form

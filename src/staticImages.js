@@ -7,6 +7,7 @@ export default {
 		brushBackground: "static/images/posters/brush.png",
 		calendar: "static/images/posters/calendar.png",
 		clippedImage: "static/images/posters/crop.webp",
+		clock: "static/images/posters/clock.png",
 		cloud: "static/images/posters/cloud.png",
 		cylinder: "static/images/posters/cylinder.png",
 		contour: "static/images/posters/contour.png",
@@ -23,6 +24,7 @@ export default {
 	presets: {
 		calendar: "static/images/presets/calendar.jpg",
 		clippedImage: "static/images/presets/tornPaper.png",
+		clock: "static/images/presets/clock.jpg",
 		cylinder: "static/images/presets/cylinder.jpg",
 		polaroid: "static/images/presets/polaroid.jpg",
 		frame: "static/images/presets/frame.jpg",

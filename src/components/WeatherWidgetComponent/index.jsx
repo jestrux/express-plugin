@@ -205,7 +205,15 @@ export default function WeatherWidgetComponent() {
 							type: "tag",
 							choices: Object.keys(colorMap),
 						},
-						temperature: "number",
+						temperature: {
+							type: "number",
+							inline: true,
+							meta: {
+								min: -120,
+								max: 120,
+								className: "inline-number-field",
+							},
+						},
 						icon: {
 							type: "tag",
 							choices: Object.keys(icons),

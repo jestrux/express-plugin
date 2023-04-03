@@ -735,3 +735,18 @@ hr {
 .aspect-square {
 	aspect-ratio: 1;
 }
+
+.inline-number-field {
+	size: 1px;
+	width: auto;
+	min-width: 0px;
+	text-align: center;
+	font-weight: bold;
+	height: 100%;
+	border: none;
+	border-bottom: 2px dotted;
+}
+
+.SectionField + .SectionField {
+	margin-top: -1rem;
+}

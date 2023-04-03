@@ -746,7 +746,3 @@ hr {
 	border: none;
 	border-bottom: 2px dotted;
 }
-
-.SectionField + .SectionField {
-	margin-top: -1rem;
-}

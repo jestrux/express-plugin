@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
-import ImagePicker from "./tokens/ImagePicker";
 import ComponentFields from "./tokens/ComponentFields";
 import {
 	backgroundSpec,
@@ -139,7 +138,9 @@ class CalendarDrawer {
 		Object.assign(this, props);
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.img = await loadImageFromUrl(props.src);
+
+		if (props.image?.source)
+			this.img = await loadImageFromUrl(props.image?.source);
 
 		return this.drawImage();
 	}
@@ -178,9 +179,10 @@ class CalendarDrawer {
 			const col = i % 7;
 
 			ctx.save();
-			if (entry.blurred) ctx.globalAlpha = 0.4;
-			if (entry.selected) {
-				ctx.globalAlpha = 0.1;
+			if (entry.blurred) ctx.globalAlpha = 0.35;
+			else if (!entry.date) ctx.globalAlpha = 0.6;
+			if (entry.selected && this.showSelected) {
+				ctx.globalAlpha = 0.3;
 				ctx.fillRect(
 					columnSize * col,
 					columnSize * row,
@@ -213,7 +215,7 @@ class CalendarDrawer {
 		let fontSize = 30;
 		const calendar = this.getCalendar();
 
-		if (this.bare) return calendar.toDataURL();
+		if (this.plain) return calendar.toDataURL();
 
 		this.canvas.height = calendar.height;
 		this.canvas.width = calendar.width + fontSize + 20;
@@ -233,31 +235,22 @@ class CalendarDrawer {
 			date.getFullYear();
 
 		ctx.font = `bold ${fontSize}px Helvetica`;
-		let metric = ctx.measureText(text);
-
-		// while (metric.width > height - fontSize) {
-		// 	fontSize -= 10;
-		// 	ctx.font = `bold ${fontSize}px Helvetica`;
-		// 	metric = ctx.measureText(text);
-		// }
-
 		ctx.fillStyle = solidGradientBg(this.canvas, this.background);
 		ctx.roundRect(0, 0, width, height, 10);
 		ctx.fill();
 		ctx.clip();
 
-		ctx.globalAlpha = this.imageOpacity;
-		ctx.drawImage(
-			resizeToAspectRatio(this.img, width / height),
-			fontSize + 25,
-			0
-		);
-		ctx.globalAlpha = 1;
-		ctx.drawImage(calendar, width - calendar.width, 0);
+		if (this.image?.source) {
+			ctx.globalAlpha = this.image.opacity;
+			ctx.drawImage(
+				resizeToAspectRatio(this.img, width / height),
+				fontSize + 25,
+				0
+			);
+			ctx.globalAlpha = 1;
+		}
 
-		// ctx.fillStyle = solidGradientBg(this.canvas, this.background);
-		// ctx.fillRect(0, 0, fontSize + 25, height);
-		// ctx.globalAlpha = 1;
+		ctx.drawImage(calendar, width - calendar.width, 0);
 
 		ctx.fillStyle = this.color;
 		ctx.font = `bold ${fontSize - 10}px Helvetica`;
@@ -283,7 +276,6 @@ export default function CalendarComponent() {
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			src: staticImages.presets.calendar,
 			date: new Intl.DateTimeFormat("en-US")
 				.format(new Date())
 				.split("/")
@@ -291,12 +283,16 @@ export default function CalendarComponent() {
 				.map((entry) => entry.padStart(2, "0"))
 				.join("-"),
 			fromMonday: false,
-			bare: false,
-			imageOpacity: 0.7,
+			showSelected: true,
+			plain: false,
+			image: {
+				source: staticImages.presets.calendar,
+				opacity: 0.7,
+			},
 			color: "white",
 			background: {
 				type: "color",
-				color: "#ffc414",
+				color: "#ffb514",
 				gradient: ["#737DFE", "#FFCAC9"],
 			},
 		},
@@ -342,30 +338,59 @@ export default function CalendarComponent() {
 			</div>
 
 			<div className="px-12px mt-2">
-				<div className="my-4">
-					<ImagePicker onChange={(src) => updateField("src", src)} />
-				</div>
-
 				<ComponentFields
 					schema={{
-						date: "date",
-						bare: "boolean",
-						fromMonday: "boolean",
-						imageOpacity: {
-							type: "range",
-							min: 0,
-							max: 1,
-							meta: { min: 0, step: 0.1, max: 1 },
-							show: (state) => !state.bare,
+						date: {
+							type: "date",
+							inline: true,
+							meta: {
+								min: 0,
+								max: 24,
+								className: "inline-number-field",
+							},
 						},
-						// border: {
-						// 	type: "color",
-						// 	meta: { showTransparent: true },
-						// },
-						color: "color",
+						fromMonday: "boolean",
+						showSelected: "boolean",
+						plain: "boolean",
+						image: {
+							type: "section",
+							optional: true,
+							children: {
+								source: {
+									type: "image",
+									defaultValue: staticImages.presets.calendar,
+								},
+								opacity: {
+									type: "range",
+									min: 0,
+									max: 1,
+									meta: { min: 0, step: 0.1, max: 1 },
+									defaultValue: 0.7,
+									show: (state) => !state.plain,
+								},
+							},
+							show: (state) => !state.plain,
+						},
+						color: {
+							type: "color",
+							inline: true,
+							meta: {
+								colors: ["white"],
+								showIndicator: false,
+								choiceSize: 14,
+							},
+						},
 						background: backgroundSpec({
-							showTransparent: false,
-							show: (state) => !state.bare,
+							show: (state) => !state.plain,
+							colorProps: {
+								inline: true,
+								meta: {
+									showTransparent: false,
+									colors: ["#ffb514"],
+									showIndicator: false,
+									choiceSize: 14,
+								},
+							},
 						}),
 					}}
 					onChange={updateField}

@@ -42,7 +42,7 @@ const ColorList = ({
 
 	return (
 		<div
-			className={`flex flex-wrap items-center ${
+			className={`flex flex-wrap items-center rounded-xs overflow-hidden ${
 				centerColors && "justify-center"
 			}`}
 			style={{ gap: `${spacing}px` }}

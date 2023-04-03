@@ -21,7 +21,7 @@ function getClock(source, { date, colors, showNumbers }) {
 		var ang;
 		var num;
 
-		const fontScale = 0.1;
+		const fontScale = 0.15;
 		const spacingScale = 1 - fontScale;
 
 		ctx.fillStyle = colors.numbers;
@@ -238,9 +238,9 @@ export default function ClockWidgetComponent() {
 			image: staticImages.presets.clock,
 			showNumbers: true,
 			time: {
-				hour: 14,
+				hour: 13,
 				minutes: 50,
-				seconds: 40,
+				seconds: 0,
 			},
 			colors: {
 				numbers: "#fff9b8",

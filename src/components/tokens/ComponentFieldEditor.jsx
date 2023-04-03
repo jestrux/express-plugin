@@ -297,8 +297,11 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 						// 		);
 						// 	}}
 						// >
+
 						<input
-							className="m-0 w-full"
+							className={`m-0 w-full ${
+								type == "range" && "mt-1"
+							}`}
 							type={type}
 							// value={tempValue}
 							value={value}

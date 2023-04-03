@@ -156,7 +156,7 @@ class CalendarDrawer {
 		ctx.fillStyle = this.color;
 		ctx.strokeStyle = this.color;
 		const [columns, entries] = getCalendarDays(this.date, {
-			fromMonday: this.fromMonday,
+			fromMonday: this.settings?.startFromMonday,
 		});
 
 		ctx.beginPath();
@@ -181,7 +181,7 @@ class CalendarDrawer {
 			ctx.save();
 			if (entry.blurred) ctx.globalAlpha = 0.35;
 			else if (!entry.date) ctx.globalAlpha = 0.6;
-			if (entry.selected && this.showSelected) {
+			if (entry.selected && this.settings?.showSelectedDay) {
 				ctx.globalAlpha = 0.3;
 				ctx.fillRect(
 					columnSize * col,
@@ -215,7 +215,7 @@ class CalendarDrawer {
 		let fontSize = 30;
 		const calendar = this.getCalendar();
 
-		if (this.plain) return calendar.toDataURL();
+		if (this.settings?.plainCalendar) return calendar.toDataURL();
 
 		this.canvas.height = calendar.height;
 		this.canvas.width = calendar.width + fontSize + 20;
@@ -282,9 +282,11 @@ export default function CalendarComponent() {
 				.reverse()
 				.map((entry) => entry.padStart(2, "0"))
 				.join("-"),
-			fromMonday: false,
-			showSelected: true,
-			plain: false,
+			settings: {
+				startFromMonday: false,
+				showSelectedDay: true,
+				plainCalendar: false,
+			},
 			image: {
 				source: staticImages.presets.calendar,
 				opacity: 0.7,
@@ -349,9 +351,16 @@ export default function CalendarComponent() {
 								className: "inline-number-field",
 							},
 						},
-						fromMonday: "boolean",
-						showSelected: "boolean",
-						plain: "boolean",
+						settings: {
+							type: "section",
+							label: "Customize calendar",
+							collapsed: true,
+							children: {
+								startFromMonday: "boolean",
+								showSelectedDay: "boolean",
+								plainCalendar: "boolean",
+							},
+						},
 						image: {
 							type: "section",
 							optional: true,

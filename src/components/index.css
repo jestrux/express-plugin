@@ -650,6 +650,11 @@ img.inset-0 {
 .border-dark-gray {
 	border-color: #888;
 }
+
+.divide-y > * + * {
+	border-left: 1px solid #aaa;
+}
+
 .rounded-full {
 	border-radius: 2000px;
 }

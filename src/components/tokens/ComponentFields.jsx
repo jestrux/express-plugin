@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { camelCaseToSentenceCase } from "../utils";
 import ComponentFieldEditor from "./ComponentFieldEditor";
 import Toggle from "./Toggle";
@@ -48,6 +48,17 @@ function ComponentFieldSection({
 	rootLevel = false,
 	onChange,
 }) {
+	const collapsedRef = useRef();
+	const [collapsed, setCollapsed] = useState(false);
+
+	useEffect(() => {
+		if (collapsedRef?.current == null) {
+			const initialCollapsed = field.collapsed || false;
+			collapsedRef.current = initialCollapsed;
+			setCollapsed(initialCollapsed);
+		}
+	}, []);
+
 	function handleChange(key, newValue) {
 		const updatedProps = typeof key == "string" ? { [key]: newValue } : key;
 
@@ -91,7 +102,7 @@ function ComponentFieldSection({
 			}}
 		>
 			<div className="relative">
-				{data && (
+				{data && !collapsed && (
 					<div
 						className="absolute inset-0"
 						style={{
@@ -107,60 +118,96 @@ function ComponentFieldSection({
 				<div className="relative flex items-center justify-between px-12px py-2">
 					<label>{camelCaseToSentenceCase(field.label)}</label>
 
-					{field.optional && (
-						<Toggle checked={data} onChange={handleToggle} />
-					)}
+					<div className="flex items-center gap-3">
+						{rootLevel && (!field.optional || data) && (
+							<button
+								className="cursor-pointer"
+								onClick={() => setCollapsed(!collapsed)}
+								style={{
+									border: "none",
+									outline: "none",
+								}}
+							>
+								<svg
+									width={12}
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={3}
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d={
+											collapsed
+												? "M12 4.5v15m7.5-7.5h-15"
+												: "M19.5 12h-15"
+										}
+									/>
+								</svg>
+							</button>
+						)}
+
+						{field.optional && (
+							<Toggle checked={data} onChange={handleToggle} />
+						)}
+					</div>
 				</div>
 			</div>
 
-			<div className="mt-1 overflow-hidden">
-				{data && (
-					<div className={`${rootLevel ? "px-12px" : ""}`}>
-						<div className={rootLevel ? "" : "px-12px"}>
-							{children.map((field, index) => {
-								if (
-									typeof field.show == "function" &&
-									!field.show(data)
-								) {
-									return null;
-								}
+			{!collapsed && (
+				<div className="mt-1 overflow-hidden">
+					{data && (
+						<div className={`${rootLevel ? "px-12px" : ""}`}>
+							<div className={rootLevel ? "" : "px-12px"}>
+								{children.map((field, index) => {
+									if (
+										typeof field.show == "function" &&
+										!field.show(data)
+									) {
+										return null;
+									}
 
-								if (field.type == "section")
-									return (
-										<ComponentFieldSection
-											key={index}
-											isLast={
-												index == children.length - 1
-											}
-											field={field}
-											data={data[field.__id]}
-											onChange={handleChange}
-										/>
-									);
-								else if (field.type == "group")
-									return (
-										<ComponentFieldGroup
-											key={index}
-											field={field}
-											data={data}
-											onChange={handleChange}
-										/>
-									);
+									if (field.type == "section")
+										return (
+											<ComponentFieldSection
+												key={index}
+												isLast={
+													index == children.length - 1
+												}
+												field={field}
+												data={data[field.__id]}
+												onChange={handleChange}
+											/>
+										);
+									else if (field.type == "group")
+										return (
+											<ComponentFieldGroup
+												key={index}
+												field={field}
+												data={data}
+												onChange={handleChange}
+											/>
+										);
 
-								return (
-									<div className="mb-4" key={index}>
-										<ComponentFieldEditor
-											inset
-											field={{ ...field, __data: data }}
-											onChange={handleChange}
-										/>
-									</div>
-								);
-							})}
+									return (
+										<div className="mb-4" key={index}>
+											<ComponentFieldEditor
+												inset
+												field={{
+													...field,
+													__data: data,
+												}}
+												onChange={handleChange}
+											/>
+										</div>
+									);
+								})}
+							</div>
 						</div>
-					</div>
-				)}
-			</div>
+					)}
+				</div>
+			)}
 		</div>
 	);
 }

@@ -1,6 +1,7 @@
 import brushPoster from "./images/posters/brush.png";
 import calendarPoster from "./images/posters/calendar.png";
 import clippedImagePoster from "./images/posters/crop.webp";
+import clockPoster from "./images/posters/clock.png";
 import cloudPoster from "./images/posters/cloud.png";
 import cylinderPoster from "./images/posters/cylinder.png";
 import contourPoster from "./images/posters/contour.png";
@@ -16,6 +17,7 @@ import wavesPoster from "./images/posters/waves.png";
 
 import calendarPreset from "./images/presets/calendar.jpg";
 import clippedImagePreset from "./images/presets/tornPaper.png";
+import clockPreset from "./images/presets/clock.jpg";
 import cylinderPreset from "./images/presets/cylinder.jpg";
 import polaroidPreset from "./images/presets/polaroid.jpg";
 import framePreset from "./images/presets/frame.jpg";
@@ -35,6 +37,7 @@ export default {
 		brushBackground: brushPoster,
 		calendar: calendarPoster,
 		clippedImage: clippedImagePoster,
+		clock: clockPoster,
 		cloud: cloudPoster,
 		cylinder: cylinderPoster,
 		contour: contourPoster,
@@ -51,6 +54,7 @@ export default {
 	presets: {
 		calendar: calendarPreset,
 		clippedImage: clippedImagePreset,
+		clock: clockPreset,
 		cylinder: cylinderPreset,
 		polaroid: polaroidPreset,
 		frame: framePreset,

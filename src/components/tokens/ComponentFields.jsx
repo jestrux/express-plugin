@@ -81,7 +81,7 @@ function ComponentFieldSection({
 
 	return (
 		<div
-			className={`-mx-12px ${
+			className={`SectionField -mx-12px ${
 				data && (rootLevel || !isLast) && "border-b"
 			}`}
 		>

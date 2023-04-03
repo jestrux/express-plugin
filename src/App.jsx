@@ -17,6 +17,7 @@ import StickerBadgeComponent from "./components/StickerBadgeComponent";
 import WeatherWidgetComponent from "./components/WeatherWidgetComponent";
 import WaveComponent from "./components/WaveComponent";
 import CalendarComponent from "./components/CalendarComponent";
+import ClockWidgetComponent from "./components/ClockWidgetComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -34,6 +35,7 @@ const componentMap = {
 	WeatherWidgetComponent,
 	WaveComponent,
 	CalendarComponent,
+	ClockWidgetComponent,
 };
 
 const presets = {
@@ -71,6 +73,10 @@ const presets = {
 		props: {},
 		component: "CalendarComponent",
 	},
+	clock: {
+		props: {},
+		component: "ClockWidgetComponent",
+	},
 	weatherWidget: {
 		props: {},
 		component: "WeatherWidgetComponent",
@@ -105,7 +111,7 @@ const presets = {
 
 export default function App() {
 	const [lastUpdate, setLastUpdate] = useState();
-	// const component = useRef(CalendarComponent);
+	// const component = useRef(ClockWidgetComponent);
 	const component = useRef();
 
 	function setCurrentComponent(currentComponent) {

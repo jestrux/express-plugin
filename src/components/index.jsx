@@ -52,6 +52,21 @@
 // Ransom note alt: https://cms-assets.tutsplus.com/cdn-cgi/image/width=1700/uploads/users/166/posts/29186/final_image/Newspaper%20Ransom%20Note%20Text%20Effect%20-%20850.jpg
 // Pin: https://pbs.twimg.com/media/Fsize9OX0AMFOyM?format=jpg&name=4096x4096
 
+// Templates
+// https://reallygooddesigns.com/moodboard-templates/
+// https://reallygooddesigns.com/wp-content/uploads/2021/08/Free-Moodboard-Templates-04.png
+// https://www.fotor.com/moodboard-maker/
+
+// Clocks
+// https://www.redbubble.com/shop/arrow+moodboard+clocks
+// https://www.pinterest.com/pin/758434393515269169/
+// https://blog.carrot.link/wp-content/uploads/2022/05/fashion-moodbnoard-684x1024.jpeg
+// https://content-imagery.s3-us-west-2.amazonaws.com/Blog/2020/Winter+Moodboards+2020/concretedetails-title-moodboard.jpg
+// https://static.bodet-time.co.uk/images/clocks/countdown-clock.png
+// https://mir-s3-cdn-cf.behance.net/project_modules/fs/635ecb166996675.6422f43828ea9.png
+// https://behance.directus.app/assets/0a00c004-ab96-434a-bb76-f8e2d23774e8?width=2800&height=1846&format=webp&quality=90
+
+
 import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js"
 import React from "react";
 import { createRoot } from "react-dom/client";

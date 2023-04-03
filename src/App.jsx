@@ -111,8 +111,8 @@ const presets = {
 
 export default function App() {
 	const [lastUpdate, setLastUpdate] = useState();
-	// const component = useRef(ClockWidgetComponent);
-	const component = useRef();
+	const component = useRef(ClockWidgetComponent);
+	// const component = useRef();
 
 	function setCurrentComponent(currentComponent) {
 		component.current = componentMap[currentComponent];

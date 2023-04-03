@@ -9,6 +9,7 @@ import LogoEditorField from "./LogoEditorField";
 import TagList from "./TagList";
 import Toggle from "./Toggle";
 import ImagePicker from "../ImagePicker";
+import ColorSwatch from "./ColorSwatch";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -197,6 +198,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 	const isCustomFieldType = [
 		"boolean",
 		"color",
+		"swatch",
 		"gradient",
 		"icon",
 		"radio",
@@ -256,6 +258,16 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 							onChange={handleChange}
 							{...meta}
 						/>
+					)}
+
+					{type == "swatch" && (
+						<div className="mt-1">
+							<ColorSwatch
+								value={value}
+								onChange={handleChange}
+								{...meta}
+							/>
+						</div>
 					)}
 
 					{type == "gradient" && (

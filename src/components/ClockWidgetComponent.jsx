@@ -339,51 +339,7 @@ export default function ClockWidgetComponent() {
 								},
 							},
 						},
-						colors: {
-							type: "section",
-							children: {
-								numbers: {
-									type: "color",
-									inline: true,
-									meta: {
-										colors: ["#fff9b8"],
-										showIndicator: false,
-									},
-								},
-								hour: {
-									type: "color",
-									inline: true,
-									meta: {
-										colors: ["#fff6d6"],
-										showIndicator: false,
-									},
-								},
-								minute: {
-									type: "color",
-									inline: true,
-									meta: {
-										colors: ["#59d1d9"],
-										showIndicator: false,
-									},
-								},
-								second: {
-									type: "color",
-									inline: true,
-									meta: {
-										colors: ["#ffbc47"],
-										showIndicator: false,
-									},
-								},
-								dot: {
-									type: "color",
-									inline: true,
-									meta: {
-										colors: ["#ddd1a6"],
-										showIndicator: false,
-									},
-								},
-							},
-						},
+						colors: "swatch",
 					}}
 					onChange={updateField}
 					data={data}

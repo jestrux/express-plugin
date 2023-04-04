@@ -367,6 +367,7 @@ export default function CalendarComponent() {
 							children: {
 								source: {
 									type: "image",
+									label: "",
 									defaultValue: staticImages.presets.calendar,
 								},
 								opacity: {

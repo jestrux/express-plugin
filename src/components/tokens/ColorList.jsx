@@ -10,6 +10,7 @@ const ColorCard = ({ height, color, selected, showIndicator, onChange }) => {
 		<label
 			className="block relative cursor-pointer rounded-sm border"
 			style={{
+				minWidth: height + "px",
 				height: height + "px",
 				borderColor:
 					transparent || tinyColor(color).getLuminance() > 0.95

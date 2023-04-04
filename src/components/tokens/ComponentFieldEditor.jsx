@@ -214,7 +214,10 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 			{label && label.length && (
 				<div
 					className="flex items-center justify-between"
-					style={{ marginBottom: isCustomFieldType ? "0.1rem" : 0 }}
+					style={{
+						marginBottom:
+							isCustomFieldType && !inline ? "0.4rem" : 0,
+					}}
 				>
 					<label
 						className={`fieldEditorLabel ${inset && "inset"}`}

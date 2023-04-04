@@ -1,4 +1,6 @@
-export { default as tinyColor } from "./tinycolor";
+import tinyColor from "./tinycolor";
+
+export { tinyColor as tinyColor };
 
 export function shuffle(array) {
 	return [...array].sort((_) => Math.random() - 0.5);
@@ -185,9 +187,11 @@ export const solidGradientImageBg = async (source, background) => {
 export const backgroundSpec = ({
 	imageAsOption = false,
 	imageProps = {},
+	gradientProps = { meta: { singleChoice: true } },
 	colorProps = { meta: { showTransparent: true } },
 	...backgroundProps
 } = {}) => {
+	const { meta: gradientPropsMeta, otherGradientProps } = gradientProps;
 	const { meta: colorPropsMeta, otherColorProps } = colorProps;
 
 	return {
@@ -196,7 +200,7 @@ export const backgroundSpec = ({
 		children: {
 			type: {
 				label: "",
-				type: "tag",
+				type: "radio",
 				inline: true,
 				noMargin: true,
 				choices: [
@@ -213,9 +217,8 @@ export const backgroundSpec = ({
 				show: (state) => state.type == "color",
 				...otherColorProps,
 				meta: {
-					colors: ["#ffb514"],
-					showIndicator: false,
-					fullWidth: true,
+					choiceSize: 30,
+					singleChoice: true,
 					...colorPropsMeta,
 				},
 			},
@@ -224,6 +227,11 @@ export const backgroundSpec = ({
 				type: "gradient",
 				defaultValue: ["#E233FF", "#FF6B00"],
 				show: (state) => state.type == "gradient",
+				...otherGradientProps,
+				meta: {
+					singleChoice: true,
+					...gradientPropsMeta,
+				},
 			},
 			...(imageAsOption
 				? {
@@ -237,4 +245,28 @@ export const backgroundSpec = ({
 				: {}),
 		},
 	};
+};
+
+export const hexAverage = (...args) => {
+	return args
+		.map((arg) => new tinyColor(arg).toHex())
+		.reduce(
+			function (previousValue, currentValue) {
+				return currentValue
+					.replace(/^#/, "")
+					.match(/.{2}/g)
+					.map(function (value, index) {
+						return previousValue[index] + parseInt(value, 16);
+					});
+			},
+			[0, 0, 0]
+		)
+		.reduce(function (previousValue, currentValue) {
+			return (
+				previousValue +
+				Math.floor(currentValue / args.length)
+					.toString(16)
+					.padStart(2, "0")
+			);
+		}, "#");
 };

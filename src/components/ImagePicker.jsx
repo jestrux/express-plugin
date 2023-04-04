@@ -17,14 +17,17 @@ export default function ImagePicker({ onChange }) {
 	};
 
 	return (
-		<label className="cursor-pointer p-2 bg-gray text-md block w-full text-center">
+		<label
+			className="hoverable bg-gray border text-primary font-medium block w-full text-center flex center-center rounded-sm"
+			style={{ height: "34px", fontSize: "13px" }}
+		>
 			<Input
 				className="hidden"
 				type="file"
 				name="image"
 				onChange={processImage}
 			/>
-			Pick photo
+			Select image
 		</label>
 	);
 }

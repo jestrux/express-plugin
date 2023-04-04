@@ -4,8 +4,6 @@ import ButtonGroup from "./ButtonGroup";
 import ColorList from "./ColorList";
 import GradientList from "./GradientPicker/GradientList";
 import IconList from "./IconPicker/IconList";
-// import ImageEditorField from "./ImageEditorField";
-import LogoEditorField from "./LogoEditorField";
 import TagList from "./TagList";
 import Toggle from "./Toggle";
 import ImagePicker from "../ImagePicker";
@@ -219,7 +217,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					style={{ marginBottom: isCustomFieldType ? "0.1rem" : 0 }}
 				>
 					<label
-						className={` ${inset && "text-md"}`}
+						className={`fieldEditorLabel ${inset && "inset"}`}
 						style={{
 							paddingTop: inline ? "2px" : "",
 						}}
@@ -276,7 +274,11 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					)}
 
 					{type == "gradient" && (
-						<GradientList value={value} onChange={handleChange} />
+						<GradientList
+							value={value}
+							onChange={handleChange}
+							{...meta}
+						/>
 					)}
 
 					{type == "icon" && (

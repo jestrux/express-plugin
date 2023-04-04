@@ -362,14 +362,6 @@ export default function ClockWidgetComponent() {
 							imageProps: {
 								defaultValue: staticImages.presets.clock,
 							},
-							colorProps: {
-								inline: true,
-								meta: {
-									colors: ["#ffb514"],
-									showIndicator: false,
-									fullWidth: true,
-								},
-							},
 						}),
 						showNumbers: {
 							type: "boolean",

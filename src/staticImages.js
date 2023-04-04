@@ -1,4 +1,5 @@
 import brushPoster from "./images/posters/brush.png";
+import backgroundPatternPoster from "./images/posters/background-pattern.png";
 import calendarPoster from "./images/posters/calendar.png";
 import clippedImagePoster from "./images/posters/crop.webp";
 import clockPoster from "./images/posters/clock.png";
@@ -35,6 +36,7 @@ export default {
 	spotifyWave,
 	posters: {
 		brushBackground: brushPoster,
+		backgroundPattern: backgroundPatternPoster,
 		calendar: calendarPoster,
 		clippedImage: clippedImagePoster,
 		clock: clockPoster,

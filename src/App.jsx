@@ -18,6 +18,8 @@ import WeatherWidgetComponent from "./components/WeatherWidgetComponent";
 import WaveComponent from "./components/WaveComponent";
 import CalendarComponent from "./components/CalendarComponent";
 import ClockWidgetComponent from "./components/ClockWidgetComponent";
+import BackgroundPatternComponent from "./components/BackgroundPatternComponent";
+import { camelCaseToSentenceCase } from "./components/utils";
 
 const componentMap = {
 	TornPaperComponent,
@@ -36,13 +38,20 @@ const componentMap = {
 	WaveComponent,
 	CalendarComponent,
 	ClockWidgetComponent,
+	BackgroundPatternComponent,
 };
 
 const presets = {
+	backgroundPattern: {
+		props: {},
+		// height: 70,
+		// fullWidth: true,
+		component: "BackgroundPatternComponent",
+	},
 	clippedImage: {
 		props: {},
-		height: 70,
-		fullWidth: true,
+		// height: 70,
+		// fullWidth: true,
 		component: "TornPaperComponent",
 	},
 	polaroidCard: {
@@ -110,13 +119,13 @@ const presets = {
 };
 
 export default function App() {
-	const [lastUpdate, setLastUpdate] = useState();
-	const component = useRef(ClockWidgetComponent);
-	// const component = useRef();
+	const [currentComponent, setCurrentComponent] = useState();
+	// const component = useRef(BackgroundPatternComponent);
+	const component = useRef();
 
-	function setCurrentComponent(currentComponent) {
+	function handleSetCurrentComponent(currentComponent, name = "") {
 		component.current = componentMap[currentComponent];
-		setLastUpdate(Date.now());
+		setCurrentComponent(name);
 	}
 
 	if (component.current) {
@@ -124,18 +133,36 @@ export default function App() {
 
 		return (
 			<>
-				<div className="p-3">
-					<span
-						className="hoverable inline-flex items-center cursor-pointer opacity-65 bg-black54 rounded-lg py-1 px-1"
-						onClick={() => setCurrentComponent(null)}
+				<div className="p-3 flex items-center gap-2">
+					<button
+						className="border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-lg aspect-square"
+						onClick={() => handleSetCurrentComponent(null)}
+						style={{
+							width: "24px",
+							padding: 0,
+							paddingRight: "1px",
+						}}
 					>
-						<svg height="16" viewBox="0 0 24 24" width="24">
+						<svg
+							height="16"
+							viewBox="0 0 24 24"
+							strokeWidth={2.6}
+							stroke="currentColor"
+							fill="none"
+						>
 							<path
-								fill="black"
-								d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M15.75 19.5L8.25 12l7.5-7.5"
 							/>
 						</svg>
-						<span className="text-md mr-2">Back</span>
+					</button>
+
+					<span
+						className="capitalize font-medium"
+						style={{ fontSize: "1rem" }}
+					>
+						{camelCaseToSentenceCase(currentComponent)}
 					</span>
 				</div>
 
@@ -144,5 +171,7 @@ export default function App() {
 		);
 	}
 
-	return <PresetGrid presets={presets} onSelect={setCurrentComponent} />;
+	return (
+		<PresetGrid presets={presets} onSelect={handleSetCurrentComponent} />
+	);
 }

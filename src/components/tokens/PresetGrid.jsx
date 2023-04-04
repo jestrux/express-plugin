@@ -23,7 +23,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 							border: "solid #e5e5e5",
 							borderWidth: "0 1px 1px 0",
 						}}
-						onClick={() => onSelect(component)}
+						onClick={() => onSelect(component, name)}
 					>
 						<div
 							className="flex center-center"

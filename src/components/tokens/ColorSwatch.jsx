@@ -21,9 +21,10 @@ export default function ColorSwatch({ value, onChange }) {
 						}}
 					>
 						<input
-							className="hidden"
 							type="color"
 							defaultValue={color}
+							className="absolute opacity-0"
+							style={{ width: 0, height: 0 }}
 							onChange={(e) => updateColor(name, e.target.value)}
 						/>
 

@@ -380,15 +380,6 @@ export default function CalendarComponent() {
 							},
 							show: (state) => !state.plain,
 						},
-						color: {
-							type: "color",
-							inline: true,
-							meta: {
-								colors: ["white"],
-								showIndicator: false,
-								choiceSize: 18,
-							},
-						},
 						background: backgroundSpec({
 							show: (state) => !state.plain,
 							colorProps: {
@@ -400,6 +391,16 @@ export default function CalendarComponent() {
 								},
 							},
 						}),
+						color: {
+							type: "color",
+							label: "Text color",
+							inline: true,
+							meta: {
+								colors: ["white"],
+								showIndicator: false,
+								choiceSize: 18,
+							},
+						},
 					}}
 					onChange={updateField}
 					data={data}

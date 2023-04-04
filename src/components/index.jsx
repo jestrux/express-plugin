@@ -66,6 +66,22 @@
 // https://mir-s3-cdn-cf.behance.net/project_modules/fs/635ecb166996675.6422f43828ea9.png
 // https://behance.directus.app/assets/0a00c004-ab96-434a-bb76-f8e2d23774e8?width=2800&height=1846&format=webp&quality=90
 
+// Stickers
+// https://www.freepik.com/author/brgfx
+// https://www.freepik.com/free-vector/pumpkin-sticker-white_16508182.htm#from_view=detail_author
+// https://www.freepik.com/free-vector/sticker-design-with-chicken-isolated_16265246.htm#from_view=detail_author
+// https://www.freepik.com/free-vector/tree_6132448.htm#&position=8&from_view=author
+// https://www.freepik.com/free-vector/orange-tree-sticker-white-background_18435757.htm#from_view=detail_alsolike
+// https://www.freepik.com/free-vector/set-palm-tree_3797831.htm#&position=9&from_view=author
+// https://www.freepik.com/free-vector/sticker-design-with-strawberry-isolated_18173929.htm#from_view=detail_author
+// https://www.freepik.com/free-vector/ball_3077534.htm#from_view=detail_author
+// https://www.freepik.com/free-vector/set-wild-animals_4771105.htm#&position=12&from_view=author
+// https://www.freepik.com/free-vector/set-isolated-various-dinosaurs-cartoon-character-white-background_18194379.htm#&position=14&from_view=author
+// https://www.freepik.com/free-vector/fast-food-sticker-design-with-hot-dog-isolated_18555268.htm#&position=28&from_view=author
+// https://www.freepik.com/free-vector/airplane-cartoon-style-transparent_11420379.htm#&position=46&from_view=author
+// https://www.freepik.com/free-vector/different-insects-collection-isolated-white-background_12321401.htm#&position=48&from_view=author
+// https://www.freepik.com/free-vector/happy-new-year-lettering_1371539.htm#from_view=detail_alsolike
+// https://www.freepik.com/free-vector/best-wishes-calligraphic-lettering_1430395.htm#from_view=detail_alsolike
 
 import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js"
 import React from "react";

@@ -6,8 +6,8 @@ export function shuffle(array) {
 
 export function camelCaseToSentenceCase(text) {
 	if (!text || !text.length) return "";
-	const result = text.replace(/([A-Z]{1,})/g, " $1");
-	return result.charAt(0).toUpperCase() + result.slice(1);
+	const result = text.replace(/([A-Z]{1,})/g, " $1").trim();
+	return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
 }
 
 export function someTime(duration = 10) {

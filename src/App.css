@@ -402,6 +402,15 @@ img.inset-0 {
 	padding-right: 0.75rem;
 }
 
+.px-4,
+.pl-4 {
+	padding-left: 1rem;
+}
+.px-4,
+.pr-4 {
+	padding-right: 1rem;
+}
+
 .py-0 {
 	padding-left: 0;
 	padding-right: 0;

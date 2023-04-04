@@ -133,9 +133,9 @@ export default function App() {
 
 		return (
 			<>
-				<div className="p-3 flex items-center gap-2">
+				<div className="px-4 mb-3 flex items-center gap-2">
 					<button
-						className="border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-lg aspect-square"
+						className="border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-sm aspect-square"
 						onClick={() => handleSetCurrentComponent(null)}
 						style={{
 							width: "24px",

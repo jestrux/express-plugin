@@ -116,18 +116,22 @@ function ComponentFieldSection({
 				)}
 
 				<div className="relative flex items-center justify-between px-12px py-2">
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-1">
 						{rootLevel && (!field.optional || data) && (
 							<button
-								className="cursor-pointer"
+								className="hoverable rounded-xs border flex center-center"
 								onClick={() => setCollapsed(!collapsed)}
 								style={{
-									border: "none",
+									padding: "0px 5px 0px 5px",
+									height: "20px",
 									outline: "none",
+									background: "transparent",
+									border: "none",
 								}}
 							>
 								<svg
-									width={12}
+									className="text-primary"
+									width={14}
 									fill="none"
 									viewBox="0 0 24 24"
 									strokeWidth={3}
@@ -155,7 +159,7 @@ function ComponentFieldSection({
 				</div>
 			</div>
 
-			<div className="mt-1 overflow-hidden">
+			<div className={` overflow-hidden ${collapsed ? "mt-1" : "mt-2"}`}>
 				{!collapsed && data && (
 					<div className={`${rootLevel ? "px-12px" : ""}`}>
 						<div className={rootLevel ? "" : "px-12px"}>

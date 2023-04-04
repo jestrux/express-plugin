@@ -3,6 +3,52 @@ import staticImages from "../../staticImages";
 import { DEFAULT_COLORS } from "../constants";
 import { tinyColor } from "../utils";
 
+const ColorCard = ({ height, color, selected, showIndicator, onChange }) => {
+	const transparent = color == "transparent";
+
+	return (
+		<label
+			className="block relative cursor-pointer rounded-sm border"
+			style={{
+				height: height + "px",
+				borderColor:
+					transparent || tinyColor(color).getLuminance() > 0.95
+						? selected
+							? "#bbb"
+							: "#e7e7e7"
+						: color,
+				...(transparent
+					? {
+							background: `url(${staticImages.transparency})`,
+							backgroundSize: height,
+					  }
+					: { backgroundColor: color }),
+			}}
+			onClick={() => onChange(color)}
+		>
+			{!transparent && (
+				<input
+					className="absolute opacity-0"
+					style={{ width: 0, height: 0 }}
+					type="color"
+					defaultValue={color}
+					onChange={(e) => onChange(e.target.value)}
+				/>
+			)}
+
+			{showIndicator && (
+				<div
+					className="border-2 rounded-sm h-full aspect-square"
+					style={{
+						borderColor:
+							selected && !transparent ? "white" : "transparent",
+					}}
+				></div>
+			)}
+		</label>
+	);
+};
+
 const ColorList = ({
 	centerColors = false,
 	selectedColor,
@@ -14,14 +60,13 @@ const ColorList = ({
 	showIndicator = true,
 	fullWidth = false,
 	onChange,
+	singleChoice,
 	...props
 }) => {
 	const [colors, setColors] = useState([
 		...(showTransparent ? ["transparent"] : []),
 		...(props.colors || DEFAULT_COLORS),
 	]);
-
-	const customColorIconSize = choiceSize + 4;
 
 	const updateColor = (index, newColor) => {
 		setColors(
@@ -34,69 +79,33 @@ const ColorList = ({
 		onChange(newColor);
 	};
 
+	if (singleChoice)
+		return (
+			<ColorCard
+				height={choiceSize}
+				color={selectedColor}
+				onChange={onChange}
+			/>
+		);
+
 	return (
 		<div
-			className={`inline-flex flex-wrap items-center rounded-sm overflow-hidden ${
+			className={`inline-flex flex-wrap gap-1 items-center rounded-sm overflow-hidden${
 				centerColors && "justify-center"
-			}`}
-			style={{ gap: `${spacing}px`, width: fullWidth ? "100%" : "" }}
+			} `}
 		>
 			{colors.map((color, index) => {
 				const selected = selectedColor == color;
-				const transparent = color == "transparent";
 
 				return (
-					<label
-						title={color}
+					<ColorCard
+						height={choiceSize}
+						showIndicator={true}
 						key={index}
-						className={`relative cursor-pointer ${
-							small ? "border" : "border-2"
-						}
-						${!showIndicator && "rounded-sm"}
-						`}
-						style={{
-							width: fullWidth ? "100%" : "",
-							borderColor:
-								transparent ||
-								tinyColor(color).getLuminance() > 0.95
-									? selected
-										? "#bbb"
-										: "#e7e7e7"
-									: color,
-							...(transparent
-								? {
-										background: `url(${staticImages.transparency})`,
-										backgroundSize: choiceSize,
-								  }
-								: { backgroundColor: color }),
-						}}
-						onClick={() => onChange(color)}
-					>
-						{!transparent && (
-							<input
-								className="absolute opacity-0"
-								style={{ width: 0, height: 0 }}
-								type="color"
-								defaultValue={color}
-								onChange={(e) =>
-									updateColor(index, e.target.value)
-								}
-							/>
-						)}
-
-						<div
-							className="border-2 rounded-sm"
-							style={{
-								width: fullWidth ? "100%" : choiceSize,
-								height: choiceSize,
-								borderColor: !showIndicator
-									? "transparent"
-									: selected && !transparent
-									? "white"
-									: "transparent",
-							}}
-						></div>
-					</label>
+						selected={selected}
+						color={color}
+						onChange={(color) => updateColor(index, color)}
+					/>
 				);
 			})}
 		</div>

@@ -386,7 +386,7 @@ export default function CalendarComponent() {
 							meta: {
 								colors: ["white"],
 								showIndicator: false,
-								choiceSize: 14,
+								choiceSize: 18,
 							},
 						},
 						background: backgroundSpec({
@@ -397,7 +397,6 @@ export default function CalendarComponent() {
 									showTransparent: false,
 									colors: ["#ffb514"],
 									showIndicator: false,
-									choiceSize: 14,
 								},
 							},
 						}),

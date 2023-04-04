@@ -125,6 +125,34 @@ export const resizeToAspectRatio = (input, aspectRatio = 1) => {
 	return output;
 };
 
+export const solidGradientBg = (canvas, background) => {
+	if (!canvas || !background) return;
+
+	const ctx = canvas.getContext("2d");
+	let fillStyle = background.color;
+
+	if (background.type == "gradient" && background.gradient) {
+		const gradient = ctx.createLinearGradient(
+			0,
+			0,
+			canvas.width,
+			canvas.height
+		);
+
+		const gradientColors = background.gradient;
+		gradientColors.map((color, index) =>
+			gradient.addColorStop(
+				index / Math.max(gradientColors.length - 1, 1),
+				color
+			)
+		);
+
+		fillStyle = gradient;
+	}
+
+	return fillStyle;
+};
+
 export const solidGradientImageBg = async (source, background) => {
 	if (!source || !background) return;
 
@@ -159,40 +187,54 @@ export const backgroundSpec = ({
 	imageProps = {},
 	colorProps = { meta: { showTransparent: true } },
 	...backgroundProps
-} = {}) => ({
-	type: "section",
-	...backgroundProps,
-	children: {
-		type: {
-			label: "",
-			type: "tag",
-			inline: true,
-			noMargin: true,
-			choices: ["color", "gradient", ...(imageAsOption ? ["image"] : [])],
-			defaultValue: "color",
+} = {}) => {
+	const { meta: colorPropsMeta, otherColorProps } = colorProps;
+
+	return {
+		type: "section",
+		...backgroundProps,
+		children: {
+			type: {
+				label: "",
+				type: "tag",
+				inline: true,
+				noMargin: true,
+				choices: [
+					"color",
+					"gradient",
+					...(imageAsOption ? ["image"] : []),
+				],
+				defaultValue: "color",
+			},
+			color: {
+				type: "color",
+				label: "",
+				defaultValue: "#ff2e6d",
+				show: (state) => state.type == "color",
+				...otherColorProps,
+				meta: {
+					colors: ["#ffb514"],
+					showIndicator: false,
+					fullWidth: true,
+					...colorPropsMeta,
+				},
+			},
+			gradient: {
+				label: "",
+				type: "gradient",
+				defaultValue: ["#E233FF", "#FF6B00"],
+				show: (state) => state.type == "gradient",
+			},
+			...(imageAsOption
+				? {
+						image: {
+							label: "",
+							type: "image",
+							show: (state) => state.type == "image",
+							...imageProps,
+						},
+				  }
+				: {}),
 		},
-		color: {
-			type: "color",
-			label: "",
-			defaultValue: "#ff2e6d",
-			show: (state) => state.type == "color",
-			...colorProps,
-		},
-		gradient: {
-			label: "",
-			type: "gradient",
-			defaultValue: ["#E233FF", "#FF6B00"],
-			show: (state) => state.type == "gradient",
-		},
-		...(imageAsOption
-			? {
-					image: {
-						label: "",
-						type: "image",
-						show: (state) => state.type == "image",
-						...imageProps,
-					},
-			  }
-			: {}),
-	},
-});
+	};
+};

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import staticImages from "../../staticImages";
 import { camelCaseToSentenceCase } from "../utils";
 
@@ -48,10 +48,15 @@ const PresetGrid = ({ presets, onSelect }) => {
 						</div>
 
 						{floatingLabel ? (
-							<span className="show-on-parent-hover absolute inset-x-0 bottom-0 mb-1 font-normal block text-center text-sm">
-								{camelCaseToSentenceCase(
-									name.replaceAll("-", " ")
-								)}
+							<span className="show-on-parent-hover block absolute inset-x-0 top-0 flex items-center justify-start">
+								<span
+									className="bg-black26 p-1 font-normal text-sm"
+									style={{ padding: "0.25rem 0.4rem" }}
+								>
+									{camelCaseToSentenceCase(
+										name.replaceAll("-", " ")
+									)}
+								</span>
 							</span>
 						) : (
 							<span className="font-normal block text-center mt-1 text-sm">

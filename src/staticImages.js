@@ -1,6 +1,7 @@
 import brushPoster from "./images/posters/brush.png";
 import backgroundPatternPoster from "./images/posters/background-pattern.png";
 import calendarPoster from "./images/posters/calendar.png";
+import chartPoster from "./images/posters/chart.png";
 import clippedImagePoster from "./images/posters/crop.webp";
 import clockPoster from "./images/posters/clock.png";
 import cloudPoster from "./images/posters/cloud.png";
@@ -38,6 +39,7 @@ export default {
 		brushBackground: brushPoster,
 		backgroundPattern: backgroundPatternPoster,
 		calendar: calendarPoster,
+		charts: chartPoster,
 		clippedImage: clippedImagePoster,
 		clock: clockPoster,
 		cloud: cloudPoster,

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { camelCaseToSentenceCase } from "../utils";
 import ComponentFieldEditor from "./ComponentFieldEditor";
 import Toggle from "./Toggle";
+import KeyValueEditor from "./KeyValueEditor";
 
 function schemaToFields(schema, data) {
 	const fields = [];
@@ -89,6 +90,7 @@ function ComponentFieldSection({
 	}
 
 	const children = !data ? [] : schemaToFields(field.children, data);
+	const fieldDisabled = field.optional && !data;
 
 	return (
 		<div
@@ -117,16 +119,25 @@ function ComponentFieldSection({
 
 				<div className="relative flex items-center justify-between px-12px py-2">
 					<div className="flex items-center gap-1">
-						{rootLevel && (!field.optional || data) && (
+						{rootLevel && (
 							<button
 								className="hoverable rounded-xs border flex center-center"
-								onClick={() => setCollapsed(!collapsed)}
+								onClick={() =>
+									fieldDisabled
+										? null
+										: setCollapsed(!collapsed)
+								}
 								style={{
 									padding: "0px 5px 0px 5px",
 									height: "20px",
 									outline: "none",
 									background: "transparent",
 									border: "none",
+									marginLeft: "-0.4rem",
+									opacity: fieldDisabled ? 0.5 : 1,
+									pointerEvents: fieldDisabled
+										? "none"
+										: "auto",
 								}}
 							>
 								<svg
@@ -304,6 +315,15 @@ function ComponentFields({ schema, data, onChange }) {
 				else if (field.type == "group")
 					return (
 						<ComponentFieldGroup
+							key={index}
+							field={field}
+							data={data}
+							onChange={onChange}
+						/>
+					);
+				else if (field.type == "keyValue")
+					return (
+						<KeyValueEditor
 							key={index}
 							field={field}
 							data={data}

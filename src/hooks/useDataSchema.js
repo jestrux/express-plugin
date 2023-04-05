@@ -8,10 +8,14 @@ export default function useDataSchema(defaultValue, mainCallback = () => {}) {
 
 		const updatedProps = keyValueUpdate ? { [field]: newValue } : field;
 		const newData = { ...data, ...updatedProps };
-		setData(newData);
 
-		callback(newData);
+		handleSetData(newData, callback);
 	};
 
-	return [data, updateField];
+	const handleSetData = (data, callback = mainCallback) => {
+		setData(data);
+		callback(data);
+	};
+
+	return [data, updateField, handleSetData];
 }

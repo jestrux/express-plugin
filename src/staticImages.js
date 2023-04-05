@@ -7,6 +7,7 @@ export default {
 		brushBackground: "static/images/posters/brush.png",
 		backgroundPattern: "static/images/posters/background-pattern.png",
 		calendar: "static/images/posters/calendar.png",
+		charts: "static/images/posters/chart.png",
 		clippedImage: "static/images/posters/crop.webp",
 		clock: "static/images/posters/clock.png",
 		cloud: "static/images/posters/cloud.png",

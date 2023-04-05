@@ -19,6 +19,7 @@ import CalendarComponent from "./CalendarComponent";
 import ClockWidgetComponent from "./ClockWidgetComponent";
 import BackgroundPatternComponent from "./BackgroundPatternComponent";
 import { camelCaseToSentenceCase } from "./utils";
+import ChartComponent from "./ChartComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -38,6 +39,7 @@ const componentMap = {
 	CalendarComponent,
 	ClockWidgetComponent,
 	BackgroundPatternComponent,
+	ChartComponent,
 };
 
 const presets = {
@@ -56,6 +58,10 @@ const presets = {
 	polaroidCard: {
 		props: {},
 		component: "PolaroidComponent",
+	},
+	charts: {
+		props: {},
+		component: "ChartComponent",
 	},
 	spiral: {
 		props: {},
@@ -119,7 +125,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(BackgroundPatternComponent);
+	// const component = useRef(ChartComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

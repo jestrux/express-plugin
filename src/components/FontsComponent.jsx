@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Input from "./Input";
+import Input from "./tokens/Input";
 
 class FontDrawer {
 	fontLoaded = false;

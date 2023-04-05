@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import staticImages from "../../staticImages";
-import ImagePicker from "../ImagePicker";
 import ComponentFields from "../tokens/ComponentFields";
 import {
 	backgroundSpec,

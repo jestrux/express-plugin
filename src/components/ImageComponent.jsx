@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Input from "./Input";
+import Input from "./tokens/Input";
 import ComponentFields from "./tokens/ComponentFields";
 
 function dragElement(elmnt, callback) {
@@ -314,18 +314,9 @@ export default function ImageComponent() {
 			</div>
 
 			<div className="px-12px">
-				<label className="cursor-pointer my-3 p-2 bg-gray text-md block w-full text-center">
-					<Input
-						className="hidden"
-						type="file"
-						name="image"
-						onChange={processImage}
-					/>
-					Pick photo
-				</label>
-
 				<ComponentFields
 					schema={{
+						src: { type: "image", label: "" },
 						crop: {
 							type: "section",
 							optional: true,

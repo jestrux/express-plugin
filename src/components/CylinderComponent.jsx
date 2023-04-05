@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
-import ImagePicker from "./ImagePicker";
 import ComponentFields from "./tokens/ComponentFields";
 import {
 	backgroundSpec,
@@ -167,14 +166,14 @@ export default function CylinderComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px">
-				<div className="my-4">
-					<ImagePicker onChange={(src) => updateField("src", src)} />
-				</div>
-
+			<div className="px-12px mt-2">
 				<ComponentFields
 					schema={{
 						half: "boolean",
+						src: {
+							type: "image",
+							label: "",
+						},
 						smoothCorners: {
 							type: "boolean",
 							show: (state) => state.half,

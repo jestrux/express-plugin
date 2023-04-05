@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import staticImages from "../../staticImages";
-import ImagePicker from "../ImagePicker";
 import ComponentFields from "../tokens/ComponentFields";
 import { backgroundSpec, solidGradientBg } from "../utils";
 import * as brushes from "./brushes";
@@ -96,11 +95,7 @@ export default function BrushComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px">
-				<div className="my-4">
-					{/* <ImagePicker onChange={(src) => updateField("src", src)} /> */}
-				</div>
-
+			<div className="px-12px mt-2">
 				<ComponentFields
 					schema={{
 						brush: {

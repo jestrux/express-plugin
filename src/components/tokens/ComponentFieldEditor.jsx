@@ -6,7 +6,7 @@ import GradientList from "./GradientPicker/GradientList";
 import IconList from "./IconPicker/IconList";
 import TagList from "./TagList";
 import Toggle from "./Toggle";
-import ImagePicker from "../ImagePicker";
+import ImagePicker from "./ImagePicker";
 import ColorSwatch from "./ColorSwatch";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {

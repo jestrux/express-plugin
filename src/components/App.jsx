@@ -1,25 +1,24 @@
 import React, { useRef, useState } from "react";
 
-import "./App.css";
-import PresetGrid from "./components/tokens/PresetGrid";
-import ContourComponent from "./components/ContourComponent";
-import SpiralComponent from "./components/SpiralComponent";
-import PoppyFlowerComponent from "./components/PoppyFlowerComponent";
-import CloudComponent from "./components/CloudComponent";
-import SpringComponent from "./components/SpringComponent";
-import TornPaperComponent from "./components/TornPaperComponent";
-import PolaroidComponent from "./components/PolaroidComponent";
-import FrameComponent from "./components/FrameComponent";
-import SpotifyComponent from "./components/SpotifyComponent";
-import CylinderComponent from "./components/CylinderComponent";
-import BrushComponent from "./components/BrushComponent";
-import StickerBadgeComponent from "./components/StickerBadgeComponent";
-import WeatherWidgetComponent from "./components/WeatherWidgetComponent";
-import WaveComponent from "./components/WaveComponent";
-import CalendarComponent from "./components/CalendarComponent";
-import ClockWidgetComponent from "./components/ClockWidgetComponent";
-import BackgroundPatternComponent from "./components/BackgroundPatternComponent";
-import { camelCaseToSentenceCase } from "./components/utils";
+import PresetGrid from "./tokens/PresetGrid";
+import ContourComponent from "./ContourComponent";
+import SpiralComponent from "./SpiralComponent";
+import PoppyFlowerComponent from "./PoppyFlowerComponent";
+import CloudComponent from "./CloudComponent";
+import SpringComponent from "./SpringComponent";
+import TornPaperComponent from "./TornPaperComponent";
+import PolaroidComponent from "./PolaroidComponent";
+import FrameComponent from "./FrameComponent";
+import SpotifyComponent from "./SpotifyComponent";
+import CylinderComponent from "./CylinderComponent";
+import BrushComponent from "./BrushComponent";
+import StickerBadgeComponent from "./StickerBadgeComponent";
+import WeatherWidgetComponent from "./WeatherWidgetComponent";
+import WaveComponent from "./WaveComponent";
+import CalendarComponent from "./CalendarComponent";
+import ClockWidgetComponent from "./ClockWidgetComponent";
+import BackgroundPatternComponent from "./BackgroundPatternComponent";
+import { camelCaseToSentenceCase } from "./utils";
 
 const componentMap = {
 	TornPaperComponent,

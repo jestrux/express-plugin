@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import useKeyDetector from "../hooks/useKeyDetector";
+import useKeyDetector from "../../hooks/useKeyDetector";
 
 export default function Input({ onSubmit = () => {}, ...props }) {
 	const inputRef = useRef(null);

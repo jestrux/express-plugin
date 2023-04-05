@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
-import Input from "./Input";
 import ComponentFields from "./tokens/ComponentFields";
 import { loadImage } from "./utils";
 
@@ -100,8 +99,6 @@ class TornPaperDrawer {
 export default function TornPaperComponent() {
 	const previewRef = useRef(null);
 	const tornPaperDrawerRef = useRef((data) => {
-		console.log("New data: ", data);
-
 		if (!window.tornPaperDrawer)
 			window.tornPaperDrawer = new TornPaperDrawer();
 
@@ -138,20 +135,6 @@ export default function TornPaperComponent() {
 		else window.AddOnSdk?.app.document.addImage(blob);
 	};
 
-	const processImage = (e) => {
-		const files = e.target.files;
-		if (!files?.length) return;
-
-		const file = files[0];
-
-		updateField("src", null);
-		var reader = new FileReader();
-		reader.onload = (e) => updateField("src", e.target.result);
-		reader.readAsDataURL(file);
-
-		e.target.value = "";
-	};
-
 	return (
 		<>
 			<div
@@ -185,19 +168,10 @@ export default function TornPaperComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px">
-				<label className="cursor-pointer my-3 p-2 bg-gray text-md block w-full text-center">
-					<Input
-						className="hidden"
-						type="file"
-						name="image"
-						onChange={processImage}
-					/>
-					Pick photo
-				</label>
-
+			<div className="px-12px mt-2">
 				<ComponentFields
 					schema={{
+						src: { type: "image", label: "" },
 						crop: {
 							label: "",
 							type: "boolean",

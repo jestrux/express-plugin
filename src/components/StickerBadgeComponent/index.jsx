@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import staticImages from "../../staticImages";
-import ImagePicker from "../tokens/ImagePicker";
 import ComponentFields from "../tokens/ComponentFields";
 import { backgroundSpec, solidGradientBg } from "../utils";
 import * as stickers from "./stickers";
@@ -101,10 +100,6 @@ export default function StickerBadgeComponent() {
 			</div>
 
 			<div className="px-12px mt-2">
-				{/* <div className="my-4">
-					<ImagePicker onChange={(src) => updateField("src", src)} />
-				</div> */}
-
 				<ComponentFields
 					schema={{
 						sticker: {

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
-import Input from "./Input";
 import ComponentFields from "./tokens/ComponentFields";
 import { loadImage } from "./utils";
 
@@ -97,7 +96,7 @@ class PolaroidDrawer {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		// if (!this.img || props.src != this.src)
-			await loadImage(this, props.src);
+		await loadImage(this, props.src);
 		return this.drawImage();
 	}
 
@@ -149,20 +148,6 @@ export default function PolaroidComponent() {
 		else window.AddOnSdk?.app.document.addImage(blob);
 	};
 
-	const processImage = (e) => {
-		const files = e.target.files;
-		if (!files?.length) return;
-
-		const file = files[0];
-
-		updateField("src", null);
-		var reader = new FileReader();
-		reader.onload = (e) => updateField("src", e.target.result);
-		reader.readAsDataURL(file);
-
-		e.target.value = "";
-	};
-
 	return (
 		<>
 			<div
@@ -180,19 +165,10 @@ export default function PolaroidComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px">
-				<label className="cursor-pointer my-3 p-2 bg-gray text-md block w-full text-center">
-					<Input
-						className="hidden"
-						type="file"
-						name="image"
-						onChange={processImage}
-					/>
-					Pick photo
-				</label>
-
+			<div className="px-12px mt-2">
 				<ComponentFields
 					schema={{
+						src: { type: "image", label: "" },
 						polaroid: {
 							label: "",
 							type: "boolean",

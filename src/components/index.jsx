@@ -44,7 +44,6 @@
 // https://cdn.cssauthor.com/wp-content/uploads/2013/01/Art-Calendar-2013_2.png?strip=all&lossy=1&ssl=1
 
 // Components
-// Charts: http://extensions.wysiwygwebbuilder.com/pictures/chartist.jpg
 // Image / Gradient clipping: http://extensions.wysiwygwebbuilder.com/pictures/ClipText.jpg
 // Clock: http://extensions.wysiwygwebbuilder.com/pictures/flipclock.jpg
 // Party text: http://extensions.wysiwygwebbuilder.com/pictures/4d05ede72de41.jpg
@@ -53,9 +52,13 @@
 // Pin: https://pbs.twimg.com/media/Fsize9OX0AMFOyM?format=jpg&name=4096x4096
 
 // Templates
+// https://current.com/images/4mil-bottom.webp
 // https://reallygooddesigns.com/moodboard-templates/
 // https://reallygooddesigns.com/wp-content/uploads/2021/08/Free-Moodboard-Templates-04.png
 // https://www.fotor.com/moodboard-maker/
+
+// Deco shapes
+// https://shapes.framer.website/
 
 // Clocks
 // https://www.redbubble.com/shop/arrow+moodboard+clocks
@@ -83,16 +86,20 @@
 // https://www.freepik.com/free-vector/happy-new-year-lettering_1371539.htm#from_view=detail_alsolike
 // https://www.freepik.com/free-vector/best-wishes-calligraphic-lettering_1430395.htm#from_view=detail_alsolike
 
-import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js"
+// Charts:
+// http://extensions.wysiwygwebbuilder.com/pictures/chartist.jpg
+// https://ui8.net/rakata/products/graph-and-chart-3d-objects?rel=muzli&utm_source=extension&utm_medium=click&utm_campaign=muzli
+
+import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
 AddOnSdk.ready.then(() => {
-    console.log("AddOnSdk is ready for use.");
-    window.AddOnSdk = AddOnSdk;
+	console.log("AddOnSdk is ready for use.");
+	window.AddOnSdk = AddOnSdk;
 
-    const root = createRoot(document.getElementById("root"));
-    root.render(<App addOnSdk={AddOnSdk} />);
+	const root = createRoot(document.getElementById("root"));
+	root.render(<App addOnSdk={AddOnSdk} />);
 });

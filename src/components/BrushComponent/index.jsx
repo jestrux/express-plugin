@@ -50,7 +50,7 @@ export default function BrushComponent() {
 			brush: "splotch",
 			background: {
 				type: "gradient",
-				color: "#ff2e6d",
+				color: "#995533",
 				gradient: ["#9055FF", "#13E2DA"],
 			},
 		},
@@ -95,7 +95,7 @@ export default function BrushComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-2">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
 						brush: {

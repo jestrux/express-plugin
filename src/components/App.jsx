@@ -59,17 +59,17 @@ const presets = {
 		props: {},
 		component: "PolaroidComponent",
 	},
-	charts: {
-		props: {},
-		component: "ChartComponent",
-	},
-	spiral: {
-		props: {},
-		component: "SpiralComponent",
-	},
 	framedImage: {
 		props: {},
 		component: "FrameComponent",
+	},
+	waves: {
+		props: {},
+		component: "WaveComponent",
+	},
+	charts: {
+		props: {},
+		component: "ChartComponent",
 	},
 	stickerBadge: {
 		props: {},
@@ -103,9 +103,9 @@ const presets = {
 		props: {},
 		component: "SpringComponent",
 	},
-	waves: {
+	spiral: {
 		props: {},
-		component: "WaveComponent",
+		component: "SpiralComponent",
 	},
 	contour: {
 		props: {},
@@ -125,7 +125,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(ChartComponent);
+	// const component = useRef(CylinderComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

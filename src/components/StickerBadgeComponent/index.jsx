@@ -99,7 +99,7 @@ export default function StickerBadgeComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-2">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
 						sticker: {

@@ -1,40 +1,34 @@
 // https://code.tutsplus.com/tutorials/how-to-draw-a-pie-chart-and-doughnut-chart-using-javascript-and-html5-canvas--cms-27197
-import chartThemes from "./chart-themes";
+import { chartThemes, dataSets } from "./chart-utils";
 
 export const defaultOptions = {
 	padding: 5,
-	data: {
-		Classical: 16,
-		Alternative: 18,
-		Pop: 18,
-		Jazz: 12,
-		Country: 16,
+	data: dataSets[1],
+	settings: {
+		fontFamily: "Georgia, serif",
+		fontSize: 50,
+		categoryLabel: true,
+		categoryAmount: "%",
+		doughnutHoleSize: 0.35,
+		borders: 6,
 	},
-	labels: {
-		font: "Georgia, serif",
-		size: 50,
-		categoryName: true,
-		secondaryText: "%",
-	},
-	doughnutHoleSize: 0.35,
-	borders: 6,
 	colors: chartThemes[0],
 };
 
 export const schema = {
 	data: {
 		type: "keyValue",
-		collapsed: true,
 		meta: {
 			type: "number",
+			dataSets,
 		},
 	},
-	labels: {
+	settings: {
 		type: "section",
-		// optional: true,
+		label: "Chart Properties",
 		collapsed: true,
 		children: {
-			categoryName: {
+			categoryLabel: {
 				type: "radio",
 				inline: true,
 				choices: [
@@ -48,82 +42,49 @@ export const schema = {
 					},
 				],
 			},
-			secondaryText: {
+			categoryAmount: {
 				type: "radio",
 				inline: true,
-				defaultValue: defaultOptions.labels.secondaryText,
+				defaultValue: defaultOptions.settings.categoryAmount,
 				choices: ["hide", "#", "%"],
 			},
-			font: {
+			fontSize: {
+				type: "radio",
 				inline: true,
-				type: "radio",
-				label: "Font family",
-				defaultValue: defaultOptions.labels.font,
-				choices: [
-					{
-						label: "Sans",
-						value: "adobe-clean, sans-serif",
-					},
-					{
-						label: "Serif",
-						value: "Georgia, serif",
-					},
-				],
-			},
-			size: {
-				type: "radio",
-				label: "Text size",
 				choices: [
 					{ label: "sm", value: 30 },
 					{ label: "md", value: 40 },
 					{ label: "lg", value: 50 },
 				],
-				// type: "range",
+				defaultValue: defaultOptions.settings.fontSize,
+			},
+			doughnutHoleSize: {
+				label: "Donut hole",
+				type: "radio",
 				inline: true,
-				defaultValue: defaultOptions.labels.size,
-				meta: {
-					min: 30,
-					max: 50,
-					step: 1,
-					className: "inline-number-field",
-				},
+				choices: [
+					{ label: "hide", value: 0 },
+					{ label: "md", value: 0.35 },
+					{ label: "lg", value: 0.7 },
+				],
+				defaultValue: defaultOptions.settings.doughnutHoleSize,
+			},
+			borders: {
+				type: "radio",
+				inline: true,
+				choices: [
+					{ label: "hide", value: 0 },
+					{ label: "md", value: 3 },
+					{ label: "lg", value: 6 },
+				],
+				defaultValue: defaultOptions.settings.borders,
 			},
 		},
 	},
-	doughnutHoleSize: {
-		type: "radio",
-		choices: [
-			{ label: "hide", value: 0 },
-			{ label: "md", value: 0.35 },
-			{ label: "lg", value: 0.7 },
-		],
-		// type: "range",
-		label: "Donut hole",
-		inline: true,
-		defaultValue: defaultOptions.doughnutHoleSize,
-		meta: {
-			min: 0,
-			max: 0.7,
-			step: 0.01,
-			className: "inline-number-field",
-		},
-	},
-	borders: {
-		type: "radio",
-		choices: [
-			{ label: "none", value: 0 },
-			{ label: "md", value: 3 },
-			{ label: "lg", value: 6 },
-		],
-		// type: "range",
-		inline: true,
-		defaultValue: defaultOptions.borders,
-		meta: {
-			min: 0,
-			max: 6,
-			step: 0.1,
-			className: "inline-number-field",
-		},
+	colors: {
+		label: "Theme",
+		type: "swatch",
+		meta: { themes: chartThemes },
 	},
 };
 
@@ -191,8 +152,8 @@ class PieChart {
 			const sliceRatio = this.options.data[categ] / this.totalValue;
 			const labelText = categ; // Math.round(100 * sliceRatio) +  + "%";
 
-			const fontSize = this.options.labels.size;
-			this.ctx.font = `bold ${fontSize}px ${this.options.labels.font}`;
+			const fontSize = this.options.fontSize;
+			this.ctx.font = `bold ${fontSize}px ${this.options.fontFamily}`;
 
 			const sliceAngle = 2 * Math.PI * sliceRatio;
 			const angleX = Math.cos(startAngle + sliceAngle / 2);
@@ -217,9 +178,9 @@ class PieChart {
 
 			this.ctx.fillStyle = this.options.colors.at(-1);
 			this.ctx.textAlign = "center";
-			const secondaryText = this.options.labels?.secondaryText || "hide";
+			const categoryAmount = this.options.categoryAmount;
 
-			if (this.options.labels.categoryName) {
+			if (this.options.categoryLabel) {
 				textWords.forEach((text, index) => {
 					this.ctx.fillText(
 						text,
@@ -228,10 +189,10 @@ class PieChart {
 					);
 					if (
 						index == textWords.length - 1 &&
-						secondaryText != "hide"
+						categoryAmount != "hide"
 					) {
 						this.ctx.fillText(
-							secondaryText == "%"
+							categoryAmount == "%"
 								? Math.round(100 * sliceRatio) + "%"
 								: this.options.data[categ],
 							labelX + labelWidth * 0.02,
@@ -239,9 +200,9 @@ class PieChart {
 						);
 					}
 				});
-			} else if (secondaryText != "hide") {
+			} else if (categoryAmount != "hide") {
 				this.ctx.fillText(
-					secondaryText == "%"
+					categoryAmount == "%"
 						? Math.round(100 * sliceRatio) + "%"
 						: this.options.data[categ],
 					labelX + labelWidth * 0.02,
@@ -277,7 +238,7 @@ class PieChart {
 		this.drawSlices();
 		ctx.restore();
 
-		if (this.options.labels) this.drawLabels();
+		this.drawLabels();
 
 		ctx.beginPath();
 		ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);

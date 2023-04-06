@@ -36,9 +36,9 @@ class CylinderDrawer {
 		canvas.width = width;
 		canvas.height = height;
 
-		ctx.strokeStyle = this.inset?.border || "transparent";
+		ctx.strokeStyle = this.border || "transparent";
 		ctx.fillStyle =
-			solidGradientBg(canvas, this.inset?.background) || "transparent";
+			solidGradientBg(canvas, this.background) || "transparent";
 		ctx.lineWidth = this.strokeWidth;
 		ctx.lineCap = "round";
 		ctx.lineJoin = "round";
@@ -89,8 +89,7 @@ class CylinderDrawer {
 			: radius;
 
 		ctx.clearRect(0, 0, width, height);
-		ctx.fillStyle =
-			solidGradientBg(this.canvas, this.inset?.background) || "#333";
+		ctx.fillStyle = solidGradientBg(this.canvas, this.background) || "#333";
 		ctx.beginPath();
 		ctx.roundRect(0, 0, width, height, radius);
 		ctx.fill();
@@ -123,7 +122,14 @@ export default function CylinderComponent() {
 		{
 			src: staticImages.presets.cylinder,
 			half: true,
-			inset: false,
+			inset: true,
+			smoothCorners: true,
+			border: "#aaaaaa",
+			background: {
+				type: "gradient",
+				color: "#ffc107",
+				gradient: ["#BF953F", "#FCF6BA", "#AA771C"],
+			},
 		},
 		cylinderDrawerRef.current
 	);
@@ -166,30 +172,39 @@ export default function CylinderComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-2">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						half: "boolean",
 						src: {
 							type: "image",
 							label: "",
 						},
+						half: "boolean",
 						smoothCorners: {
 							type: "boolean",
 							show: (state) => state.half,
 						},
-						inset: {
-							type: "section",
-							optional: true,
-							children: {
-								border: {
-									type: "color",
-									defaultValue: "#888",
-									meta: { showTransparent: true },
-								},
-								background: backgroundSpec(),
+						inset: "boolean",
+						border: {
+							type: "color",
+							inline: true,
+							defaultValue: "#888",
+							meta: {
+								showTransparent: true,
+								colors: ["#aaaaaa"],
 							},
+							show: (state) => state.inset,
 						},
+						background: backgroundSpec({
+							show: (state) => state.inset,
+							colorProps: {
+								meta: {
+									singleChoice: false,
+									showTransparent: true,
+									choiceSize: 25,
+								},
+							},
+						}),
 					}}
 					onChange={updateField}
 					data={data}

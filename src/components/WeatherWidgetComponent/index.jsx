@@ -2,15 +2,21 @@ import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import staticImages from "../../staticImages";
 import ComponentFields from "../tokens/ComponentFields";
-import {
-	backgroundSpec,
-	loadImage,
-	loadImageFromUrl,
-	resizeImage,
-	showPreview,
-	solidGradientBg,
-} from "../utils";
+import { resizeImage, showPreview } from "../utils";
 import * as icons from "./icons";
+
+const themes = [
+	// light:
+	{ backgroundColor: "#ffffff", textColor: "#54bef0", iconColor: "#333333" },
+	// dark:
+	{ backgroundColor: "#333333", textColor: "#7aff90", iconColor: "#ffffff" },
+	// yellow:
+	{ backgroundColor: "#fff6d6", textColor: "#ffcc00", iconColor: "#857847" },
+	// green:
+	{ backgroundColor: "#ebffee", textColor: "#83d891", iconColor: "#447e4d" },
+	// blue:
+	{ backgroundColor: "#d6f2ff", textColor: "#55bef0", iconColor: "#446c7e" },
+];
 
 const colorMap = {
 	light: {
@@ -53,13 +59,19 @@ class WeatherWidgetDrawer {
 	}
 
 	async draw(userProps = {}) {
-		const props = structuredClone({ ...userProps });
-		const colorProps = colorMap[props.theme || "dark"] || colorMap.dark;
-		Object.keys(colorProps).forEach((key) => {
-			if (!props[key]) props[key] = colorProps[key];
-		});
+		const props = structuredClone({ ...userProps, ...userProps.colors });
+		// const [backgroundColor, textColor, iconColor] = props.colors;
+		// const colorProps = colorMap[props.theme || "dark"] || colorMap.dark;
+		// Object.keys(colorProps).forEach((key) => {
+		// 	if (!props[key]) props[key] = colorProps[key];
+		// });
 
-		Object.assign(this, { ...colorProps, ...props });
+		Object.assign(this, {
+			...props,
+			// backgroundColor,
+			// textColor,
+			// iconColor,
+		});
 
 		this.icon = icons[props.icon];
 
@@ -145,12 +157,9 @@ export default function WeatherWidgetComponent() {
 	const [data, updateField] = useDataSchema(
 		{
 			src: staticImages.presets.spotify,
-			theme: "dark",
+			colors: themes[1],
 			temperature: "72",
 			icon: "partlyCloudyRain",
-			// iconColor: "#93b899", // #93b6c8
-			textColor: "#7aff90",
-			// background: "#ebffee", // #d6f2ff
 		},
 		weatherWidgetDrawerRef.current
 	);
@@ -193,17 +202,13 @@ export default function WeatherWidgetComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-2">
-				{/* <div className="my-4">
-					<ImagePicker onChange={(src) => updateField("src", src)} />
-				</div> */}
-
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						theme: {
-							type: "tag",
-							choices: Object.keys(colorMap),
-						},
+						// theme: {
+						// 	type: "tag",
+						// 	choices: Object.keys(colorMap),
+						// },
 						temperature: {
 							type: "number",
 							inline: true,
@@ -215,29 +220,35 @@ export default function WeatherWidgetComponent() {
 						},
 						icon: {
 							type: "tag",
+							label: "Weather",
 							choices: Object.keys(icons),
 						},
-						backgroundColor: {
-							type: "color",
-							optional: true,
-							meta: {
-								colors: ["#fff6d6", "#ebffee", "#d6f2ff"],
-							},
+						colors: {
+							label: "Theme",
+							type: "swatch",
+							meta: { themes },
 						},
-						textColor: {
-							type: "color",
-							optional: true,
-							meta: {
-								colors: ["#fc0", "#83d891", "#55bef0"],
-							},
-						},
-						iconColor: {
-							type: "color",
-							optional: true,
-							meta: {
-								colors: ["#c1b78f", "#93b899", "#93b6c8"],
-							},
-						},
+						// backgroundColor: {
+						// 	type: "color",
+						// 	optional: true,
+						// 	meta: {
+						// 		colors: ["#fff6d6", "#ebffee", "#d6f2ff"],
+						// 	},
+						// },
+						// textColor: {
+						// 	type: "color",
+						// 	optional: true,
+						// 	meta: {
+						// 		colors: ["#fc0", "#83d891", "#55bef0"],
+						// 	},
+						// },
+						// iconColor: {
+						// 	type: "color",
+						// 	optional: true,
+						// 	meta: {
+						// 		colors: ["#c1b78f", "#93b899", "#93b6c8"],
+						// 	},
+						// },
 					}}
 					onChange={updateField}
 					data={data}

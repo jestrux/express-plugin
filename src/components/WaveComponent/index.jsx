@@ -88,11 +88,12 @@ export default function WaveComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-2">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
 						wave: {
 							type: "tag",
+							label: "Wave type",
 							choices: Object.keys(waves),
 						},
 						color: "color",

@@ -776,3 +776,11 @@ hr {
 	border: none;
 	border-bottom: 2px dotted;
 }
+
+.rotate-on-click {
+	transition: transform 0.25s ease-out;
+}
+
+.rotate-on-click:active {
+	transform: rotate(100deg);
+}

@@ -4,9 +4,12 @@ import ComponentFields from "../tokens/ComponentFields";
 import { showPreview } from "../utils";
 import PieChart, {
 	defaultOptions as pieChartDefaultOptions,
-	schema as pierChartSchema,
+	schema as pieChartSchema,
 } from "./pier-chart";
-import chartThemes from "./chart-themes";
+import BarChart, {
+	defaultOptions as barChartDefaultOptions,
+	schema as barChartSchema,
+} from "./bar-chart";
 
 class ChartComponentDrawer {
 	constructor() {
@@ -21,21 +24,17 @@ class ChartComponentDrawer {
 	}
 
 	async drawImage() {
-		let res = null;
+		const chartProperties = Object.assign(
+			{
+				...(this.settings ? this.settings : {}),
+			},
+			this
+		);
 
-		if (this.chart == "pie") {
-			const chart = new PieChart({
-				width: this.width,
-				height: this.height,
-				data: this.data,
-				doughnutHoleSize: this.doughnutHoleSize,
-				labels: this.labels,
-				borders: this.borders,
-				colors: this.colors ? Object.values(this.colors) : undefined,
-			});
-
-			res = chart.toDataURL();
-		}
+		const res = {
+			pie: new PieChart(chartProperties).toDataURL(),
+			bar: new BarChart(chartProperties).toDataURL(),
+		}[this.chart];
 
 		showPreview(res);
 		return res;
@@ -51,7 +50,7 @@ export default function ChartComponent() {
 		window.chartComponentDrawer.draw(data).then(setUrl);
 	});
 	const [url, setUrl] = useState();
-	const [schema, setSchema] = useState(pierChartSchema);
+	const [schema, setSchema] = useState(pieChartSchema);
 	const [data, updateField, setData] = useDataSchema(
 		{ chart: "pie", ...pieChartDefaultOptions },
 		chartComponentDrawerRef.current
@@ -60,23 +59,27 @@ export default function ChartComponent() {
 	const handleUpdateField = (field, value) => {
 		if (field == "chart") {
 			setUrl("");
+			const chartData = {
+				pie: pieChartDefaultOptions,
+				bar: barChartDefaultOptions,
+			}[value];
+			const chartSchema = {
+				pie: pieChartSchema,
+				bar: barChartSchema,
+			}[value];
 
-			if (value == "pie") {
-				setData({
-					chart: value,
-					...pieChartDefaultOptions,
-				});
-
-				setSchema(pierChartSchema);
-
-				return;
-			}
-
-			setData({ chart: value });
-			setSchema({});
+			setData({
+				chart: value,
+				...(chartData ? chartData : {}),
+			});
+			setSchema({
+				...(chartSchema ? chartSchema : {}),
+			});
 
 			return;
 		}
+
+		if (field == "colors") value = Object.values(value);
 
 		updateField(field, value);
 	};
@@ -121,21 +124,17 @@ export default function ChartComponent() {
 
 			<div className="px-12px mt-1">
 				<ComponentFields
+					key={data.chart}
 					schema={{
 						chart: {
 							type: "tag",
 							label: "",
-							choices: ["pie", "bar", "line"].map((value) => ({
+							choices: ["pie", "bar"].map((value) => ({
 								value,
 								label: value + " Chart",
 							})),
 						},
 						...schema,
-						colors: {
-							label: "Theme",
-							type: "swatch",
-							meta: { themes: chartThemes },
-						},
 					}}
 					onChange={handleUpdateField}
 					data={data}

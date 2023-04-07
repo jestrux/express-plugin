@@ -8,6 +8,7 @@ import cloudPoster from "./images/posters/cloud.png";
 import cylinderPoster from "./images/posters/cylinder.png";
 import contourPoster from "./images/posters/contour.png";
 import framedImagePoster from "./images/posters/frame.png";
+import mapPoster from "./images/posters/map.png";
 import polaroidCardPoster from "./images/posters/polaroid.webp";
 import poppyFlowerPoster from "./images/posters/poppyFlower.png";
 import spiralPoster from "./images/posters/spiral.png";
@@ -24,6 +25,7 @@ import cylinderPreset from "./images/presets/cylinder.jpg";
 import polaroidPreset from "./images/presets/polaroid.jpg";
 import framePreset from "./images/presets/frame.jpg";
 import spotifyPreset from "./images/presets/spotify.jpg";
+import mapPreset from "./images/presets/map.jpg";
 
 import transparency from "./images/transparency.png";
 import flowers2 from "./images/flowers2.jpg";
@@ -46,6 +48,7 @@ export default {
 		cylinder: cylinderPoster,
 		contour: contourPoster,
 		framedImage: framedImagePoster,
+		map: mapPoster,
 		polaroidCard: polaroidCardPoster,
 		poppyFlower: poppyFlowerPoster,
 		spiral: spiralPoster,
@@ -62,6 +65,7 @@ export default {
 		cylinder: cylinderPreset,
 		polaroid: polaroidPreset,
 		frame: framePreset,
+		map: mapPreset,
 		spotify: spotifyPreset,
 	},
 };

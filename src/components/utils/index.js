@@ -127,30 +127,30 @@ export const resizeToAspectRatio = (input, aspectRatio = 1) => {
 	return output;
 };
 
+export const getGradientFill = (canvas, colors = ["#d53369", "#daae51"]) => {
+	const ctx = canvas.getContext("2d");
+	const gradient = ctx.createLinearGradient(
+		0,
+		0,
+		canvas.width,
+		canvas.height
+	);
+
+	colors.map((color, index) =>
+		gradient.addColorStop(index / Math.max(colors.length - 1, 1), color)
+	);
+
+	return gradient;
+};
+
 export const solidGradientBg = (canvas, background) => {
 	if (!canvas || !background) return;
 
 	const ctx = canvas.getContext("2d");
 	let fillStyle = background.color;
 
-	if (background.type == "gradient" && background.gradient) {
-		const gradient = ctx.createLinearGradient(
-			0,
-			0,
-			canvas.width,
-			canvas.height
-		);
-
-		const gradientColors = background.gradient;
-		gradientColors.map((color, index) =>
-			gradient.addColorStop(
-				index / Math.max(gradientColors.length - 1, 1),
-				color
-			)
-		);
-
-		fillStyle = gradient;
-	}
+	if (background.type == "gradient" && background.gradient)
+		fillStyle = getGradientFill(canvas, background.gradient);
 
 	return fillStyle;
 };

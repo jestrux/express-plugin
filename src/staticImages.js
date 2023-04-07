@@ -14,6 +14,7 @@ export default {
 		cylinder: "static/images/posters/cylinder.png",
 		contour: "static/images/posters/contour.png",
 		framedImage: "static/images/posters/frame.png",
+		map: "static/images/posters/map.png",
 		polaroidCard: "static/images/posters/polaroid.webp",
 		poppyFlower: "static/images/posters/poppyFlower.png",
 		spiral: "static/images/posters/spiral.png",
@@ -30,6 +31,7 @@ export default {
 		cylinder: "static/images/presets/cylinder.jpg",
 		polaroid: "static/images/presets/polaroid.jpg",
 		frame: "static/images/presets/frame.jpg",
+		map: "static/images/presets/map.jpg",
 		spotify: "static/images/presets/spotify.jpg",
 	},
 };

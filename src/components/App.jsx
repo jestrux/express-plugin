@@ -20,6 +20,7 @@ import ClockWidgetComponent from "./ClockWidgetComponent";
 import BackgroundPatternComponent from "./BackgroundPatternComponent";
 import { camelCaseToSentenceCase } from "./utils";
 import ChartComponent from "./ChartComponent";
+import MapComponent from "./MapComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -40,6 +41,7 @@ const componentMap = {
 	ClockWidgetComponent,
 	BackgroundPatternComponent,
 	ChartComponent,
+	MapComponent,
 };
 
 const presets = {
@@ -66,6 +68,10 @@ const presets = {
 	waves: {
 		props: {},
 		component: "WaveComponent",
+	},
+	map: {
+		props: {},
+		component: "MapComponent",
 	},
 	charts: {
 		props: {},
@@ -125,7 +131,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(CylinderComponent);
+	// const component = useRef(MapComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

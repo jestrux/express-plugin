@@ -5,19 +5,21 @@ import { showPreview, tinyColor } from "../utils";
 import * as icons from "./icons";
 
 class PatternEffect {
-	constructor({ icon, color, effect }) {
+	constructor({ shape, style, color, effect }) {
 		const canvas = document.createElement("canvas");
 		const ctx = canvas.getContext("2d");
 		this.ctx = ctx;
 
 		this.color = color;
-		icon = icons[icon];
+		const icon = icons[shape];
 
 		canvas.width = icon.width * 5;
 		canvas.height = icon.height * 4;
 
 		ctx.fillStyle = color;
-		const path = new Path2D(icon.path);
+		const path = new Path2D(
+			icon[style == "filled" ? "filledPath" : "path"]
+		);
 		ctx.translate(icon.width * 0.35, icon.height * 0.5);
 		ctx.fill(path);
 
@@ -89,7 +91,7 @@ class BackgroundPatternDrawer {
 		const canvas = document.createElement("canvas");
 		this.canvas = canvas;
 		canvas.width = 3840;
-		canvas.height = 2160;
+		canvas.height = 2080;
 		this.ctx = canvas.getContext("2d");
 	}
 
@@ -110,7 +112,8 @@ class BackgroundPatternDrawer {
 		ctx.fillRect(0, 0, width, height);
 
 		ctx.fillStyle = new PatternEffect({
-			icon: this.icon,
+			shape: this.shape,
+			style: this.style,
 			color: this.color,
 			effect: this.effect,
 		});
@@ -135,7 +138,8 @@ export default function BackgroundPatternComponent() {
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			icon: "heart",
+			shape: "heart",
+			style: "outline",
 			// background: "#e0f2ff",
 			color: "#ac1f40",
 			effect: "splitcomplement",
@@ -184,17 +188,32 @@ export default function BackgroundPatternComponent() {
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
+						shape: {
+							type: "tag",
+							choices: ["heart", "star", "triangle", "music"],
+						},
+						style: {
+							type: "radio",
+							label: "Shape style",
+							inline: true,
+							choices: ["outline", "filled"],
+						},
 						effect: {
 							type: "tag",
+							label: "Scatter effect",
 							choices: [
 								"none",
 								"contrast",
-								"complement",
-								"triad",
-								"tetrad",
-								// "monochromatic",
-								"splitcomplement",
-								"analogous",
+								{
+									label: "Color shift",
+									value: "splitcomplement",
+								},
+								// "complement",
+								// "triad",
+								// "tetrad",
+								// // "monochromatic",
+								// "splitcomplement",
+								// "analogous",
 							],
 						},
 						background: {

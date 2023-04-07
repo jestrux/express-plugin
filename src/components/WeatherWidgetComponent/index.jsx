@@ -10,12 +10,12 @@ const themes = [
 	{ backgroundColor: "#ffffff", textColor: "#54bef0", iconColor: "#333333" },
 	// dark:
 	{ backgroundColor: "#333333", textColor: "#7aff90", iconColor: "#ffffff" },
-	// yellow:
-	{ backgroundColor: "#fff6d6", textColor: "#ffcc00", iconColor: "#857847" },
-	// green:
-	{ backgroundColor: "#ebffee", textColor: "#83d891", iconColor: "#447e4d" },
+	// brown:
+	{ backgroundColor: "#FFEEE6", textColor: "#DD693E", iconColor: "#AD450D" },
+	// brown:
+	{ backgroundColor: "#E0F5D9", textColor: "#449049", iconColor: "#33492F" },
 	// blue:
-	{ backgroundColor: "#d6f2ff", textColor: "#55bef0", iconColor: "#446c7e" },
+	{ backgroundColor: "#d6f2ff", textColor: "#55bef0", iconColor: "#FFFFFF" },
 ];
 
 const colorMap = {

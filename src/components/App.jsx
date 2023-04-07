@@ -125,8 +125,8 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	const component = useRef(CylinderComponent);
-	// const component = useRef();
+	// const component = useRef(BackgroundPatternComponent);
+	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {
 		component.current = componentMap[currentComponent];

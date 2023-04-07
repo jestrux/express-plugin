@@ -190,7 +190,13 @@ export default function BackgroundPatternComponent() {
 					schema={{
 						shape: {
 							type: "tag",
-							choices: ["heart", "star", "triangle", "music"],
+							choices: [
+								"heart",
+								"star",
+								"triangle",
+								{ label: "Music Note", value: "music" },
+								"circle",
+							],
 						},
 						style: {
 							type: "radio",

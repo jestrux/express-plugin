@@ -5,28 +5,57 @@ import { showPreview, tinyColor } from "../utils";
 import * as icons from "./icons";
 
 class PatternEffect {
-	constructor({ shape, style, color, effect }) {
+	constructor({ shape, style, color, effect, spacing }) {
 		const canvas = document.createElement("canvas");
 		const ctx = canvas.getContext("2d");
 		this.ctx = ctx;
-
 		this.color = color;
+
 		const icon = icons[shape];
+		const path = new Path2D(icon.path);
+		const lineWidth = 5;
 
-		canvas.width = icon.width * 5;
-		canvas.height = icon.height * 4;
+		const fillPath = () => {
+			if (style == "outline") {
+				ctx.strokeStyle = color;
+				ctx.lineWidth = lineWidth;
+				ctx.stroke(path);
+			} else {
+				ctx.strokeStyle = color;
+				ctx.fillStyle = color;
+				ctx.fill(path);
+			}
+		};
 
-		ctx.fillStyle = color;
-		const path = new Path2D(
-			icon[style == "filled" ? "filledPath" : "path"]
-		);
-		ctx.translate(icon.width * 0.35, icon.height * 0.5);
-		ctx.fill(path);
+		if (spacing == "loose") {
+			canvas.width = icon.width * 5;
+			canvas.height = icon.height * 4;
+
+			fillPath();
+
+			ctx.translate(icon.width * 2.5, icon.height * 2);
+		} else if (spacing == "snug") {
+			canvas.width = icon.width * 2;
+			canvas.height = icon.height * 2;
+
+			fillPath();
+
+			ctx.translate(icon.width, icon.height);
+		} else {
+			canvas.width = icon.width * 2;
+			canvas.height = icon.height;
+
+			fillPath();
+
+			ctx.translate(icon.width, 0);
+		}
 
 		if (effect != "none") this[`${effect}Effect`]();
 
-		ctx.translate(icon.width * 2.5, icon.height * 2);
-		ctx.fill(path);
+		if (["outline", "alternate"].includes(style)) {
+			ctx.lineWidth = lineWidth;
+			ctx.stroke(path);
+		} else ctx.fill(path);
 
 		return ctx.createPattern(canvas, "repeat");
 	}
@@ -38,6 +67,7 @@ class PatternEffect {
 	complementEffect() {
 		const color = new tinyColor(this.color).complement(); //.spin(-90);
 		this.ctx.fillStyle = color;
+		this.ctx.strokeStyle = color;
 		this.ctx.globalAlpha = 0.3;
 	}
 
@@ -47,6 +77,7 @@ class PatternEffect {
 		})[0];
 
 		this.ctx.fillStyle = color;
+		this.ctx.strokeStyle = color;
 	}
 
 	triadEffect() {
@@ -55,6 +86,7 @@ class PatternEffect {
 		})[0];
 
 		this.ctx.fillStyle = color;
+		this.ctx.strokeStyle = color;
 	}
 
 	tetradEffect() {
@@ -63,6 +95,7 @@ class PatternEffect {
 		})[0];
 
 		this.ctx.fillStyle = color;
+		this.ctx.strokeStyle = color;
 	}
 
 	// monochromaticEffect() {
@@ -73,6 +106,7 @@ class PatternEffect {
 	// 		})[5];
 
 	// 	this.ctx.fillStyle = color;
+	// 	this.ctx.strokeStyle = color;
 	// }
 
 	splitcomplementEffect() {
@@ -83,6 +117,7 @@ class PatternEffect {
 			})[0];
 
 		this.ctx.fillStyle = color;
+		this.ctx.strokeStyle = color;
 	}
 }
 
@@ -116,6 +151,7 @@ class BackgroundPatternDrawer {
 			style: this.style,
 			color: this.color,
 			effect: this.effect,
+			spacing: this.spacing,
 		});
 		ctx.fillRect(0, 0, width, height);
 
@@ -138,11 +174,12 @@ export default function BackgroundPatternComponent() {
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			shape: "heart",
-			style: "outline",
-			// background: "#e0f2ff",
+			shape: "square",
+			style: "alternate",
+			spacing: "loose",
+			background: "#EDDED4",
 			color: "#ac1f40",
-			effect: "splitcomplement",
+			effect: "none",
 		},
 		backgroundPatternDrawerRef.current
 	);
@@ -193,20 +230,25 @@ export default function BackgroundPatternComponent() {
 							choices: [
 								"heart",
 								"star",
+								"square",
 								"triangle",
 								{ label: "Music Note", value: "music" },
 								"circle",
 							],
 						},
 						style: {
-							type: "radio",
+							type: "tag",
 							label: "Shape style",
-							inline: true,
-							choices: ["outline", "filled"],
+							choices: ["outline", "filled", "alternate"],
+						},
+						spacing: {
+							type: "tag",
+							label: "Pattern spacing",
+							choices: ["compact", "snug", "loose"],
 						},
 						effect: {
 							type: "tag",
-							label: "Scatter effect",
+							label: "Color effect",
 							choices: [
 								"none",
 								"contrast",

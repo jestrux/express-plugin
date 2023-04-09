@@ -177,7 +177,7 @@ export default function BackgroundPatternComponent() {
 			shape: "square",
 			style: "alternate",
 			spacing: "loose",
-			background: "#EDDED4",
+			// background: "#EDDED4",
 			color: "#ac1f40",
 			effect: "none",
 		},
@@ -268,7 +268,7 @@ export default function BackgroundPatternComponent() {
 							optional: true,
 							type: "color",
 							// inline: true,
-							defaultValue: "#e0f2ff",
+							defaultValue: "#EDDED4",
 							meta: {
 								singleChoice: true,
 								choiceSize: 30,

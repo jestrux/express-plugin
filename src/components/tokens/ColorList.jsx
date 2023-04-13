@@ -3,14 +3,21 @@ import staticImages from "../../staticImages";
 import { DEFAULT_COLORS } from "../constants";
 import { tinyColor } from "../utils";
 
-const ColorCard = ({ height, color, selected, showIndicator, onChange }) => {
+const ColorCard = ({
+	fullWidth,
+	height,
+	color,
+	selected,
+	showIndicator,
+	onChange,
+}) => {
 	const transparent = color == "transparent";
 
 	return (
 		<label
 			className="block relative cursor-pointer rounded-sm border"
 			style={{
-				minWidth: height + "px",
+				minWidth: fullWidth ? "100%" : height + "px",
 				height: height + "px",
 				borderColor:
 					transparent || tinyColor(color).getLuminance() > 0.95
@@ -83,6 +90,7 @@ const ColorList = ({
 	if (singleChoice)
 		return (
 			<ColorCard
+				fullWidth={fullWidth}
 				height={choiceSize}
 				color={selectedColor}
 				onChange={onChange}

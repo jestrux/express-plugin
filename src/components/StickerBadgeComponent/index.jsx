@@ -25,6 +25,8 @@ class StickerBadgeDrawer {
 	}
 
 	async drawImage() {
+		const width = this.canvas.width;
+		const height = this.canvas.height;
 		const ctx = this.ctx;
 
 		ctx.fillStyle = solidGradientBg(this.canvas, this.background);
@@ -33,6 +35,20 @@ class StickerBadgeDrawer {
 		p.addPath(new Path2D(this.sticker[0]));
 		p.addPath(new Path2D(this.sticker[1]));
 		ctx.fill(p);
+
+		if (this.text) {
+			ctx.fillStyle = this.text.color;
+			const fontSize = 200;
+			ctx.font = `bold ${fontSize}px Georgia`;
+			const text = this.text.label;
+			const metrics = ctx.measureText(text);
+
+			ctx.fillText(
+				text,
+				(width - metrics.width) / 2,
+				(fontSize + height) / 2 - 20
+			);
+		}
 
 		return this.canvas.toDataURL();
 	}
@@ -51,6 +67,10 @@ export default function StickerBadgeComponent() {
 		{
 			src: staticImages.presets.cylinder,
 			sticker: "new",
+			// text: {
+			// 	label: "NEW",
+			// 	color: "#522EFF",
+			// },
 			border: "transparent",
 			background: {
 				type: "gradient",
@@ -106,10 +126,30 @@ export default function StickerBadgeComponent() {
 							type: "tag",
 							choices: Object.keys(stickers),
 						},
-						border: {
-							type: "color",
-							meta: { showTransparent: true },
+						text: {
+							type: "section",
+							optional: true,
+							children: {
+								label: {
+									label: "",
+									defaultValue: "NEW",
+									noMargin: true,
+								},
+								color: {
+									type: "color",
+									label: "",
+									defaultValue: "#522EFF",
+									meta: {
+										singleChoice: true,
+										choiceSize: 28,
+									},
+								},
+							},
 						},
+						// border: {
+						// 	type: "color",
+						// 	meta: { showTransparent: true },
+						// },
 						background: backgroundSpec(),
 					}}
 					onChange={updateField}

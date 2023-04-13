@@ -21,6 +21,7 @@ import BackgroundPatternComponent from "./BackgroundPatternComponent";
 import { camelCaseToSentenceCase } from "./utils";
 import ChartComponent from "./ChartComponent";
 import MapComponent from "./MapComponent";
+import ColorComponent from "./ColorComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -42,6 +43,7 @@ const componentMap = {
 	BackgroundPatternComponent,
 	ChartComponent,
 	MapComponent,
+	ColorComponent,
 };
 
 const presets = {
@@ -57,29 +59,43 @@ const presets = {
 		// fullWidth: true,
 		component: "TornPaperComponent",
 	},
-	polaroidCard: {
+	charts: {
 		props: {},
-		component: "PolaroidComponent",
-	},
-	framedImage: {
-		props: {},
-		component: "FrameComponent",
-	},
-	waves: {
-		props: {},
-		component: "WaveComponent",
+		component: "ChartComponent",
 	},
 	map: {
 		props: {},
 		component: "MapComponent",
 	},
-	charts: {
+	frame: {
 		props: {},
-		component: "ChartComponent",
+		// halfWidth: true,
+		component: "FrameComponent",
 	},
-	stickerBadge: {
+	polaroid: {
 		props: {},
-		component: "StickerBadgeComponent",
+		// halfWidth: true,
+		component: "PolaroidComponent",
+	},
+	calendar: {
+		props: {},
+		// halfWidth: true,
+		component: "CalendarComponent",
+	},
+	clock: {
+		props: {},
+		// halfWidth: true,
+		component: "ClockWidgetComponent",
+	},
+	weather: {
+		props: {},
+		// halfWidth: true,
+		component: "WeatherWidgetComponent",
+	},
+	color: {
+		props: {},
+		// halfWidth: true,
+		component: "ColorComponent",
 	},
 	brushBackground: {
 		props: {},
@@ -89,49 +105,51 @@ const presets = {
 		props: {},
 		component: "CylinderComponent",
 	},
-	calendar: {
+	"Deco Shapes": {
 		props: {},
-		component: "CalendarComponent",
-	},
-	clock: {
-		props: {},
-		component: "ClockWidgetComponent",
-	},
-	weatherWidget: {
-		props: {},
-		component: "WeatherWidgetComponent",
-	},
-	poppyFlower: {
-		props: {},
-		component: "PoppyFlowerComponent",
-	},
-	spring: {
-		props: {},
-		component: "SpringComponent",
-	},
-	spiral: {
-		props: {},
-		component: "SpiralComponent",
-	},
-	contour: {
-		props: {},
-		component: "ContourComponent",
-	},
-	cloud: {
-		props: {},
-		component: "CloudComponent",
-	},
-	spotifyCard: {
-		props: {},
-		height: 70,
-		fullWidth: true,
+		// height: 70,
+		// fullWidth: true,
 		component: "SpotifyComponent",
 	},
+	// stickerBadge: {
+	// 	props: {},
+	// 	component: "StickerBadgeComponent",
+	// },
+	// waves: {
+	// 	props: {},
+	// 	component: "WaveComponent",
+	// },
+	// poppyFlower: {
+	// 	props: {},
+	// 	component: "PoppyFlowerComponent",
+	// },
+	// spring: {
+	// 	props: {},
+	// 	component: "SpringComponent",
+	// },
+	// spiral: {
+	// 	props: {},
+	// 	component: "SpiralComponent",
+	// },
+	// contour: {
+	// 	props: {},
+	// 	component: "ContourComponent",
+	// },
+	// cloud: {
+	// 	props: {},
+	// 	component: "CloudComponent",
+	// },
+	// spotifyCard: {
+	// 	props: {},
+	// 	height: 70,
+	// 	fullWidth: true,
+	// 	component: "SpotifyComponent",
+	// },
 };
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(MapComponent);
+	// const component = useRef(ColorComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

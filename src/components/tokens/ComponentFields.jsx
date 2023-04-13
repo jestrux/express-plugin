@@ -332,22 +332,30 @@ function ComponentFields({ schema, data, onChange }) {
 					);
 
 				return (
-					<div key={index} className="relative">
+					<div
+						key={index}
+						className="relative"
+						style={{
+							marginBottom: field.noMargin ? "-0.8rem" : "",
+						}}
+					>
 						<ComponentFieldEditor
 							field={{ ...field, __data: data }}
 							onChange={onChange}
 						/>
 
-						<div
-							className="border-b absolute"
-							style={{
-								top: "auto",
-								left: "-12px",
-								right: "-12px",
-								bottom: "-0.75rem",
-								opacity: 0.5,
-							}}
-						></div>
+						{!field.noBorder && (
+							<div
+								className="border-b absolute"
+								style={{
+									top: "auto",
+									left: "-12px",
+									right: "-12px",
+									bottom: "-0.75rem",
+									opacity: 0.5,
+								}}
+							></div>
+						)}
 					</div>
 				);
 			})}

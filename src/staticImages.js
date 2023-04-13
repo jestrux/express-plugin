@@ -5,12 +5,14 @@ import chartsPoster from "./images/posters/charts.png";
 import clippedImagePoster from "./images/posters/crop.webp";
 import clockPoster from "./images/posters/clock.png";
 import cloudPoster from "./images/posters/cloud.png";
+import colorPoster from "./images/posters/color.png";
 import cylinderPoster from "./images/posters/cylinder.png";
 import contourPoster from "./images/posters/contour.png";
 import framedImagePoster from "./images/posters/frame.png";
 import mapPoster from "./images/posters/map.png";
 import polaroidCardPoster from "./images/posters/polaroid.webp";
 import poppyFlowerPoster from "./images/posters/poppyFlower.png";
+import shapesPoster from "./images/posters/shapes.png";
 import spiralPoster from "./images/posters/spiral.png";
 import spotifyCardPoster from "./images/posters/spotify.png";
 import springPoster from "./images/posters/spring.png";
@@ -45,17 +47,19 @@ export default {
 		clippedImage: clippedImagePoster,
 		clock: clockPoster,
 		cloud: cloudPoster,
+		color: colorPoster,
 		cylinder: cylinderPoster,
 		contour: contourPoster,
-		framedImage: framedImagePoster,
+		frame: framedImagePoster,
 		map: mapPoster,
-		polaroidCard: polaroidCardPoster,
+		polaroid: polaroidCardPoster,
 		poppyFlower: poppyFlowerPoster,
+		"Deco Shapes": shapesPoster,
 		spiral: spiralPoster,
 		spotifyCard: spotifyCardPoster,
 		spring: springPoster,
 		stickerBadge: stickerBadgePoster,
-		weatherWidget: weatherWidgetPoster,
+		weather: weatherWidgetPoster,
 		waves: wavesPoster,
 	},
 	presets: {

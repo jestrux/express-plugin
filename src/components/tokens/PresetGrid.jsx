@@ -8,9 +8,10 @@ const PresetGrid = ({ presets, onSelect }) => {
 			{Object.entries(presets).map(([name, value], index) => {
 				const { props, component, ...styles } = value;
 				const {
-					height = 50,
+					height = 45,
 					noContainer,
 					fullWidth,
+					halfWidth,
 					floatingLabel = false,
 				} = styles || {};
 
@@ -19,7 +20,11 @@ const PresetGrid = ({ presets, onSelect }) => {
 						key={index}
 						className="hoverable parent relative py-3 flex-shrink-0 font-bold text-center bg-gray-100 overflow-hidden relative flex flex-col center-center"
 						style={{
-							width: fullWidth ? "100%" : "50%",
+							width: fullWidth
+								? "100%"
+								: halfWidth
+								? "33.333%"
+								: "50%",
 							border: "solid #e5e5e5",
 							borderWidth: "0 1px 1px 0",
 						}}
@@ -59,7 +64,13 @@ const PresetGrid = ({ presets, onSelect }) => {
 								</span>
 							</span>
 						) : (
-							<span className="font-normal block text-center mt-1 text-sm">
+							<span
+								className="font-medium block text-center mt-1 text-sm"
+								style={{
+									fontSize: "0.6rem",
+									lineHeight: "1.5",
+								}}
+							>
 								{camelCaseToSentenceCase(
 									name.replaceAll("-", " ")
 								)}

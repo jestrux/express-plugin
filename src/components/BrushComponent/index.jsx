@@ -27,10 +27,26 @@ class BrushDrawer {
 
 	async drawImage() {
 		const ctx = this.ctx;
+		const width = this.canvas.width;
+		const height = this.canvas.height;
 		ctx.fillStyle = solidGradientBg(this.canvas, this.background);
 
 		const p = new Path2D(this.brush.path);
 		ctx.fill(p);
+
+		if (this.text) {
+			ctx.fillStyle = this.text.color;
+			const fontSize = 140;
+			ctx.font = `bold ${fontSize}px 'Sacre Bleu MVB, script'`;
+			const text = this.text.label;
+			const metrics = ctx.measureText(text);
+
+			ctx.fillText(
+				text,
+				(width - metrics.width) / 2,
+				(fontSize + height) / 2 - 30
+			);
+		}
 
 		return this.canvas.toDataURL();
 	}
@@ -48,6 +64,10 @@ export default function BrushComponent() {
 		{
 			src: staticImages.presets.cylinder,
 			brush: "splotch",
+			// text: {
+			// 	label: "Splat",
+			// 	color: "#FFF",
+			// },
 			background: {
 				type: "gradient",
 				color: "#995533",
@@ -101,6 +121,26 @@ export default function BrushComponent() {
 						brush: {
 							type: "tag",
 							choices: Object.keys(brushes),
+						},
+						text: {
+							type: "section",
+							optional: true,
+							children: {
+								label: {
+									label: "",
+									defaultValue: "Text",
+									noMargin: true,
+								},
+								color: {
+									type: "color",
+									label: "",
+									defaultValue: "#FFFFFF",
+									meta: {
+										singleChoice: true,
+										choiceSize: 28,
+									},
+								},
+							},
 						},
 						background: backgroundSpec(),
 					}}

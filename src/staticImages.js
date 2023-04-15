@@ -1,5 +1,16 @@
 export default {
+	templatePictures: [
+		"static/images/template-pictures/1.jpg",
+		"static/images/template-pictures/2.jpg",
+		"static/images/template-pictures/3.jpg",
+		"static/images/template-pictures/4.jpg",
+		"static/images/template-pictures/5.jpg",
+		"static/images/template-pictures/6.jpg",
+		"static/images/template-pictures/7.jpg",
+		"static/images/template-pictures/8.jpg",
+	],
 	transparency: "static/images/transparency.png",
+
 	flowers2: "static/images/flowers2.jpg",
 	flowers: "static/images/flowers.jpg",
 	spotifyWave: "static/images/spotify-wave.png",
@@ -16,6 +27,7 @@ export default {
 		contour: "static/images/posters/contour.png",
 		"Deco Shapes": "static/images/posters/shapes.png",
 		frame: "static/images/posters/frame.png",
+		layouts: "static/images/posters/layouts.png",
 		map: "static/images/posters/map.png",
 		polaroid: "static/images/posters/polaroid.webp",
 		poppyFlower: "static/images/posters/poppyFlower.png",

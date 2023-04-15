@@ -22,6 +22,7 @@ import { camelCaseToSentenceCase } from "./utils";
 import ChartComponent from "./ChartComponent";
 import MapComponent from "./MapComponent";
 import ColorComponent from "./ColorComponent";
+import LayoutsComponent from "./layouts";
 
 const componentMap = {
 	TornPaperComponent,
@@ -44,9 +45,16 @@ const componentMap = {
 	ChartComponent,
 	MapComponent,
 	ColorComponent,
+	LayoutsComponent,
 };
 
 const presets = {
+	layouts: {
+		props: {},
+		// height: 70,
+		// fullWidth: true,
+		component: "LayoutsComponent",
+	},
 	backgroundPattern: {
 		props: {},
 		// height: 70,
@@ -149,7 +157,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(ColorComponent);
+	// const component = useRef(LayoutsComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

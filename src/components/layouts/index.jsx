@@ -8,80 +8,82 @@ import { solidGradientBg } from "../utils";
 import ScatteredTemplate from "./scattered";
 import OvalTemplate from "./oval";
 import MasonryTemplate from "./masonry";
+import HoneyCombTemplate from "./honeycomb";
 
 const templateMap = {
 	scattered: ScatteredTemplate,
 	oval: OvalTemplate,
 	masonry: MasonryTemplate,
+	honeycomb: HoneyCombTemplate,
 };
 
 class LayoutsComponentDrawer {
-	constructor(callback) {
+	constructor(appCallback) {
 		const canvas = document.createElement("canvas");
 		this.canvas = canvas;
 		canvas.width = 2200;
 		canvas.height = 2200;
 		this.templateCanvases = {};
+		this.appCallback = appCallback;
 
 		this.ctx = canvas.getContext("2d");
-
-		this.callback = () => {
-			const canvas = this.templateCanvases[this.template];
-			const width = canvas.width;
-			const height = canvas.height;
-			const ctx = this.ctx;
-
-			this.canvas.height = height;
-			this.canvas.width = width;
-
-			if (this.background) {
-				ctx.fillStyle = solidGradientBg(this.canvas, this.background);
-				ctx.fillRect(0, 0, width, height);
-			}
-
-			ctx.drawImage(canvas, 0, 0);
-
-			if (this.text) {
-				setTimeout(() => {
-					const fontSize = width * 0.06;
-					const text = this.text.label;
-					const textColor = this.text.color;
-
-					ctx.save();
-					ctx.letterSpacing = "0.12em";
-					ctx.font = `500 ${fontSize}px theFont`;
-
-					text.split("\\n").forEach((text, index) => {
-						text = text.trim();
-						const metrics = ctx.measureText(text);
-						const x = (width - metrics.width) / 2;
-						const y =
-							(height - fontSize) / 2 + fontSize * 1.8 * index;
-
-						ctx.fillStyle = "#fff";
-						ctx.fillRect(
-							x - 30,
-							y - fontSize - 15,
-							metrics.width + 60,
-							fontSize * 1.6
-						);
-
-						ctx.fillStyle = textColor;
-						ctx.fillText(text, x, y);
-					});
-
-					const url = this.canvas.toDataURL();
-					showPreview(url);
-					callback(url);
-					ctx.restore();
-				});
-			}
-
-			const url = this.canvas.toDataURL();
-			showPreview(url);
-			callback(url);
-		};
 	}
+
+	callback = () => {
+		const canvas = this.templateCanvases[this.template];
+		const width = canvas.width;
+		const height = canvas.height;
+		const ctx = this.ctx;
+
+		this.canvas.height = height;
+		this.canvas.width = width;
+
+		if (this.background) {
+			ctx.fillStyle = solidGradientBg(this.canvas, this.background);
+			ctx.fillRect(0, 0, width, height);
+		}
+
+		ctx.drawImage(canvas, 0, 0);
+
+		if (this.text) {
+			setTimeout(() => {
+				const fontSize = width * 0.06;
+				const text = this.text.label;
+				const textColor = this.text.color;
+
+				ctx.save();
+				ctx.letterSpacing = "0.12em";
+				ctx.font = `500 ${fontSize}px theFont`;
+
+				text.split("\\n").forEach((text, index) => {
+					text = text.trim();
+					const metrics = ctx.measureText(text);
+					const x = (width - metrics.width) / 2;
+					const y = (height - fontSize) / 2 + fontSize * 1.8 * index;
+
+					ctx.fillStyle = "#fff";
+					ctx.fillRect(
+						x - 30,
+						y - fontSize - 15,
+						metrics.width + 60,
+						fontSize * 1.6
+					);
+
+					ctx.fillStyle = textColor;
+					ctx.fillText(text, x, y);
+				});
+
+				const url = this.canvas.toDataURL();
+				showPreview(url);
+				this.appCallback(url);
+				ctx.restore();
+			});
+		}
+
+		const url = this.canvas.toDataURL();
+		showPreview(url);
+		this.appCallback(url);
+	};
 
 	async loadFont() {
 		if (this.fontLoaded) return;
@@ -133,7 +135,9 @@ class LayoutsComponentDrawer {
 				}).draw();
 
 				return;
-			} else if (imagesChanged) {
+			}
+
+			if (imagesChanged) {
 				new templateMap[this.template]({
 					canvas,
 					callback: this.callback,
@@ -235,7 +239,12 @@ export default function LayoutsComponent() {
 					schema={{
 						template: {
 							type: "tag",
-							choices: ["oval", "scattered", "masonry"],
+							choices: [
+								"oval",
+								"scattered",
+								"masonry",
+								"honeycomb",
+							],
 						},
 						background: backgroundSpec({
 							optional: true,

@@ -9,6 +9,7 @@ import colorPoster from "./images/posters/color.png";
 import cylinderPoster from "./images/posters/cylinder.png";
 import contourPoster from "./images/posters/contour.png";
 import framedImagePoster from "./images/posters/frame.png";
+import layoutsPoster from "./images/posters/layouts.png";
 import mapPoster from "./images/posters/map.png";
 import polaroidCardPoster from "./images/posters/polaroid.webp";
 import poppyFlowerPoster from "./images/posters/poppyFlower.png";
@@ -34,11 +35,30 @@ import flowers2 from "./images/flowers2.jpg";
 import flowers from "./images/flowers.jpg";
 import spotifyWave from "./images/spotify-wave.png";
 
+import template1 from "./images/template-pictures/1.jpg";
+import template2 from "./images/template-pictures/2.jpg";
+import template3 from "./images/template-pictures/3.jpg";
+import template4 from "./images/template-pictures/4.jpg";
+import template5 from "./images/template-pictures/5.jpg";
+import template6 from "./images/template-pictures/6.jpg";
+import template7 from "./images/template-pictures/7.jpg";
+import template8 from "./images/template-pictures/8.jpg";
+
 export default {
 	transparency,
 	flowers,
 	flowers2,
 	spotifyWave,
+	templatePictures: [
+		template1,
+		template2,
+		template3,
+		template4,
+		template5,
+		template6,
+		template7,
+		template8,
+	],
 	posters: {
 		brushBackground: brushPoster,
 		backgroundPattern: backgroundPatternPoster,
@@ -51,6 +71,7 @@ export default {
 		cylinder: cylinderPoster,
 		contour: contourPoster,
 		frame: framedImagePoster,
+		layouts: layoutsPoster,
 		map: mapPoster,
 		polaroid: polaroidCardPoster,
 		poppyFlower: poppyFlowerPoster,

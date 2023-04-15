@@ -189,10 +189,11 @@ export const backgroundSpec = ({
 	imageProps = {},
 	gradientProps = { meta: { singleChoice: true } },
 	colorProps = { meta: { showTransparent: true } },
+	defaultType = "color",
 	...backgroundProps
 } = {}) => {
-	const { meta: gradientPropsMeta, otherGradientProps } = gradientProps;
-	const { meta: colorPropsMeta, otherColorProps } = colorProps;
+	const { meta: gradientPropsMeta, ...otherGradientProps } = gradientProps;
+	const { meta: colorPropsMeta, ...otherColorProps } = colorProps;
 
 	return {
 		type: "section",
@@ -208,7 +209,7 @@ export const backgroundSpec = ({
 					"gradient",
 					...(imageAsOption ? ["image"] : []),
 				],
-				defaultValue: "color",
+				defaultValue: defaultType,
 			},
 			color: {
 				type: "color",

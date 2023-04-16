@@ -205,6 +205,8 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		"logo",
 	].includes(type);
 
+	let { className, ...otherMeta } = meta;
+
 	return (
 		<div
 			className={`ComponentFieldEditor mt-2 ${
@@ -322,13 +324,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 
 						<input
 							className={`m-0 w-full ${
-								type == "range" && "mt-1"
-							}`}
+								type == "range"
+									? "mt-1"
+									: "py-2 px-2 border border-dark-gray rounded-xs"
+							} ${className}`}
 							type={type}
 							// value={tempValue}
 							value={value}
 							uxp-quiet="true"
-							{...meta}
+							{...otherMeta}
 							// onChange={(e) => setTempValue(e.target.value)}
 							onChange={(e) => handleChange(e.target.value)}
 						/>

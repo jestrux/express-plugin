@@ -9,8 +9,10 @@ import ScatteredTemplate from "./scattered";
 import OvalTemplate from "./oval";
 import MasonryTemplate from "./masonry";
 import HoneyCombTemplate from "./honeycomb";
+import StackTemplate from "./stack";
 
 const templateMap = {
+	stack: StackTemplate,
 	scattered: ScatteredTemplate,
 	oval: OvalTemplate,
 	masonry: MasonryTemplate,
@@ -47,7 +49,7 @@ class LayoutsComponentDrawer {
 
 		if (this.text) {
 			setTimeout(() => {
-				const fontSize = width * 0.06;
+				const fontSize = width * 0.055;
 				const text = this.text.label;
 				const textColor = this.text.color;
 
@@ -58,10 +60,16 @@ class LayoutsComponentDrawer {
 				text.split("\\n").forEach((text, index) => {
 					text = text.trim();
 					const metrics = ctx.measureText(text);
-					const x = (width - metrics.width) / 2;
-					const y = (height - fontSize) / 2 + fontSize * 1.8 * index;
+					let x = (width - metrics.width) / 2;
+					let y = (height - fontSize) / 2 + fontSize * 1.8 * index;
 
-					ctx.fillStyle = "#fff";
+					if (this.template == "stack") {
+						const inset = height * 0.05;
+						x = inset;
+						y -= inset;
+					}
+
+					ctx.fillStyle = this.text.highlight;
 					ctx.fillRect(
 						x - 30,
 						y - fontSize - 15,
@@ -242,6 +250,7 @@ export default function LayoutsComponent() {
 							choices: [
 								"oval",
 								"scattered",
+								"stack",
 								"masonry",
 								"honeycomb",
 							],
@@ -265,17 +274,34 @@ export default function LayoutsComponent() {
 									noMargin: true,
 									defaultValue: "Fun Summer\\n ~ 2023 ~ ",
 									meta: {
-										className:
-											"mt-2 mb-1 w-full py-2 px-2 border border-dark-gray rounded-xs",
+										className: "mt-2 mb-1",
 									},
 								},
 								color: {
-									label: "",
+									label: "Text color",
 									type: "color",
-									defaultValue: "#5258e4",
+									defaultValue: "#5258E4",
+									inline: true,
 									meta: {
-										choiceSize: 30,
-										singleChoice: true,
+										colors: [
+											"#FFFFFF",
+											"#000000",
+											"#5258E4",
+										],
+									},
+								},
+								highlight: {
+									label: "Highlight color",
+									type: "color",
+									defaultValue: "#FFFFFF",
+									inline: true,
+									meta: {
+										showTransparent: true,
+										colors: [
+											"#FFFFFF",
+											"#000000",
+											"#5258E4",
+										],
 									},
 								},
 							},

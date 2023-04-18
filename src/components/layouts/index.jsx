@@ -10,6 +10,7 @@ import OvalTemplate from "./oval";
 import MasonryTemplate from "./masonry";
 import HoneyCombTemplate from "./honeycomb";
 import StackTemplate from "./stack";
+import HeartTemplate from "./heart";
 
 const templateMap = {
 	stack: StackTemplate,
@@ -17,6 +18,7 @@ const templateMap = {
 	oval: OvalTemplate,
 	masonry: MasonryTemplate,
 	honeycomb: HoneyCombTemplate,
+	heart: HeartTemplate,
 };
 
 class LayoutsComponentDrawer {
@@ -185,7 +187,7 @@ export default function LayoutsComponent() {
 				color: "#A5292A",
 				gradient: ["#FFD4A2", "#ECE6FF"],
 			},
-			template: "scattered",
+			template: "heart",
 			images: staticImages.templatePictures,
 			imagess: [
 				staticImages.presets.clock,
@@ -250,6 +252,7 @@ export default function LayoutsComponent() {
 							choices: [
 								"oval",
 								"scattered",
+								"heart",
 								"stack",
 								"masonry",
 								"honeycomb",

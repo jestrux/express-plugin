@@ -107,10 +107,13 @@ class LayoutsComponentDrawer {
 	}
 
 	async draw(props = {}) {
+		if (!props.images) return;
+
 		const templateChanged =
 			!this.template || this.template != props.template;
 		const imagesChanged =
 			!this.images || this.images.join("") != props.images.join("");
+		// const imagesChanged = props.imagesChanged;
 
 		Object.assign(this, props);
 
@@ -124,11 +127,14 @@ class LayoutsComponentDrawer {
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-		return this.drawImage({ templateChanged, imagesChanged });
+		return this.drawImage({
+			templateChanged,
+			imagesChanged,
+		});
 	}
 
 	drawImage({ templateChanged, imagesChanged }) {
-		if (templateChanged) {
+		if (templateChanged || imagesChanged) {
 			let canvas = this.templateCanvases[this.template];
 
 			if (!canvas) {
@@ -189,19 +195,22 @@ export default function LayoutsComponent() {
 			},
 			template: "heart",
 			images: staticImages.templatePictures,
-			imagess: [
-				staticImages.presets.clock,
-				staticImages.presets.cylinder,
-				staticImages.presets.frame,
-				staticImages.presets.polaroid,
-				staticImages.presets.spotify,
-				staticImages.presets.calendar,
-				staticImages.flowers,
-				staticImages.flowers2,
-			],
+			imagesChanged: true,
 		},
 		layoutsComponentDrawerRef.current
 	);
+
+	const handleChange = (key, value) => {
+		if (key == "images") {
+			updateField("imagesChanged", true);
+
+			// setTimeout(() => {
+			// 	updateField("imagesChanged", false);
+			// }, 300);
+		}
+
+		updateField(key, value);
+	};
 
 	useEffect(() => {
 		if (initialRef.current) return;
@@ -247,6 +256,12 @@ export default function LayoutsComponent() {
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
+						images: {
+							type: "image",
+							meta: {
+								multiple: true,
+							},
+						},
 						template: {
 							type: "tag",
 							choices: [
@@ -310,7 +325,7 @@ export default function LayoutsComponent() {
 							},
 						},
 					}}
-					onChange={updateField}
+					onChange={handleChange}
 					data={data}
 				/>
 			</div>

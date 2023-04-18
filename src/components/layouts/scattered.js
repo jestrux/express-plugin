@@ -30,6 +30,8 @@ class ScatteredTemplate {
 		canvas.height = height;
 		const ctx = canvas.getContext("2d");
 
+		if (!img) return canvas;
+
 		const shadowOffset = 8;
 		ctx.fillStyle = "white";
 		ctx.strokeStyle = "white";

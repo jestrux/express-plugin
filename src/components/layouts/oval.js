@@ -29,6 +29,8 @@ class OvalTemplate {
 		canvas.height = height;
 		const ctx = canvas.getContext("2d");
 
+		if (!img) return canvas;
+
 		const innerWidth = width - inset * 2;
 		const innerHeight = height - inset * 2 - 60;
 

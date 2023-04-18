@@ -1,17 +1,27 @@
 import React from "react";
 import Input from "./Input";
 
-export default function ImagePicker({ onChange }) {
-	const processImage = (e) => {
+const readFile = (file) => {
+	return new Promise((res) => {
+		const reader = new FileReader();
+		reader.onload = (e) => res(e.target.result);
+		reader.readAsDataURL(file);
+	});
+};
+
+export default function ImagePicker({ multiple, onChange }) {
+	const processImage = async (e) => {
 		const files = e.target.files;
+
 		if (!files?.length) return;
 
-		const file = files[0];
-		const reader = new FileReader();
-
 		onChange(null);
-		reader.onload = (e) => onChange(e.target.result);
-		reader.readAsDataURL(file);
+
+		const res = await (multiple
+			? Promise.all(Array.from(files).map(readFile))
+			: readFile(files[0]));
+
+		onChange(res);
 
 		e.target.value = "";
 	};
@@ -26,8 +36,9 @@ export default function ImagePicker({ onChange }) {
 				type="file"
 				name="image"
 				onChange={processImage}
+				{...(multiple ? { multiple: true } : {})}
 			/>
-			Select image
+			{multiple ? "Select images" : "Select image"}
 		</label>
 	);
 }

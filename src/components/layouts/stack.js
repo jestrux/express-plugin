@@ -32,6 +32,8 @@ class StackTemplate {
 		canvas.height = height;
 		const ctx = canvas.getContext("2d");
 
+		if (!img) return canvas;
+
 		const shadowOffset = 12;
 		ctx.fillStyle = "white";
 		ctx.strokeStyle = "white";

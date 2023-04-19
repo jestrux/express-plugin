@@ -27,6 +27,7 @@ export default {
 		contour: "static/images/posters/contour.png",
 		"Deco Shapes": "static/images/posters/shapes.png",
 		frame: "static/images/posters/frame.png",
+		grid: "static/images/posters/grid.png",
 		layouts: "static/images/posters/layouts.png",
 		map: "static/images/posters/map.png",
 		polaroid: "static/images/posters/polaroid.webp",

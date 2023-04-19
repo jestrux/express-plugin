@@ -23,6 +23,7 @@ import ChartComponent from "./ChartComponent";
 import MapComponent from "./MapComponent";
 import ColorComponent from "./ColorComponent";
 import LayoutsComponent from "./layouts";
+import GridComponent from "./GridComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -46,6 +47,7 @@ const componentMap = {
 	MapComponent,
 	ColorComponent,
 	LayoutsComponent,
+	GridComponent,
 };
 
 const presets = {
@@ -78,6 +80,10 @@ const presets = {
 	brushBackground: {
 		props: {},
 		component: "BrushComponent",
+	},
+	grid: {
+		props: {},
+		component: "GridComponent",
 	},
 	cylinder: {
 		props: {},
@@ -155,7 +161,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(LayoutsComponent);
+	// const component = useRef(GridComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

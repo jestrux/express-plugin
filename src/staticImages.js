@@ -33,7 +33,7 @@ export default {
 		poppyFlower: "static/images/posters/poppyFlower.png",
 		spiral: "static/images/posters/spiral.png",
 		spotifyCard: "static/images/posters/spotify.png",
-		spring: "static/images/posters/spring.png",
+		ribbon: "static/images/posters/ribbon.png",
 		stickerBadge: "static/images/posters/sticker-badge.png",
 		weather: "static/images/posters/weather.png",
 		waves: "static/images/posters/waves.png",

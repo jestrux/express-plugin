@@ -5,7 +5,7 @@ import ContourComponent from "./ContourComponent";
 import SpiralComponent from "./SpiralComponent";
 import PoppyFlowerComponent from "./PoppyFlowerComponent";
 import CloudComponent from "./CloudComponent";
-import SpringComponent from "./SpringComponent";
+import RibbonComponent from "./RibbonComponent";
 import TornPaperComponent from "./TornPaperComponent";
 import PolaroidComponent from "./PolaroidComponent";
 import FrameComponent from "./FrameComponent";
@@ -31,7 +31,7 @@ const componentMap = {
 	FrameComponent,
 	PoppyFlowerComponent,
 	SpotifyComponent,
-	SpringComponent,
+	RibbonComponent,
 	CloudComponent,
 	CylinderComponent,
 	ContourComponent,
@@ -75,36 +75,6 @@ const presets = {
 		props: {},
 		component: "MapComponent",
 	},
-	frame: {
-		props: {},
-		// halfWidth: true,
-		component: "FrameComponent",
-	},
-	polaroid: {
-		props: {},
-		// halfWidth: true,
-		component: "PolaroidComponent",
-	},
-	calendar: {
-		props: {},
-		// halfWidth: true,
-		component: "CalendarComponent",
-	},
-	clock: {
-		props: {},
-		// halfWidth: true,
-		component: "ClockWidgetComponent",
-	},
-	weather: {
-		props: {},
-		// halfWidth: true,
-		component: "WeatherWidgetComponent",
-	},
-	color: {
-		props: {},
-		// halfWidth: true,
-		component: "ColorComponent",
-	},
 	brushBackground: {
 		props: {},
 		component: "BrushComponent",
@@ -113,31 +83,59 @@ const presets = {
 		props: {},
 		component: "CylinderComponent",
 	},
-	"Deco Shapes": {
+	frame: {
 		props: {},
-		// height: 70,
-		// fullWidth: true,
-		component: "SpotifyComponent",
+		// halfWidth: true,
+		component: "FrameComponent",
 	},
-	// stickerBadge: {
+	poppyFlower: {
+		props: {},
+		component: "PoppyFlowerComponent",
+	},
+	clock: {
+		props: {},
+		// halfWidth: true,
+		component: "ClockWidgetComponent",
+	},
+	stickerBadge: {
+		props: {},
+		component: "StickerBadgeComponent",
+	},
+	waves: {
+		props: {},
+		component: "WaveComponent",
+	},
+	polaroid: {
+		props: {},
+		// halfWidth: true,
+		component: "PolaroidComponent",
+	},
+	weather: {
+		props: {},
+		// halfWidth: true,
+		component: "WeatherWidgetComponent",
+	},
+	ribbon: {
+		props: {},
+		component: "RibbonComponent",
+	},
+	spiral: {
+		props: {},
+		component: "SpiralComponent",
+	},
+	calendar: {
+		props: {},
+		// halfWidth: true,
+		component: "CalendarComponent",
+	},
+	color: {
+		props: {},
+		// halfWidth: true,
+		component: "ColorComponent",
+	},
+	// "Deco Shapes": {
 	// 	props: {},
-	// 	component: "StickerBadgeComponent",
-	// },
-	// waves: {
-	// 	props: {},
-	// 	component: "WaveComponent",
-	// },
-	// poppyFlower: {
-	// 	props: {},
-	// 	component: "PoppyFlowerComponent",
-	// },
-	// spring: {
-	// 	props: {},
-	// 	component: "SpringComponent",
-	// },
-	// spiral: {
-	// 	props: {},
-	// 	component: "SpiralComponent",
+	// 	component: "SpotifyComponent",
 	// },
 	// contour: {
 	// 	props: {},

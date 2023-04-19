@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import ComponentFieldEditor from "./tokens/ComponentFieldEditor";
+import { showPreview } from "./utils";
 
 class RibbonDrawer {
 	constructor() {
 		const canvas = document.createElement("canvas");
-		canvas.width = 50;
-		canvas.height = 180;
+		canvas.width = 200;
+		canvas.height = 800;
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 	}
@@ -17,24 +18,31 @@ class RibbonDrawer {
 	}
 
 	async drawCloud() {
+		const height = this.canvas.height;
+		const width = this.canvas.width;
 		const ctx = this.ctx;
-		ctx.lineWidth = 10;
+		const lineWidth = 20;
+		const centerX = width / 2;
+		const amplitude = -width / 2 + lineWidth;
+		const fold = height / 200;
+
 		ctx.strokeStyle = this.color;
+		ctx.lineWidth = lineWidth;
 
 		ctx.beginPath();
-		ctx.moveTo(25, 0);
-		for (var i = 0; i <= 220; i++) {
-			const wide = 20; // 5 - 20
-			const fold = 0.8; // 0.6 - 1
-			ctx.lineTo(25 + wide * Math.sin((8 * i * Math.PI) / 180), i * fold);
-			ctx.lineWidth = 5;
+		ctx.moveTo(centerX, 0);
+
+		for (var i = 0; i <= height; i += 0.5) {
+			ctx.lineTo(
+				centerX + amplitude * Math.sin((8 * i * Math.PI) / 180),
+				i * fold
+			);
 			ctx.stroke();
 		}
 
-		// ctx.stroke();
-		// ctx.fill();
-
-		return this.canvas.toDataURL();
+		const res = this.canvas.toDataURL();
+		showPreview(res);
+		return res;
 	}
 }
 
@@ -88,7 +96,7 @@ export default function RibbonComponent() {
 							className="drag-target max-w-full"
 							src={url}
 							style={{
-								maxHeight: "30vh",
+								maxHeight: "20vh",
 							}}
 						/>
 					</div>

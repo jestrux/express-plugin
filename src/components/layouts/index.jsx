@@ -195,22 +195,9 @@ export default function LayoutsComponent() {
 			},
 			template: "heart",
 			images: staticImages.templatePictures,
-			imagesChanged: true,
 		},
 		layoutsComponentDrawerRef.current
 	);
-
-	const handleChange = (key, value) => {
-		if (key == "images") {
-			updateField("imagesChanged", true);
-
-			// setTimeout(() => {
-			// 	updateField("imagesChanged", false);
-			// }, 300);
-		}
-
-		updateField(key, value);
-	};
 
 	useEffect(() => {
 		if (initialRef.current) return;
@@ -224,6 +211,8 @@ export default function LayoutsComponent() {
 			},
 			completionCallback: exportImage,
 		});
+
+		return () => (window.layoutsComponentDrawer = null);
 	}, []);
 
 	const exportImage = async (e) => {
@@ -253,7 +242,7 @@ export default function LayoutsComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-1">
+			<div className="px-12px">
 				<ComponentFields
 					schema={{
 						images: {
@@ -325,7 +314,7 @@ export default function LayoutsComponent() {
 							},
 						},
 					}}
-					onChange={handleChange}
+					onChange={updateField}
 					data={data}
 				/>
 			</div>

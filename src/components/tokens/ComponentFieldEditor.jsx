@@ -206,6 +206,18 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 	].includes(type);
 
 	let { className, ...otherMeta } = meta;
+	let initialValue = value;
+
+	if (type == "date") {
+		try {
+			initialValue = new Intl.DateTimeFormat("en-UK")
+				.format(value)
+				.split("/")
+				.reverse()
+				.map((entry) => entry.padStart(2, "0"))
+				.join("-");
+		} catch (error) {}
+	}
 
 	return (
 		<div
@@ -330,7 +342,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 							} ${className}`}
 							type={type}
 							// value={tempValue}
-							value={value}
+							defaultValue={initialValue}
 							uxp-quiet="true"
 							{...otherMeta}
 							// onChange={(e) => setTempValue(e.target.value)}

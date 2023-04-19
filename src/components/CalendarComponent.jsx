@@ -175,8 +175,8 @@ class CalendarDrawer {
 		ctx.globalAlpha = 1;
 
 		[...columns, ...entries].forEach((entry, i) => {
-			const row = Math.floor(i / 7);
-			const col = i % 7;
+			const row = Math.floor(i / 8);
+			const col = i % 8;
 
 			ctx.save();
 			if (entry.blurred) ctx.globalAlpha = 0.35;
@@ -276,12 +276,7 @@ export default function CalendarComponent() {
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			date: new Intl.DateTimeFormat("en-US")
-				.format(new Date())
-				.split("/")
-				.reverse()
-				.map((entry) => entry.padStart(2, "0"))
-				.join("-"),
+			date: new Date(),
 			settings: {
 				startFromMonday: false,
 				showSelectedDay: true,
@@ -339,7 +334,7 @@ export default function CalendarComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-1">
+			<div className="px-12px">
 				<ComponentFields
 					schema={{
 						date: {
@@ -383,13 +378,12 @@ export default function CalendarComponent() {
 						},
 						background: backgroundSpec({
 							show: (state) => !state.plain,
+							defaultType: "color",
 							colorProps: {
-								inline: true,
-								meta: {
-									showTransparent: false,
-									colors: ["#ffb514"],
-									showIndicator: false,
-								},
+								defaultValue: "#ffb514",
+							},
+							gradientProps: {
+								defaultValue: ["#737DFE", "#FFCAC9"],
 							},
 						}),
 						color: {

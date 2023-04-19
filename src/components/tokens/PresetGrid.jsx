@@ -8,7 +8,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 			{Object.entries(presets).map(([name, value], index) => {
 				const { props, component, ...styles } = value;
 				const {
-					height = 45,
+					height = 35,
 					noContainer,
 					fullWidth,
 					halfWidth,
@@ -18,7 +18,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 				return (
 					<div
 						key={index}
-						className="hoverable parent relative py-3 flex-shrink-0 font-bold text-center bg-gray-100 overflow-hidden relative flex flex-col center-center"
+						className="hoverable parent relative pt-3 flex-shrink-0 font-bold text-center bg-gray-100 overflow-hidden relative flex flex-col center-center"
 						style={{
 							width: fullWidth
 								? "100%"
@@ -27,6 +27,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 								: "50%",
 							border: "solid #e5e5e5",
 							borderWidth: "0 1px 1px 0",
+							paddingBottom: "1.8rem",
 						}}
 						onClick={() => onSelect(component, name)}
 					>
@@ -36,7 +37,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 								height:
 									height && height > 55
 										? height + "px"
-										: "55px",
+										: "30px",
 							}}
 						>
 							<img
@@ -65,7 +66,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 							</span>
 						) : (
 							<span
-								className="font-medium block text-center mt-1 text-sm"
+								className="absolute bottom-0 font-medium block text-center mb-1 text-sm"
 								style={{
 									fontSize: "0.6rem",
 									lineHeight: "1.5",

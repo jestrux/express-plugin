@@ -8,6 +8,7 @@ import cloudPoster from "./images/posters/cloud.png";
 import colorPoster from "./images/posters/color.png";
 import cylinderPoster from "./images/posters/cylinder.png";
 import contourPoster from "./images/posters/contour.png";
+import gridPoster from "./images/posters/grid.png";
 import framedImagePoster from "./images/posters/frame.png";
 import layoutsPoster from "./images/posters/layouts.png";
 import mapPoster from "./images/posters/map.png";
@@ -71,6 +72,7 @@ export default {
 		cylinder: cylinderPoster,
 		contour: contourPoster,
 		frame: framedImagePoster,
+		grid: gridPoster,
 		layouts: layoutsPoster,
 		map: mapPoster,
 		polaroid: polaroidCardPoster,

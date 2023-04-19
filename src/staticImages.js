@@ -16,7 +16,7 @@ import poppyFlowerPoster from "./images/posters/poppyFlower.png";
 import shapesPoster from "./images/posters/shapes.png";
 import spiralPoster from "./images/posters/spiral.png";
 import spotifyCardPoster from "./images/posters/spotify.png";
-import springPoster from "./images/posters/spring.png";
+import ribbonPoster from "./images/posters/ribbon.png";
 import stickerBadgePoster from "./images/posters/sticker-badge.png";
 import weatherWidgetPoster from "./images/posters/weather.png";
 import wavesPoster from "./images/posters/waves.png";
@@ -78,7 +78,7 @@ export default {
 		"Deco Shapes": shapesPoster,
 		spiral: spiralPoster,
 		spotifyCard: spotifyCardPoster,
-		spring: springPoster,
+		ribbon: ribbonPoster,
 		stickerBadge: stickerBadgePoster,
 		weather: weatherWidgetPoster,
 		waves: wavesPoster,

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ComponentFieldEditor from "./tokens/ComponentFieldEditor";
 
-class SpringDrawer {
+class RibbonDrawer {
 	constructor() {
 		const canvas = document.createElement("canvas");
 		canvas.width = 50;
@@ -38,14 +38,14 @@ class SpringDrawer {
 	}
 }
 
-export default function SpringComponent() {
+export default function RibbonComponent() {
 	const [data, setData] = useState({ color: "#ffc107" });
 	const [url, setUrl] = useState();
 	const previewRef = useRef(null);
 
 	useEffect(() => {
-		window.springDrawer = new SpringDrawer();
-		window.springDrawer.draw(data).then(setUrl);
+		window.ribbonDrawer = new RibbonDrawer();
+		window.ribbonDrawer.draw(data).then(setUrl);
 
 		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 			previewCallback: (element) => {
@@ -71,7 +71,7 @@ export default function SpringComponent() {
 		const newData = { ...data, ...updatedProps };
 		setData(newData);
 
-		window.springDrawer.draw(newData).then(setUrl);
+		window.ribbonDrawer.draw(newData).then(setUrl);
 	}
 
 	return (

@@ -120,7 +120,9 @@ class LayoutsComponentDrawer {
 		await this.loadFont();
 
 		if (imagesChanged) {
+			this.templateCanvases = {};
 			this.imagesElements = await Promise.all(
+				// this.images.map(() => this.canvas)
 				this.images.map(loadImageFromUrl)
 			);
 		}
@@ -254,11 +256,11 @@ export default function LayoutsComponent() {
 						template: {
 							type: "tag",
 							choices: [
-								"oval",
+								// "oval",
 								"scattered",
 								"heart",
-								"stack",
-								"masonry",
+								// "stack",
+								// "masonry",
 								"honeycomb",
 							],
 						},

@@ -5,11 +5,44 @@ class HoneyCombTemplate {
 	constructor({ canvas, callback, images, hideCenterCard = false }) {
 		this.inset = 60;
 		this.images = images;
-		this.callback = callback;
+		// this.callback = callback;
 		this.canvas = canvas;
 		this.hideCenterCard = hideCenterCard;
 		this.canvas.width = (this.canvas.height * 16) / 9;
 		this.ctx = canvas.getContext("2d");
+
+		this.processedImages = 0;
+		this.callback = () => {
+			this.processedImages += 1;
+			callback();
+		};
+
+		const looper = () => {
+			if (this.processedImages == 7) {
+				const width = this.canvas.width;
+				const height = this.canvas.height;
+				const ctx = this.ctx;
+
+				// ctx.clip();
+				ctx.globalCompositeOperation = "source-in";
+
+				ctx.drawImage(
+					resizeImage(
+						resizeToAspectRatio(this.images[0], width / height),
+						{
+							width: width,
+							height: height,
+						}
+					),
+					0,
+					0
+				);
+
+				callback();
+			} else requestAnimationFrame(looper);
+		};
+
+		if (this.images.length == 1) looper();
 
 		callback();
 	}
@@ -53,7 +86,12 @@ class HoneyCombTemplate {
 		ctx.stroke();
 		ctx.clip();
 
-		if (!img) return canvas;
+		if (!img) {
+			ctx.fillStyle = "white";
+			ctx.fill();
+			callback(canvas);
+			return canvas;
+		}
 
 		ctx.drawImage(
 			resizeImage(resizeToAspectRatio(img, innerWidth / innerHeight), {
@@ -86,7 +124,7 @@ class HoneyCombTemplate {
 		);
 
 		this.drawCard(
-			this.images[4],
+			this.images[5],
 			{ height: height / 1.5 },
 			(cardBottomLeft) => {
 				ctx.drawImage(cardBottomLeft, this.inset * 2, height / 2);
@@ -95,7 +133,7 @@ class HoneyCombTemplate {
 		);
 
 		this.drawCard(
-			this.images[2],
+			this.images[1],
 			{ height: height / 1.6 },
 			(cardTopCenter) => {
 				ctx.drawImage(
@@ -132,7 +170,7 @@ class HoneyCombTemplate {
 		);
 
 		this.drawCard(
-			this.images[1],
+			this.images[2],
 			{ height: height / 1.6 },
 			(cardTopRight) => {
 				ctx.drawImage(
@@ -145,7 +183,7 @@ class HoneyCombTemplate {
 		);
 
 		this.drawCard(
-			this.images[5],
+			this.images[7],
 			{ height: height / 1.6 },
 			(cardBottomRight) => {
 				ctx.drawImage(

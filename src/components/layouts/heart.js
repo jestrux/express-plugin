@@ -66,7 +66,7 @@ class HeartTemplate {
 		ctx.fillRect(0, 0, width, height);
 
 		let innerWidth = width - inset * 2;
-		let innerHeight = height - inset * 2 - 60;
+		let innerHeight = height - inset * 2;
 
 		ctx.drawImage(
 			resizeImage(resizeToAspectRatio(img, innerWidth / innerHeight), {
@@ -96,106 +96,125 @@ class HeartTemplate {
 		const path = new Path2D(
 			"M 1705.02 1485.24 C 1445.79 1695.42 1131.93 1802.08 857.412 1996.48 C 765.157 1706.98 567.523 1569.29 349.372 1374.77 C 57.414 1114.44 -225.259 400.599 360.264 291.362 C 516.345 262.281 672.958 343.276 794.158 445.85 C 908.096 542.385 1003.19 659.173 1074.62 790.312 C 1143.61 470.852 1445.67 217.247 1772.25 204.599 C 1830.15 200.226 1888.29 209.211 1942.17 230.862 C 1990.61 254.246 2032.79 288.812 2065.25 331.708 C 2204.49 506.346 2211.92 761.408 2124.78 966.993 C 2037.47 1173.01 1883.53 1342.6 1705.08 1485.28"
 		);
-
-		// ctx.fillStyle = this.color;
 		ctx.stroke(path);
 		ctx.clip(path);
+
+		this.drawCard(
+			this.images[4],
+			{
+				rotate: 5,
+				width: 1000,
+				height: 800,
+			},
+			(cardCenterLeft) => {
+				ctx.drawImage(
+					cardCenterLeft,
+					-cardCenterLeft.width * 0.1,
+					(height - cardCenterLeft.height) / 3
+				);
+				this.callback();
+			}
+		);
 
 		this.drawCard(this.images[0], { rotate: 20 }, (cardTopLeft) => {
 			ctx.drawImage(cardTopLeft, -cardTopLeft.width * 0.1, 0);
 			this.callback();
 		});
 
-		this.drawCard(this.images[5], { rotate: -2 }, (cardBottomLeft) => {
-			ctx.drawImage(
-				cardBottomLeft,
-				cardBottomLeft.width * 0.35,
-				height - cardBottomLeft.height * 1.3
-			);
-			this.callback();
-		});
-
 		this.drawCard(
-			this.images[3],
-			{
-				rotate: -15,
-				width: 1000,
-				height: 1000,
-			},
-			(cardCenterLeft) => {
+			this.images[6],
+			{ rotate: 1, width: 1000, height: 800 },
+			(cardBottomLeft) => {
+				ctx.save();
+				ctx.globalCompositeOperation = "destination-over";
 				ctx.drawImage(
-					cardCenterLeft,
-					-cardCenterLeft.width * 0.2,
-					(height - cardCenterLeft.height) / 2
+					cardBottomLeft,
+					cardBottomLeft.width * 0.05,
+					height - cardBottomLeft.height * 1.5
 				);
+				ctx.restore()
 				this.callback();
 			}
 		);
 
-		this.drawCard(this.images[2], (cardTopRight) => {
-			ctx.drawImage(
-				cardTopRight,
-				width - cardTopRight.width * 1.1,
-				-cardTopRight.height * 0.3
-			);
-			this.callback();
-		});
-
 		this.drawCard(
-			this.images[4],
-			{
-				rotate: 15,
-				width: 1000,
-				height: 1000,
-			},
-			(cardCenterRight) => {
+			this.images[5],
+			{ rotate: -2, width: 1000, height: 1000 },
+			(cardBottomRight) => {
 				ctx.drawImage(
-					cardCenterRight,
-					width - cardCenterRight.width * 0.8,
-					(height - cardCenterRight.height) / 3
+					cardBottomRight,
+					width - cardBottomRight.width * 0.9,
+					height - cardBottomRight.height * 1.26
 				);
 				this.callback();
 			}
 		);
-
-		this.drawCard(this.images[7], { rotate: -12 }, (cardBottomRight) => {
-			ctx.drawImage(
-				cardBottomRight,
-				width - cardBottomRight.width,
-				height - cardBottomRight.height * 1.5
-			);
-			this.callback();
-		});
 
 		this.drawCard(
 			this.images[1],
-			{
-				rotate: -10,
-				width: 1000,
-				height: 900,
-			},
-			(cardTopCenter) => {
-				ctx.drawImage(
-					cardTopCenter,
-					(width - cardTopCenter.width) / 2,
-					cardTopCenter.height * 0.3
-				);
-				this.callback();
-			}
-		);
-
-		this.drawCard(
-			this.images[6],
 			{
 				rotate: -5,
 				width: 1000,
 				height: 1000,
 			},
+			(cardTopCenter) => {
+				ctx.drawImage(
+					cardTopCenter,
+					(width - cardTopCenter.width) / 1.8,
+					cardTopCenter.height * 0.63
+				);
+				this.callback();
+			}
+		);
+
+		this.drawCard(
+			this.images[7],
+			{
+				rotate: -5,
+				width: 1200,
+				height: 900,
+			},
 			(cardBottomCenter) => {
+				ctx.save();
+				ctx.globalCompositeOperation = "destination-over";
 				ctx.drawImage(
 					cardBottomCenter,
 					(width - cardBottomCenter.width) / 1.6,
 					height - cardBottomCenter.height * 0.9
+				);
+				ctx.restore();
+				this.callback();
+			}
+		);
+
+		this.drawCard(
+			this.images[3],
+			{
+				rotate: -1,
+				width: 1200,
+				height: 1300,
+			},
+			(cardCenterRight) => {
+				ctx.save();
+				ctx.globalCompositeOperation = "destination-over";
+				ctx.drawImage(
+					cardCenterRight,
+					width - cardCenterRight.width * 0.7,
+					-cardCenterRight.height * 0.05
+				);
+				ctx.restore();
+				this.callback();
+			}
+		);
+
+		this.drawCard(
+			this.images[2],
+			{ rotate: -5, width: 1100, height: 1000 },
+			(cardTopRight) => {
+				ctx.drawImage(
+					cardTopRight,
+					width - cardTopRight.width * 1.5,
+					-cardTopRight.height * 0.12
 				);
 				this.callback();
 			}

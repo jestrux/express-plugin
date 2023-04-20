@@ -2,12 +2,12 @@
 import { loadImageFromUrl, resizeImage, resizeToAspectRatio } from "../utils";
 
 class ScatteredTemplate {
+	inset = 30;
 	constructor({ canvas, callback, images }) {
 		this.images = images;
 		this.callback = callback;
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
-		this.canvas.width = this.canvas.height;
 
 		callback();
 	}
@@ -93,12 +93,7 @@ class ScatteredTemplate {
 		const ctx = this.ctx;
 
 		this.drawCard(this.images[0], { rotate: 20 }, (cardTopLeft) => {
-			ctx.drawImage(cardTopLeft, 0, 0);
-			this.callback();
-		});
-
-		this.drawCard(this.images[5], { rotate: -2 }, (cardBottomLeft) => {
-			ctx.drawImage(cardBottomLeft, 0, height - cardBottomLeft.height);
+			ctx.drawImage(cardTopLeft, -cardTopLeft.width * 0.1, 0);
 			this.callback();
 		});
 
@@ -112,39 +107,30 @@ class ScatteredTemplate {
 			(cardCenterLeft) => {
 				ctx.drawImage(
 					cardCenterLeft,
-					-cardCenterLeft.width * 0.2,
+					-cardCenterLeft.width * 0.1,
 					(height - cardCenterLeft.height) / 2
 				);
 				this.callback();
 			}
 		);
 
-		this.drawCard(this.images[2], (cardTopRight) => {
-			ctx.drawImage(cardTopRight, width - cardTopRight.width, 0);
-			this.callback();
-		});
-
-		this.drawCard(this.images[7], { rotate: 30 }, (cardBottomRight) => {
+		this.drawCard(this.images[4], { rotate: 15 }, (cardBottomLeft) => {
 			ctx.drawImage(
-				cardBottomRight,
-				width - cardBottomRight.width,
-				height - cardBottomRight.height
+				cardBottomLeft,
+				-cardBottomLeft.width * 0.1,
+				height - cardBottomLeft.height * 1
 			);
 			this.callback();
 		});
 
 		this.drawCard(
-			this.images[4],
-			{
-				rotate: 15,
-				width: 1000,
-				height: 1000,
-			},
-			(cardCenterRight) => {
+			this.images[2],
+			{ rotate: 5, width: 1100, height: 1300 },
+			(cardBottomRight) => {
 				ctx.drawImage(
-					cardCenterRight,
-					width - cardCenterRight.width * 0.8,
-					(height - cardCenterRight.height) / 2
+					cardBottomRight,
+					width - cardBottomRight.width * 0.88,
+					height - cardBottomRight.height * 0.95
 				);
 				this.callback();
 			}
@@ -153,16 +139,39 @@ class ScatteredTemplate {
 		this.drawCard(
 			this.images[1],
 			{
-				rotate: -10,
-				width: 1000,
-				height: 900,
+				rotate: 5,
+				width: 1100,
+				height: 1000,
 			},
 			(cardTopCenter) => {
+				ctx.save();
+				// ctx.globalCompositeOperation = "destination-over";
 				ctx.drawImage(
 					cardTopCenter,
-					(width - cardTopCenter.width) / 2,
-					-cardTopCenter.height * 0.2
+					(width - cardTopCenter.width) / 1.8,
+					cardTopCenter.height * 0.65
 				);
+				ctx.restore();
+				this.callback();
+			}
+		);
+
+		this.drawCard(
+			this.images[7],
+			{
+				rotate: -5,
+				width: 1200,
+				height: 900,
+			},
+			(cardBottomCenter) => {
+				ctx.save();
+				// ctx.globalCompositeOperation = "destination-over";
+				ctx.drawImage(
+					cardBottomCenter,
+					(width - cardBottomCenter.width) / 3,
+					height - cardBottomCenter.height * 0.9
+				);
+				ctx.restore();
 				this.callback();
 			}
 		);
@@ -170,15 +179,31 @@ class ScatteredTemplate {
 		this.drawCard(
 			this.images[6],
 			{
-				rotate: -20,
-				width: 1000,
-				height: 900,
+				rotate: 5,
+				width: 1200,
+				height: 1400,
 			},
-			(cardBottomCenter) => {
+			(cardCenterRight) => {
+				ctx.save();
+				// ctx.globalCompositeOperation = "destination-over";
 				ctx.drawImage(
-					cardBottomCenter,
-					(width - cardBottomCenter.width) / 2,
-					height - cardBottomCenter.height * 0.8
+					cardCenterRight,
+					width - cardCenterRight.width * 0.88,
+					-(height - cardCenterRight.height) * 0.15
+				);
+				ctx.restore();
+				this.callback();
+			}
+		);
+
+		this.drawCard(
+			this.images[5],
+			{ rotate: -5, width: 1100, height: 1000 },
+			(cardTopRight) => {
+				ctx.drawImage(
+					cardTopRight,
+					width - cardTopRight.width * 1.5,
+					-cardTopRight.height * 0.12
 				);
 				this.callback();
 			}

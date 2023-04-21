@@ -1,32 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
-import useDataSchema from "../hooks/useDataSchema";
-import ComponentFields from "./tokens/ComponentFields";
-import { showPreview } from "./utils";
+import useDataSchema from "../../hooks/useDataSchema";
+import ComponentFields from "../tokens/ComponentFields";
+import { showPreview } from "../utils";
+import arrows from "./arrows";
 
-class ChartComponentDrawer {
+class ArrowComponentDrawer {
 	constructor() {
 		const canvas = document.createElement("canvas");
 		this.canvas = canvas;
-		canvas.width = 1000;
-		canvas.height = 1000;
 		this.ctx = canvas.getContext("2d");
 	}
 
 	async draw(props = {}) {
 		Object.assign(this, props);
 
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
 		return this.drawImage();
 	}
 
 	async drawImage() {
-		const width = this.canvas.width;
-		const height = this.canvas.height;
 		const ctx = this.ctx;
+		const { width, height, path } = arrows[this.arrow];
+		this.canvas.width = width;
+		this.canvas.height = height;
 
-		ctx.fillStyle = this.background || "transparent";
-		ctx.fillRect(0, 0, width, height);
+		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		ctx.fillStyle = this.color;
+
+		ctx.beginPath();
+		ctx.fill(new Path2D(path));
 
 		const res = this.canvas.toDataURL();
 
@@ -36,24 +38,25 @@ class ChartComponentDrawer {
 	}
 }
 
-export default function ChartComponentComponent() {
+export default function ArrowComponent() {
 	const previewRef = useRef(null);
-	const chartComponentDrawerRef = useRef((data) => {
-		if (!window.chartComponentDrawer)
-			window.chartComponentDrawer = new ChartComponentDrawer();
+	const arrowComponentDrawerRef = useRef((data) => {
+		if (!window.arrowComponentDrawer)
+			window.arrowComponentDrawer = new ArrowComponentDrawer();
 
-		window.chartComponentDrawer.draw(data).then(setUrl);
+		window.arrowComponentDrawer.draw(data).then(setUrl);
 	});
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
 			color: "#ac1f40",
+			arrow: Object.keys(arrows)[0],
 		},
-		chartComponentDrawerRef.current
+		arrowComponentDrawerRef.current
 	);
 
 	useEffect(() => {
-		chartComponentDrawerRef.current(data);
+		arrowComponentDrawerRef.current(data);
 
 		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 			previewCallback: (element) => {
@@ -85,19 +88,41 @@ export default function ChartComponentComponent() {
 						ref={previewRef}
 						className="drag-target max-w-full"
 						src={url}
-						style={{ maxHeight: "20vh" }}
+						style={{ height: "20vh" }}
 					/>
 				</div>
 			</div>
 
-			<div className="px-12px">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
+						arrow: {
+							type: "grid",
+							label: "",
+							choices: Object.keys(arrows),
+							meta: {
+								render(value) {
+									const { width, height, path } =
+										arrows[value];
+
+									return (
+										<svg
+											className="p-3 w-full"
+											viewBox={`0 0 ${width} ${height}`}
+											fill={data.color}
+										>
+											<path d={path} />
+										</svg>
+									);
+								},
+							},
+						},
 						color: {
 							type: "color",
-							inline: true,
+							label: "",
 							meta: {
 								singleChoice: true,
+								choiceSize: 30,
 							},
 						},
 					}}

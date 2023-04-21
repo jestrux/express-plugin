@@ -1,3 +1,4 @@
+import arrowPoster from "./images/posters/arrows.png";
 import brushPoster from "./images/posters/brush.png";
 import backgroundPatternPoster from "./images/posters/background-pattern.png";
 import calendarPoster from "./images/posters/calendar.png";
@@ -9,6 +10,7 @@ import colorPoster from "./images/posters/color.png";
 import cylinderPoster from "./images/posters/cylinder.png";
 import contourPoster from "./images/posters/contour.png";
 import gridPoster from "./images/posters/grid.png";
+import flowerHeadsPoster from "./images/posters/flowerHeads.png";
 import framedImagePoster from "./images/posters/frame.png";
 import layoutsPoster from "./images/posters/layouts.png";
 import mapPoster from "./images/posters/map.png";
@@ -61,6 +63,7 @@ export default {
 		template8,
 	],
 	posters: {
+		arrows: arrowPoster,
 		brushBackground: brushPoster,
 		backgroundPattern: backgroundPatternPoster,
 		calendar: calendarPoster,
@@ -71,6 +74,7 @@ export default {
 		color: colorPoster,
 		cylinder: cylinderPoster,
 		contour: contourPoster,
+		flowerHeads: flowerHeadsPoster,
 		frame: framedImagePoster,
 		grid: gridPoster,
 		layouts: layoutsPoster,

@@ -24,6 +24,9 @@ import MapComponent from "./MapComponent";
 import ColorComponent from "./ColorComponent";
 import LayoutsComponent from "./layouts";
 import GridComponent from "./GridComponent";
+import ArrowComponent from "./ArrowComponent";
+import StickersComponent from "./StickersComponent";
+import FlowerHeadsComponent from "./FlowerHeadsComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -48,6 +51,8 @@ const componentMap = {
 	ColorComponent,
 	LayoutsComponent,
 	GridComponent,
+	ArrowComponent,
+	FlowerHeadsComponent
 };
 
 const presets = {
@@ -91,16 +96,18 @@ const presets = {
 	},
 	frame: {
 		props: {},
-		// halfWidth: true,
 		component: "FrameComponent",
 	},
-	poppyFlower: {
+	// poppyFlower: {
+	// 	props: {},
+	// 	component: "PoppyFlowerComponent",
+	// },
+	flowerHeads: {
 		props: {},
-		component: "PoppyFlowerComponent",
+		component: "FlowerHeadsComponent",
 	},
 	clock: {
 		props: {},
-		// halfWidth: true,
 		component: "ClockWidgetComponent",
 	},
 	stickerBadge: {
@@ -113,12 +120,14 @@ const presets = {
 	},
 	polaroid: {
 		props: {},
-		// halfWidth: true,
 		component: "PolaroidComponent",
+	},
+	arrows: {
+		props: {},
+		component: "ArrowComponent",
 	},
 	weather: {
 		props: {},
-		// halfWidth: true,
 		component: "WeatherWidgetComponent",
 	},
 	ribbon: {
@@ -131,12 +140,10 @@ const presets = {
 	},
 	calendar: {
 		props: {},
-		// halfWidth: true,
 		component: "CalendarComponent",
 	},
 	color: {
 		props: {},
-		// halfWidth: true,
 		component: "ColorComponent",
 	},
 	// "Deco Shapes": {
@@ -161,7 +168,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(SpiralComponent);
+	// const component = useRef(FlowerHeadsComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

@@ -3,7 +3,7 @@ import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
 import { showPreview } from "./utils";
 
-class ChartComponentDrawer {
+class StickersComponentDrawer {
 	constructor() {
 		const canvas = document.createElement("canvas");
 		this.canvas = canvas;
@@ -36,24 +36,24 @@ class ChartComponentDrawer {
 	}
 }
 
-export default function ChartComponentComponent() {
+export default function StickersComponent() {
 	const previewRef = useRef(null);
-	const chartComponentDrawerRef = useRef((data) => {
-		if (!window.chartComponentDrawer)
-			window.chartComponentDrawer = new ChartComponentDrawer();
+	const stickersDrawerRef = useRef((data) => {
+		if (!window.stickersComponentDrawer)
+			window.stickersComponentDrawer = new StickersComponentDrawer();
 
-		window.chartComponentDrawer.draw(data).then(setUrl);
+		window.stickersComponentDrawer.draw(data).then(setUrl);
 	});
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
 			color: "#ac1f40",
 		},
-		chartComponentDrawerRef.current
+		stickersDrawerRef.current
 	);
 
 	useEffect(() => {
-		chartComponentDrawerRef.current(data);
+		stickersDrawerRef.current(data);
 
 		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 			previewCallback: (element) => {

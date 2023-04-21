@@ -8,6 +8,7 @@ import TagList from "./TagList";
 import Toggle from "./Toggle";
 import ImagePicker from "./ImagePicker";
 import ColorSwatch from "./ColorSwatch";
+import GridList from "./GridList";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -201,6 +202,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		"icon",
 		"radio",
 		"tag",
+		"grid",
 		"image",
 		"logo",
 	].includes(type);
@@ -253,6 +255,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 
 			{(!optional || value) && (
 				<React.Fragment>
+					{type == "grid" && (
+						<GridList
+							value={value}
+							choices={choices}
+							onChange={handleChange}
+							{...meta}
+						/>
+					)}
+
 					{type == "tag" && (
 						<TagList
 							value={value}

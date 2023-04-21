@@ -54,7 +54,15 @@ class FrameDrawer {
 
 		const inset = this.inset || 10;
 
-		this.ctx.drawImage(this.img, 0, 0, width, height);
+		if (this.effect != "immersive")
+			this.ctx.drawImage(
+				this.img,
+				inset * 2,
+				inset * 2,
+				width - inset * 4,
+				height - inset * 4
+			);
+		else this.ctx.drawImage(this.img, 0, 0, width, height);
 
 		// ctx.strokeStyle = colors[0];
 		// ctx.rect(inset, inset, width - inset * 2, height - inset * 2)
@@ -66,6 +74,7 @@ class FrameDrawer {
 		const darkenFactor = luminance == 1 ? 30 : luminance > 0.15 ? 18 : 20;
 		const darkerColor = "#" + colorProp.darken(darkenFactor).toHex();
 		const colors = {
+			immersive: [darkerColor, this.color, this.color, darkerColor],
 			bevel: [darkerColor, this.color, this.color, darkerColor],
 			ridge: [this.color, darkerColor, darkerColor, this.color],
 		}[this.effect];
@@ -102,10 +111,12 @@ class FrameDrawer {
 		const region = new Path2D();
 		borderPoints.forEach((points, index) => {
 			ctx.fillStyle = colors[index];
-			// ctx.fill(pathFromPoints(points));
-			region.addPath(pathFromPoints(points));
+
+			if (this.effect == "immersive")
+				region.addPath(pathFromPoints(points));
+			else ctx.fill(pathFromPoints(points));
 		});
-		ctx.clip(region, "evenodd");
+		ctx.clip(region);
 
 		ctx.drawImage(this.img, 0, 0, width, height);
 		ctx.fillStyle = this.color;
@@ -139,6 +150,10 @@ class FrameDrawer {
 		Object.assign(this, props);
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+		if (this.color == "transparent" && this.effect != "immersive") {
+			this.color = "white";
+		}
+
 		// if (!this.img || props.src != this.src)
 		await loadImage(this, props.src);
 
@@ -148,7 +163,8 @@ class FrameDrawer {
 	async drawImage() {
 		this.addFrame();
 
-		if (this.shadow) this.addShadow();
+		// if (this.shadow)
+		this.addShadow();
 
 		return this.canvas.toDataURL();
 	}
@@ -167,10 +183,8 @@ export default function FrameComponent() {
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			src: staticImages.flowers2,
-			// color: "white",
-			// src: staticImages.presets.frame,
-			color: "cyan",
+			src: staticImages.flowers,
+			color: "#ffc107",
 			inset: 20,
 			effect: "bevel",
 		},
@@ -215,17 +229,21 @@ export default function FrameComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-1">
+			<div className="px-12px">
 				<ComponentFields
+					key={data.effect == "immersive"}
 					schema={{
 						src: { type: "image", label: "" },
 						color: {
 							type: "color",
-							meta: { showTransparent: true },
+							meta: {
+								showTransparent: data.effect == "immersive",
+							},
 						},
 						effect: {
 							type: "radio",
-							choices: ["bevel", "ridge"],
+							label: "Frame effect",
+							choices: ["bevel", "ridge", "immersive"],
 						},
 					}}
 					onChange={updateField}

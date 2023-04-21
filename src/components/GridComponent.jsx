@@ -89,8 +89,8 @@ class GridComponentDrawer {
 	}
 
 	async drawImage() {
-		if (this.gridType == "dot") this.drawDots();
-		else this.drawMesh();
+		if (this.gridType == "mesh") this.drawMesh();
+		else this.drawDots();
 
 		const res = this.canvas.toDataURL();
 
@@ -111,9 +111,9 @@ export default function GridComponent() {
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			gridType: "dot",
+			gridType: "mesh",
 			aspectRatio: "square",
-			color: "#5258e4",
+			color: "#333333",
 		},
 		gridComponentDrawerRef.current
 	);
@@ -156,29 +156,30 @@ export default function GridComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
 						gridType: {
 							label: "",
 							type: "tag",
-							inline: true,
-							choices: ["dot", "mesh"].map((value) => ({
+							choices: ["mesh", "dot"].map((value) => ({
 								value,
 								label: value + " grid",
 							})),
 						},
 						aspectRatio: {
 							type: "radio",
-							inline: true,
 							choices: ["square", "wide", "tall"],
 						},
 						color: {
 							type: "color",
-							inline: true,
 							meta: {
-								// singleChoice: true,
-								colors: ["#5258e4", "#F09D0F"],
+								colors: [
+									"#F09D0F",
+									"#5258e4",
+									"#333333",
+									"#FFFFFF",
+								],
 							},
 						},
 					}}

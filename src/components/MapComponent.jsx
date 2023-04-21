@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
-import {
-	backgroundSpec,
-	showPreview,
-	solidGradientBg,
-} from "./utils";
+import { backgroundSpec, showPreview, solidGradientBg } from "./utils";
 import staticImages from "../staticImages";
 import { loadImageFromUrl } from "./utils";
 import { resizeImage } from "./utils";
@@ -313,7 +309,7 @@ export default function MapComponent() {
 	const [data, updateField] = useDataSchema(
 		{
 			image: staticImages.presets.map,
-			shape: "blob",
+			shape: "folded",
 			blob: 0,
 			marker: {
 				size: "regular",

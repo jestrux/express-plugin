@@ -36,7 +36,7 @@ class ColorComponentDrawer {
 		ctx.shadowBlur = 10;
 		ctx.shadowOffsetX = 2;
 		ctx.shadowOffsetY = 2;
-		ctx.lineWidth = 20;
+		ctx.lineWidth = width * 0.05;
 
 		const radius = width / 2;
 		ctx.arc(radius, radius, radius * 0.9, 0, 2 * Math.PI);
@@ -46,24 +46,41 @@ class ColorComponentDrawer {
 
 	// https://dribbble.com/shots/14216897-Hospitall-Color-Exploration-1
 	circularColorPalette() {
+		const canvas = this.canvas;
 		const ctx = this.ctx;
-		const colors = [...Object.values(this.colors)];
-		const height = Math.min(150, 1000 / colors.length);
-		const radius = height / 2;
-		const width = radius * (colors.length + 1);
-		this.canvas.height = height;
-		this.canvas.width = width;
 
-		ctx.lineWidth = 10;
+		const fold = this.spacing == "fold";
+		const colors = [...Object.values(this.colors)];
+		const height = 150; //Math.min(150, 1000 / colors.length);
+		const strokeWidth = Math.max(15, height * 0.15);
+		const lineWidth = this.stroke ? strokeWidth : 0;
+		const sliceGap = this.spacing == "regular" ? strokeWidth : 2;
+		const radius = height / 2;
+		const width = fold
+			? colors.length * (radius + sliceGap) + radius
+			: colors.length * (height + sliceGap) - sliceGap;
+		canvas.height = height + strokeWidth;
+		canvas.width = width + strokeWidth;
+
+		ctx.strokeStyle = "#fff";
+		ctx.shadowColor = "rgba(0,0,0,0.15)";
+		ctx.shadowBlur = 10;
+		ctx.shadowOffsetX = 2;
+		ctx.shadowOffsetY = 2;
+		ctx.lineWidth = lineWidth;
 		ctx.strokeStyle = "#fff";
 
-		[...colors].reverse().forEach((_, i) => {
+		ctx.translate(strokeWidth / 2, strokeWidth / 2);
+
+		colors.forEach((color, index) => {
 			ctx.save();
-			const index = colors.length - 1 - i;
-			ctx.translate(width - height - radius * i, 0);
+
+			ctx.translate(((fold ? radius : height) + sliceGap) * index, 0);
+
 			ctx.beginPath();
-			ctx.fillStyle = colors[index];
-			ctx.arc(radius, radius, radius * 0.9, 0, 2 * Math.PI);
+			ctx.fillStyle = color;
+			ctx.arc(radius, radius, radius - lineWidth / 2, 0, 2 * Math.PI);
+			ctx.stroke();
 			ctx.fill();
 			ctx.restore();
 		});
@@ -71,33 +88,42 @@ class ColorComponentDrawer {
 
 	colorPalette() {
 		const ctx = this.ctx;
-		const sliceGap = 20;
 		const colors = [...Object.values(this.colors)];
-		const height = 250;
-		const sliceWidth = height * 1;
+		const referenceHeight = 250;
+		const sliceGap = this.stroke ? Math.max(15, referenceHeight / 15) : 0;
+		const height =
+			this.paletteType == "strip" ? 20 + sliceGap * 2 : referenceHeight;
+		const sliceWidth = (referenceHeight * 9) / 10;
 		const width =
 			(sliceWidth - sliceGap) * colors.length + sliceGap * colors.length;
 		this.canvas.height = height;
 		this.canvas.width = width;
+
+		const fullyRounded = this.roundedCorners == "full";
+		const cornerRadius = Math.max(20, height * 0.2);
 
 		ctx.fillStyle = "#fff";
 
 		ctx.save();
 		ctx.beginPath();
 		ctx.strokeStyle = "#fff";
-		const lineWidth = 25;
+		const lineWidth = sliceGap;
 		ctx.strokeStyle = "#fff";
 		ctx.shadowColor = "rgba(0,0,0,0.2)";
 		ctx.shadowBlur = 8;
 		ctx.shadowOffsetX = 1;
 		ctx.shadowOffsetY = 1;
-		ctx.lineWidth = lineWidth;
+		ctx.lineWidth = this.paletteType == "strip" ? 0 : lineWidth;
 		ctx.roundRect(
 			lineWidth,
 			lineWidth,
 			width - lineWidth * 2,
 			height - lineWidth * 2,
-			height * 0.2
+			this.roundedCorners
+				? fullyRounded
+					? 1000
+					: cornerRadius * 0.99
+				: 0
 		);
 		ctx.stroke();
 		ctx.restore();
@@ -109,7 +135,7 @@ class ColorComponentDrawer {
 			lineWidth,
 			width - lineWidth * 2,
 			height - lineWidth * 2,
-			height * 0.3
+			this.roundedCorners ? (fullyRounded ? 1000 : cornerRadius) : 0
 		);
 
 		colors.forEach((color, i) => {
@@ -122,7 +148,11 @@ class ColorComponentDrawer {
 				lineWidth,
 				sliceWidth - sliceGap / 2,
 				height - lineWidth * 2,
-				10
+				this.paletteType != "strip" &&
+					this.roundedCorners &&
+					sliceGap > 5
+					? 5
+					: 0
 			);
 			ctx.fill();
 			ctx.restore();
@@ -258,7 +288,7 @@ class ColorComponentDrawer {
 
 	async drawImage() {
 		if (this.type == "Color palette") {
-			if (this.paletteType == "circle") this.circularColorPalette();
+			if (this.paletteType == "circles") this.circularColorPalette();
 			else this.colorPalette();
 		} else {
 			if (this.colorType == "circle") this.colorCirlce();
@@ -284,9 +314,10 @@ export default function ColorComponent() {
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			// type: "Color palette",
-			type: "Single color",
-			paletteType: "regular",
+			type: "Color palette",
+			// type: "Single color",
+			// paletteType: "regular",
+			paletteType: "circles",
 			colorType: "card",
 			color: "#20AC3C",
 			showColorCode: true,
@@ -303,6 +334,10 @@ export default function ColorComponent() {
 				// "#45B3A5",
 				// "#2E6D92",
 			],
+			roundedCorners: false,
+			stroke: true,
+			// spacing: false,
+			spacing: "fold",
 		},
 		colorComponentDrawerRef.current
 	);
@@ -351,14 +386,13 @@ export default function ColorComponent() {
 						type: {
 							type: "tag",
 							label: "",
-							choices: ["Color palette", "Single color"],
-							noMargin: true,
-							noBorder: true,
+							choices: ["Single color", "Color palette"],
+							// noMargin: true,
+							// noBorder: true,
 						},
 						color: {
 							type: "color",
-							inline: true,
-							label: "",
+							// label: "",
 							meta: {
 								singleChoice: true,
 								fullWidth: true,
@@ -370,7 +404,7 @@ export default function ColorComponent() {
 							? {
 									colorType: {
 										type: "radio",
-										label: "Type",
+										// label: "Type",
 										inline: true,
 										choices: ["circle", "card"],
 									},
@@ -394,13 +428,40 @@ export default function ColorComponent() {
 							? {
 									colors: {
 										type: "swatch",
-										label: "",
 									},
 									paletteType: {
 										type: "radio",
-										label: "Type",
-										inline: true,
-										choices: ["regular", "circle"],
+										// inline: true,
+										choices: [
+											"regular",
+											"strip",
+											"circles",
+										],
+									},
+									roundedCorners: {
+										type: "radio",
+										show: (data) =>
+											data.paletteType != "circles",
+										choices: [
+											{ value: false, label: "none" },
+											"regular",
+											"full",
+										],
+									},
+									spacing: {
+										type: "radio",
+										show: (data) =>
+											data.paletteType == "circles",
+										choices: [
+											{ value: false, label: "none" },
+											"regular",
+											"fold",
+										],
+									},
+									stroke: {
+										type: "boolean",
+										// show: (data) =>
+										// 	data.paletteType == "regular",
 									},
 							  }
 							: {}),

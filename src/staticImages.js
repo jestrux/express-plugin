@@ -15,6 +15,7 @@ export default {
 	flowers: "static/images/flowers.jpg",
 	spotifyWave: "static/images/spotify-wave.png",
 	posters: {
+		arrows: "static/images/posters/arrows.png",
 		brushBackground: "static/images/posters/brush.png",
 		backgroundPattern: "static/images/posters/background-pattern.png",
 		calendar: "static/images/posters/calendar.png",
@@ -27,6 +28,7 @@ export default {
 		contour: "static/images/posters/contour.png",
 		"Deco Shapes": "static/images/posters/shapes.png",
 		frame: "static/images/posters/frame.png",
+		flowerHeads: "static/images/posters/flowerHeads.png",
 		grid: "static/images/posters/grid.png",
 		layouts: "static/images/posters/layouts.png",
 		map: "static/images/posters/map.png",

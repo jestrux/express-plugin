@@ -1,4 +1,5 @@
 import React from "react";
+// import { Button } from "@adobe/react-spectrum";
 import { camelCaseToSentenceCase } from "../utils";
 
 function TagList({ choices = [], onChange, ...props }) {
@@ -12,6 +13,20 @@ function TagList({ choices = [], onChange, ...props }) {
 				const label = isObject ? choice.label : choice;
 				const value = isObject ? choice.value : choice;
 				const selected = props.value == value;
+
+				// return (
+				// 	<Button
+				// 		key={index}
+				// 		size="m"
+				// 		style={selected ? "fill" : "outline"}
+				// 		variant={selected ? "accent" : "secondary"}
+				// 		onClick={() => onChange(value, index)}
+				// 	>
+				// 		<small className="capitalize">
+				// 			{camelCaseToSentenceCase(label).replace("-", " ")}
+				// 		</small>
+				// 	</Button>
+				// );
 
 				return (
 					<span

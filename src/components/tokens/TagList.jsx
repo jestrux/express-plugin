@@ -29,12 +29,12 @@ function TagList({ choices = [], onChange, ...props }) {
 				// );
 
 				return (
-					<span
+					<button
 						key={index}
 						className={`cursor-pointer py-1 border rounded-sm text-sm font-medium ${
 							selected
 								? "bg-dark-gray border-dark-gray text-white"
-								: "text-darker-gray"
+								: "bg-transparent text-darker-gray"
 						}`}
 						style={{
 							paddingLeft: "0.6rem",
@@ -46,7 +46,7 @@ function TagList({ choices = [], onChange, ...props }) {
 					>
 						{/* { label.toString().toUpperCase() } */}
 						{camelCaseToSentenceCase(label).replace("-", " ")}
-					</span>
+					</button>
 				);
 			})}
 		</div>

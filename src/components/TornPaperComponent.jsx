@@ -138,11 +138,11 @@ export default function TornPaperComponent() {
 	return (
 		<>
 			<div
-				className="border-b"
+				className="p-3"
 				style={{
-					padding: "1.25rem",
-					paddingBottom: "2rem",
-					marginBottom: "1rem",
+					// padding: "1.25rem",
+					// paddingBottom: "2rem",
+					// marginBottom: "1rem",
 					display: data?.src || url ? "" : "none",
 				}}
 			>

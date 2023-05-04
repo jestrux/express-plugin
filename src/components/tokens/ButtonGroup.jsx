@@ -13,14 +13,16 @@ function ButtonGroup({ choices = [], onChange, ...props }) {
 				const selected = props.value == value;
 
 				return (
-					<span
+					<button
 						key={index}
-						className={`capitalize rounded-xs cursor-pointer font-medium ${
-							index < choices.length - 1 && `border-r`
+						className={`capitalize cursor-pointer font-medium ${
+							index < choices.length - 1
+								? "border-r"
+								: "border border-transparent"
 						} ${
 							selected
-								? "bg-dark-gray text-white"
-								: "text-darker-gray"
+								? "rounded-xs bg-dark-gray text-white"
+								: "bg-transparent text-darker-gray"
 						}`}
 						style={{
 							fontSize: "12px",
@@ -29,7 +31,7 @@ function ButtonGroup({ choices = [], onChange, ...props }) {
 						onClick={() => onChange(value, index)}
 					>
 						{label.toString()}
-					</span>
+					</button>
 				);
 			})}
 		</div>

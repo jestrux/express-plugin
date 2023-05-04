@@ -349,10 +349,10 @@ function ComponentFields({ schema, data, onChange }) {
 								className="border-b absolute"
 								style={{
 									top: "auto",
-									// left: "-12px",
-									// right: "-12px",
-									left: "0px",
-									right: "0px",
+									left: "-12px",
+									right: "-12px",
+									// left: "0px",
+									// right: "0px",
 									bottom: "-1rem",
 									opacity: 1,
 								}}

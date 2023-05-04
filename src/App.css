@@ -121,6 +121,9 @@ button {
 	line-height: 18px;
 	border-radius: 20px;
 }
+.bg-transparent {
+	background: transparent;
+}
 .bg-current {
 	background: currentColor;
 }
@@ -154,6 +157,9 @@ button {
 .bg-black90 {
 	background: rgba(0, 0, 0, 0.75);
 }
+.bg-lighter-gray {
+	background: #f7f7f7;
+}
 .bg-light-gray {
 	background: #f0f0f0;
 }
@@ -162,6 +168,12 @@ button {
 }
 .bg-dark-gray {
 	background: #888;
+}
+.bg-darker-gray {
+	background: #6a6a6a;
+}
+.text-left {
+	text-align: left;
 }
 .text-primary,
 .text-blue {
@@ -263,6 +275,14 @@ button {
 
 .leading-loose {
 	line-height: 2;
+}
+
+.grid {
+	display: grid;
+}
+
+.grid-cols-2 {
+	grid-template-columns: 1fr 1fr;
 }
 
 .flex {
@@ -682,6 +702,9 @@ img.inset-0 {
 }
 .border-dark-gray {
 	border-color: #888;
+}
+.border-darker-gray {
+	border-color: #6a6a6a;
 }
 
 .divide-y > * + * {

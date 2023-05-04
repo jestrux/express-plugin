@@ -10,6 +10,7 @@ import ImagePicker from "./ImagePicker";
 import ColorSwatch from "./ColorSwatch";
 import GridList from "./GridList";
 import SliderInput from "./SliderInput";
+import CardList from "./CardList";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -203,6 +204,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		"icon",
 		"radio",
 		"tag",
+		"card",
 		"grid",
 		"image",
 		"logo",
@@ -234,7 +236,9 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					className="flex items-center justify-between"
 					style={{
 						marginBottom:
-							isCustomFieldType && !inline ? "0.4rem" : 0,
+							isCustomFieldType && !inline && type != "boolean"
+								? "0.4rem"
+								: 0,
 					}}
 				>
 					<label
@@ -259,6 +263,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 				<React.Fragment>
 					{type == "grid" && (
 						<GridList
+							value={value}
+							choices={choices}
+							onChange={handleChange}
+							{...meta}
+						/>
+					)}
+
+					{type == "card" && (
+						<CardList
 							value={value}
 							choices={choices}
 							onChange={handleChange}

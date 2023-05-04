@@ -9,6 +9,7 @@ import Toggle from "./Toggle";
 import ImagePicker from "./ImagePicker";
 import ColorSwatch from "./ColorSwatch";
 import GridList from "./GridList";
+import SliderInput from "./SliderInput";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -205,6 +206,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		"grid",
 		"image",
 		"logo",
+		"range",
 	].includes(type);
 
 	let { className, ...otherMeta } = meta;
@@ -329,6 +331,17 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					{type == "image" && (
 						<div className="mt-1">
 							<ImagePicker onChange={handleChange} {...meta} />
+						</div>
+					)}
+
+					{type == "range" && (
+						<div style={{ margin: "-0.25rem 0" }}>
+							<SliderInput
+								label={label}
+								value={value}
+								onChange={handleChange}
+								{...meta}
+							/>
 						</div>
 					)}
 

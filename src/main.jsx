@@ -15,7 +15,7 @@ const render = (sdk = true) => {
 
 	ReactDOM.createRoot(document.getElementById("root")).render(
 		<React.StrictMode>
-			<Provider theme={theme}>
+			<Provider theme={theme} colorScheme="light">
 				<div className="bg-white">
 					<App />
 				</div>
@@ -26,4 +26,4 @@ const render = (sdk = true) => {
 
 render(false);
 
-AddOnSdk.ready.then(render);
+// AddOnSdk.ready.then(render);

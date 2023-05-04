@@ -52,7 +52,7 @@ const componentMap = {
 	LayoutsComponent,
 	GridComponent,
 	ArrowComponent,
-	FlowerHeadsComponent
+	FlowerHeadsComponent,
 };
 
 const presets = {
@@ -74,10 +74,10 @@ const presets = {
 		// fullWidth: true,
 		component: "TornPaperComponent",
 	},
-	charts: {
-		props: {},
-		component: "ChartComponent",
-	},
+	// charts: {
+	// 	props: {},
+	// 	component: "ChartComponent",
+	// },
 	map: {
 		props: {},
 		component: "MapComponent",
@@ -90,14 +90,18 @@ const presets = {
 		props: {},
 		component: "GridComponent",
 	},
+	polaroid: {
+		props: {},
+		component: "PolaroidComponent",
+	},
 	cylinder: {
 		props: {},
 		component: "CylinderComponent",
 	},
-	frame: {
-		props: {},
-		component: "FrameComponent",
-	},
+	// frame: {
+	// 	props: {},
+	// 	component: "FrameComponent",
+	// },
 	// poppyFlower: {
 	// 	props: {},
 	// 	component: "PoppyFlowerComponent",
@@ -106,10 +110,10 @@ const presets = {
 		props: {},
 		component: "FlowerHeadsComponent",
 	},
-	clock: {
-		props: {},
-		component: "ClockWidgetComponent",
-	},
+	// clock: {
+	// 	props: {},
+	// 	component: "ClockWidgetComponent",
+	// },
 	stickerBadge: {
 		props: {},
 		component: "StickerBadgeComponent",
@@ -117,10 +121,6 @@ const presets = {
 	waves: {
 		props: {},
 		component: "WaveComponent",
-	},
-	polaroid: {
-		props: {},
-		component: "PolaroidComponent",
 	},
 	arrows: {
 		props: {},
@@ -138,10 +138,10 @@ const presets = {
 		props: {},
 		component: "SpiralComponent",
 	},
-	calendar: {
-		props: {},
-		component: "CalendarComponent",
-	},
+	// calendar: {
+	// 	props: {},
+	// 	component: "CalendarComponent",
+	// },
 	color: {
 		props: {},
 		component: "ColorComponent",
@@ -168,8 +168,8 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(FlowerHeadsComponent);
-	const component = useRef();
+	const component = useRef(TornPaperComponent);
+	// const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {
 		component.current = componentMap[currentComponent];
@@ -183,7 +183,7 @@ export default function App() {
 			<>
 				<div className="px-4 mb-3 flex items-center gap-2">
 					<button
-						className="border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-sm aspect-square"
+						className="back-button border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-sm aspect-square"
 						onClick={() => handleSetCurrentComponent(null)}
 						style={{
 							width: "24px",

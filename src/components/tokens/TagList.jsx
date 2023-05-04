@@ -31,9 +31,9 @@ function TagList({ choices = [], onChange, ...props }) {
 				return (
 					<span
 						key={index}
-						className={`cursor-pointer py-1 border rounded-lg text-sm font-medium ${
+						className={`cursor-pointer py-1 border rounded-sm text-sm font-medium ${
 							selected
-								? "bg-primary border-primary text-white"
+								? "bg-dark-gray border-dark-gray text-white"
 								: "text-darker-gray"
 						}`}
 						style={{

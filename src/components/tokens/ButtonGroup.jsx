@@ -19,12 +19,12 @@ function ButtonGroup({ choices = [], onChange, ...props }) {
 							index < choices.length - 1 && `border-r`
 						} ${
 							selected
-								? "bg-primary text-white"
+								? "bg-dark-gray text-white"
 								: "text-darker-gray"
 						}`}
 						style={{
 							fontSize: "12px",
-							padding: "0.4rem 0.5rem",
+							padding: "0.2rem 0.5rem",
 						}}
 						onClick={() => onChange(value, index)}
 					>

@@ -138,10 +138,15 @@ export default function TornPaperComponent() {
 	return (
 		<>
 			<div
-				className="p-3 border-b"
-				style={{ display: data?.src || url ? "" : "none" }}
+				className="border-b"
+				style={{
+					padding: "1.25rem",
+					paddingBottom: "2rem",
+					marginBottom: "1rem",
+					display: data?.src || url ? "" : "none",
+				}}
 			>
-				<div className="relative relative flex center-center">
+				<div className="border relative relative flex center-center">
 					<img
 						className="max-w-full object-contain object-top"
 						src={data.src}
@@ -168,19 +173,11 @@ export default function TornPaperComponent() {
 				</div>
 			</div>
 
-			<div className="px-12px mt-2">
+			<div className="px-12px">
 				<ComponentFields
 					schema={{
 						src: { type: "image", label: "" },
-						crop: {
-							label: "",
-							type: "boolean",
-							group: "crop",
-							optional: "group",
-						},
 						cropPercent: {
-							group: "crop",
-							optional: "group",
 							label: "Cut off distance",
 							type: "range",
 							defaultValue: 1,
@@ -188,7 +185,7 @@ export default function TornPaperComponent() {
 							max: 1,
 							step: 1,
 							meta: {
-								min: 0,
+								min: 0.2,
 								max: 1,
 								step: 0.1,
 							},

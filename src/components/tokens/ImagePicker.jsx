@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "./Input";
+import { Button } from "@adobe/react-spectrum";
 
 const readFile = (file) => {
 	return new Promise((res) => {
@@ -25,6 +26,19 @@ export default function ImagePicker({ multiple, onChange }) {
 
 		e.target.value = "";
 	};
+
+	return (
+		<Button elementType="label" width="100%" variant="accent">
+			<Input
+				className="hidden"
+				type="file"
+				name="image"
+				onChange={processImage}
+				{...(multiple ? { multiple: true } : {})}
+			/>
+			{multiple ? "Add images from device" : "Add image from device"}
+		</Button>
+	);
 
 	return (
 		<label

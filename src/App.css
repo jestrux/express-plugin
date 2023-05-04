@@ -12,6 +12,11 @@
 	accent-color: #5258e4;
 }
 
+.back-button:not(:hover) {
+	border-color: transparent;
+	background-color: transparent;
+}
+
 .InternalSection:last-child {
 	border-bottom: 1px solid white !important;
 }
@@ -22,13 +27,13 @@
 
 .fieldEditorLabel {
 	font-size: 0.9rem;
-	font-weight: 500;
+	/* font-weight: 500; */
 }
 
 .fieldEditorLabel.inset {
 	font-size: 0.85rem;
-	font-weight: 400;
-	opacity: 0.85;
+	/* font-weight: 400; */
+	/* opacity: 0.85; */
 	letter-spacing: -0.02rem;
 }
 
@@ -321,6 +326,9 @@ button {
 }
 .gap-4 {
 	gap: 1rem;
+}
+.gap-5 {
+	gap: 1.25rem;
 }
 
 img.inset-0 {

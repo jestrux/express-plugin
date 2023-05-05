@@ -14,6 +14,11 @@ export default {
 	flowers2: "static/images/flowers2.jpg",
 	flowers: "static/images/flowers.jpg",
 	spotifyWave: "static/images/spotify-wave.png",
+
+	mapDark: "static/images/posters/mapDark.jpg",
+	mapGreen: "static/images/posters/mapGreen.jpg",
+	mapRegular: "static/images/posters/mapRegular.jpg",
+	mapRegular,
 	posters: {
 		arrows: "static/images/posters/arrows.png",
 		brushBackground: "static/images/posters/brush.png",

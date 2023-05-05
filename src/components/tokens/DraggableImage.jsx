@@ -1,6 +1,13 @@
 import React, { useEffect, useRef } from "react";
+import Loader from "./Loader";
+import InfoCard from "./InfoCard";
 
-export default function DraggableImage({ wrapped, ...props }) {
+export default function DraggableImage({
+	wrapped,
+	loading = false,
+	info = false,
+	...props
+}) {
 	const imageRef = useRef();
 
 	useEffect(() => {
@@ -23,8 +30,10 @@ export default function DraggableImage({ wrapped, ...props }) {
 		else window.AddOnSdk?.app.document.addImage(blob);
 	};
 
-	if (!wrapped)
-		return (
+	if (!wrapped) {
+		return loading || !props.src ? (
+			<Loader />
+		) : (
 			<img
 				className="hoverable"
 				ref={imageRef}
@@ -32,15 +41,27 @@ export default function DraggableImage({ wrapped, ...props }) {
 				onClick={exportImage}
 			/>
 		);
+	}
 
 	return (
-		<div
-			draggable
-			className="hoverable relative relative bg-transparent flex center-center p-3"
-			style={{ height: "20vh" }}
-			onClick={exportImage}
-		>
-			<img ref={imageRef} className="max-h-full max-w-full" {...props} />
-		</div>
+		<>
+			<div
+				draggable
+				className="hoverable relative relative bg-transparent flex center-center p-3"
+				style={{ height: "20vh" }}
+				onClick={exportImage}
+			>
+				{props.loading || !props.src ? (
+					<Loader />
+				) : (
+					<img
+						ref={imageRef}
+						className="max-h-full max-w-full"
+						{...props}
+					/>
+				)}
+			</div>
+			{props.info && <InfoCard />}
+		</>
 	);
 }

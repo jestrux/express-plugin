@@ -15,7 +15,7 @@ function ButtonGroup({ choices = [], onChange, ...props }) {
 				return (
 					<button
 						key={index}
-						className={`capitalize cursor-pointer font-medium ${
+						className={`capitalize cursor-pointer ${
 							index < choices.length - 1
 								? "border-r"
 								: "border border-transparent"
@@ -25,8 +25,8 @@ function ButtonGroup({ choices = [], onChange, ...props }) {
 								: "bg-transparent text-darker-gray"
 						}`}
 						style={{
-							fontSize: "12px",
-							padding: "0.2rem 0.5rem",
+							fontSize: "13px",
+							padding: "0.25rem 0.5rem",
 						}}
 						onClick={() => onChange(value, index)}
 					>

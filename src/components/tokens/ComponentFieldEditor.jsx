@@ -11,6 +11,7 @@ import ColorSwatch from "./ColorSwatch";
 import GridList from "./GridList";
 import SliderInput from "./SliderInput";
 import CardList from "./CardList";
+import InfoCard from "./InfoCard";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -158,6 +159,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		__data,
 		optional,
 		label,
+		hint,
 		type,
 		choices,
 		defaultValue,
@@ -231,6 +233,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 				inline && "flex items-center justify-between"
 			}`}
 		>
+			{hint && hint.length && (
+				<div
+					className="-mx-12px mb-2"
+					style={{ marginTop: "-0.75rem" }}
+				>
+					<InfoCard>{hint}</InfoCard>
+				</div>
+			)}
+
 			{label && label.length && (
 				<div
 					className="flex items-center justify-between"

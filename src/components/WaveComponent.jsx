@@ -103,7 +103,8 @@ export default function WaveComponent() {
 						},
 						wave: {
 							type: "grid",
-							label: "Click (or drag and drop) a wave to add it to your canvas",
+							label: "",
+							hint: "Click (or drag and drop) a wave to add it to your canvas",
 							choices: Object.keys(waveThreads),
 							noBorder: true,
 							meta: {
@@ -117,10 +118,9 @@ export default function WaveComponent() {
 
 									return (
 										<DraggableImage
-											className="p-3 w-full"
+											className="p-2 w-full"
 											src={url}
 											style={{
-												height: "20vh",
 												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
 											}}
 										/>

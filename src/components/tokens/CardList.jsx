@@ -21,25 +21,27 @@ function CardList({
 						key={index}
 						className={`relative overflow-hidden cursor-pointer flex items-center border-2 rounded-sm text-left ${
 							selected
-								? "bg-lighter-gray border-dark-gray"
+								? "bg-transparent border-primary"
 								: "bg-transparent"
 						}`}
 						style={{
 							padding: "0.25rem 0.25rem",
 							height: "42px",
-							fontSize: "12px",
+							fontSize: "11px",
 							gap: "0.3rem",
-							borderColor: selected ? "" : "#DADADA",
+							borderColor: selected ? "" : "#bEbEbE",
 						}}
 						onClick={() => onChange(value, index)}
 					>
 						{selected && (
 							<div
-								className="absolute top-0 right-0 my-1 mx-1 bg-darker-gray rounded-sm flex center-center"
+								className="absolute bg-primary rounded-sm flex center-center"
 								style={{
-									width: "12px",
-									height: "12px",
+									width: "11px",
+									height: "11px",
 									zIndex: 1,
+									top: "2px",
+									right: "2px",
 								}}
 							>
 								<svg

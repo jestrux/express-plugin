@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
-import { showPreview } from "../utils";
 import arrows from "./arrows";
+import DraggableImage from "../tokens/DraggableImage";
 
 class ArrowComponentDrawer {
 	constructor() {
@@ -11,13 +11,13 @@ class ArrowComponentDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		return this.drawImage();
 	}
 
-	async drawImage() {
+	drawImage() {
 		const ctx = this.ctx;
 		const { width, height, path } = arrows[this.arrow];
 		this.canvas.width = width;
@@ -32,97 +32,54 @@ class ArrowComponentDrawer {
 
 		const res = this.canvas.toDataURL();
 
-		showPreview(res);
-
 		return res;
 	}
 }
 
 export default function ArrowComponent() {
-	const previewRef = useRef(null);
-	const arrowComponentDrawerRef = useRef((data) => {
-		if (!window.arrowComponentDrawer)
-			window.arrowComponentDrawer = new ArrowComponentDrawer();
-
-		window.arrowComponentDrawer.draw(data).then(setUrl);
+	const [data, updateField] = useDataSchema({
+		color: "#ac1f40",
 	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			color: "#ac1f40",
-			arrow: Object.keys(arrows)[0],
-		},
-		arrowComponentDrawerRef.current
-	);
-
-	useEffect(() => {
-		arrowComponentDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ height: "20vh" }}
-					/>
-				</div>
-			</div>
-
-			<div className="px-12px mt-1">
+			<div className="px-12px">
 				<ComponentFields
 					schema={{
-						arrow: {
-							type: "grid",
-							label: "",
-							choices: Object.keys(arrows),
-							meta: {
-								render(value) {
-									const { width, height, path } =
-										arrows[value];
-
-									return (
-										<svg
-											className="p-3 w-full"
-											viewBox={`0 0 ${width} ${height}`}
-											fill={data.color}
-										>
-											<path d={path} />
-										</svg>
-									);
-								},
-							},
-						},
 						color: {
 							type: "color",
-							label: "",
 							meta: {
 								singleChoice: true,
 								choiceSize: 30,
+							},
+						},
+						wave: {
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) an arrow to add it to your canvas",
+							choices: Object.keys(arrows),
+							noBorder: true,
+							meta: {
+								columns: 3,
+								render(arrow) {
+									const url = new ArrowComponentDrawer().draw(
+										{
+											arrow,
+											...data,
+										}
+									);
+
+									return (
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
+								},
 							},
 						},
 					}}

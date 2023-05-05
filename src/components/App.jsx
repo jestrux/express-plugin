@@ -25,8 +25,8 @@ import ColorComponent from "./ColorComponent";
 import LayoutsComponent from "./layouts";
 import GridComponent from "./GridComponent";
 import ArrowComponent from "./ArrowComponent";
-import StickersComponent from "./StickersComponent";
 import FlowerHeadsComponent from "./FlowerHeadsComponent";
+import ShapesComponent from "./ShapesComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -53,6 +53,7 @@ const componentMap = {
 	GridComponent,
 	ArrowComponent,
 	FlowerHeadsComponent,
+	ShapesComponent,
 };
 
 const presets = {
@@ -94,7 +95,7 @@ const presets = {
 		props: {},
 		component: "PolaroidComponent",
 	},
-	cylinder: {
+	pill: {
 		props: {},
 		component: "CylinderComponent",
 	},
@@ -130,10 +131,10 @@ const presets = {
 		props: {},
 		component: "WeatherWidgetComponent",
 	},
-	ribbon: {
-		props: {},
-		component: "RibbonComponent",
-	},
+	// ribbon: {
+	// 	props: {},
+	// 	component: "RibbonComponent",
+	// },
 	spiral: {
 		props: {},
 		component: "SpiralComponent",
@@ -146,10 +147,10 @@ const presets = {
 		props: {},
 		component: "ColorComponent",
 	},
-	// "Deco Shapes": {
-	// 	props: {},
-	// 	component: "SpotifyComponent",
-	// },
+	"Deco Shapes": {
+		props: {},
+		component: "ShapesComponent",
+	},
 	// contour: {
 	// 	props: {},
 	// 	component: "ContourComponent",
@@ -168,7 +169,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(ColorComponent);
+	// const component = useRef(WeatherWidgetComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {
@@ -181,7 +182,7 @@ export default function App() {
 
 		return (
 			<>
-				<div className="px-4 mb-3 flex items-center gap-2">
+				<div className="px-2 border-b pb-3 flex items-center gap-2">
 					<button
 						className="back-button border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-sm aspect-square"
 						onClick={() => handleSetCurrentComponent(null)}
@@ -208,7 +209,12 @@ export default function App() {
 
 					<span
 						className="capitalize font-medium"
-						style={{ fontSize: "1rem" }}
+						style={{
+							fontSize: "1rem",
+							lineHeight: "1",
+							fontWeight: "bold",
+							letterSpacing: "-0.03em",
+						}}
 					>
 						{camelCaseToSentenceCase(currentComponent)}
 					</span>

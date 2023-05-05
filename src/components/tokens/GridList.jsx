@@ -5,6 +5,7 @@ function GridList({
 	choices = [],
 	columns = 4,
 	aspectRatio = "1",
+	transparent,
 	render,
 	onChange,
 	...props
@@ -28,7 +29,7 @@ function GridList({
 				return (
 					<div
 						key={index}
-						className={`hoverable flex flex-col flex-wrap center-center border rounded-sm ${
+						className={`hoverables flex flex-col flex-wrap center-center border rounded-sm ${
 							selected
 								? "bg-black26 border-dark-gray"
 								: "text-darker-gray"
@@ -36,10 +37,14 @@ function GridList({
 						style={{
 							width: "100%",
 							overflow: "hidden",
-							borderColor: selected ? "" : "#d5d5d5",
+							borderColor: transparent
+								? "transparent"
+								: selected
+								? ""
+								: "#d5d5d5",
 							aspectRatio,
 						}}
-						onClick={() => onChange(value, index)}
+						// onClick={() => onChange(value, index)}
 					>
 						{typeof render == "function" ? (
 							render(value)

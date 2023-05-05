@@ -72,7 +72,7 @@ export default {
 		clock: clockPoster,
 		cloud: cloudPoster,
 		color: colorPoster,
-		cylinder: cylinderPoster,
+		pill: cylinderPoster,
 		contour: contourPoster,
 		flowerHeads: flowerHeadsPoster,
 		frame: framedImagePoster,

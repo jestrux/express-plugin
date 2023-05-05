@@ -3,6 +3,7 @@ import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
 import { showPreview } from "./utils";
 import getColorName from "./utils/get-color-name";
+import DraggableImage from "./tokens/DraggableImage";
 
 class ColorComponentDrawer {
 	constructor() {
@@ -13,7 +14,7 @@ class ColorComponentDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -169,7 +170,7 @@ class ColorComponentDrawer {
 		const inset = 20;
 		const fontSize = refWidth / 8;
 		const shadowOffset = fontSize / 4;
-		const textInset = inset + shadowOffset + shadowOffset;
+		const textInset = inset / 2 + shadowOffset + shadowOffset;
 		const cornerRadius = textInset / 4;
 		const canvas = document.createElement("canvas");
 		canvas.width = this.canvas.width;
@@ -186,34 +187,22 @@ class ColorComponentDrawer {
 		ctx.shadowOffsetX = 0.5;
 		ctx.shadowOffsetY = 0.5;
 
-		ctx.roundRect(
-			shadowOffset,
-			shadowOffset,
-			width - shadowOffset,
-			height - shadowOffset,
-			cornerRadius
-		);
+		ctx.roundRect(inset, inset, width, height + inset * 0.5, cornerRadius);
 		ctx.fill();
-		ctx.lineWidth = inset;
-		// ctx.stroke();
 		ctx.restore();
 		ctx.clip();
 
 		ctx.fillStyle = "#fff";
-		ctx.fillRect(inset, inset, width, height);
 
 		if (this.showColorCode) {
 			if (this.showColorName) {
 				ctx.fillStyle = this.color;
-				ctx.beginPath();
-				ctx.roundRect(
-					shadowOffset,
-					shadowOffset,
-					width - shadowOffset,
-					height - inset * 2 - fontSize * 2 - shadowOffset,
-					[cornerRadius, cornerRadius, 0, 0]
+				ctx.fillRect(
+					inset,
+					inset,
+					width,
+					height - inset * 2 - fontSize * 2 - inset
 				);
-				ctx.fill();
 
 				ctx.fillStyle = "#777";
 				ctx.letterSpacing = "0.12em";
@@ -221,7 +210,7 @@ class ColorComponentDrawer {
 				ctx.fillText(
 					getColorName(this.color).toUpperCase(),
 					textInset,
-					height - 7 - fontSize * 1.4
+					height - 7 - fontSize * 1.3
 				);
 
 				ctx.fillStyle = "#000";
@@ -229,19 +218,16 @@ class ColorComponentDrawer {
 				ctx.fillText(
 					this.color.toUpperCase(),
 					textInset,
-					height - fontSize / 1.7
+					height - fontSize / 2.5
 				);
 			} else {
 				ctx.fillStyle = this.color;
-				ctx.beginPath();
-				ctx.roundRect(
-					inset * 1.5,
-					inset * 1.5,
-					width - shadowOffset,
-					height - inset * 3 - fontSize * 1.1 - shadowOffset,
-					[cornerRadius, cornerRadius, 0, 0]
+				ctx.fillRect(
+					inset,
+					inset,
+					width,
+					height - inset * 3 - fontSize * 1.1 - shadowOffset
 				);
-				ctx.fill();
 
 				ctx.fillStyle = "#000";
 				ctx.letterSpacing = "0.12em";
@@ -249,7 +235,7 @@ class ColorComponentDrawer {
 				ctx.fillText(
 					this.color.toUpperCase(),
 					textInset,
-					height - fontSize / 1.8
+					height - fontSize / 2
 				);
 			}
 		} else if (this.showColorName) {
@@ -285,10 +271,10 @@ class ColorComponentDrawer {
 			ctx.fill();
 		}
 
-		this.ctx.drawImage(canvas, inset, inset);
+		this.ctx.drawImage(canvas, 0, 0);
 	}
 
-	async drawImage() {
+	drawImage() {
 		if (this.type == "Color palette") {
 			if (this.paletteStyle == "circles") this.circularColorPalette();
 			else this.colorPalette();
@@ -311,13 +297,13 @@ export default function ColorComponent() {
 		if (!window.colorComponentDrawer)
 			window.colorComponentDrawer = new ColorComponentDrawer();
 
-		window.colorComponentDrawer.draw(data).then(setUrl);
+		setUrl(window.colorComponentDrawer.draw(data));
 	});
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			// type: "Color palette",
-			type: "Single color",
+			type: "Color palette",
+			// type: "Single color",
 			// paletteStyle: "regular",
 			paletteStyle: "circles",
 			colorType: "card",
@@ -340,45 +326,19 @@ export default function ColorComponent() {
 			stroke: true,
 			// spacing: false,
 			fold: true,
-		},
-		colorComponentDrawerRef.current
+		}
+		// colorComponentDrawerRef.current
 	);
 
 	useEffect(() => {
 		colorComponentDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
 	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "", height: "20vh" }}
-			>
-				<img
-					draggable
-					onClick={exportImage}
-					ref={previewRef}
-					className="drag-target max-h-full max-w-full"
-					src={url}
-				/>
-			</div>
+			{/* <DraggableImage wrapped src={url} />
+
+			<InfoCard /> */}
 
 			<div className="px-12px mt-1">
 				<ComponentFields
@@ -407,7 +367,7 @@ export default function ColorComponent() {
 											<g
 												fill="#fff"
 												stroke="#fff"
-												stroke-width="5"
+												strokeWidth="5"
 												data-name="Rectangle 14"
 												transform="translate(292 227)"
 											>
@@ -429,7 +389,7 @@ export default function ColorComponent() {
 											<g
 												fill="#9a136f"
 												stroke="rgba(255,255,255,0)"
-												stroke-width="30"
+												strokeWidth="30"
 												data-name="Rectangle 15"
 											>
 												<path
@@ -455,7 +415,7 @@ export default function ColorComponent() {
 											<g
 												fill="#7ace4f"
 												stroke="#fff"
-												stroke-width="30"
+												strokeWidth="30"
 												data-name="Ellipse 2"
 												transform="translate(101 264)"
 											>
@@ -475,7 +435,7 @@ export default function ColorComponent() {
 											<g
 												fill="#febf00"
 												stroke="#fff"
-												stroke-width="30"
+												strokeWidth="30"
 												data-name="Ellipse 2"
 												transform="translate(252 264)"
 											>
@@ -495,7 +455,7 @@ export default function ColorComponent() {
 											<g
 												fill="#f67e00"
 												stroke="#fff"
-												stroke-width="30"
+												strokeWidth="30"
 												data-name="Ellipse 2"
 												transform="translate(426 264)"
 											>
@@ -536,6 +496,41 @@ export default function ColorComponent() {
 										choices: ["circle", "card"],
 										show: () => false,
 									},
+									colorPicker: {
+										type: "grid",
+										label: "",
+										hint: "Click (or drag and drop) color to add to your canvas",
+										choices: ["regular", "tall", "circle"],
+										noBorder: true,
+										meta: {
+											columns: 2,
+											// aspectRatio: "2/0.8",
+											render(type) {
+												const url =
+													new ColorComponentDrawer().draw(
+														{
+															...data,
+															cardSize: type,
+															colorType:
+																type == "circle"
+																	? "circle"
+																	: "card",
+														}
+													);
+												return (
+													<DraggableImage
+														className="p-3 h-full max-w-full object-fit"
+														src={url}
+														style={{
+															objectFit:
+																"contain",
+															filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+														}}
+													/>
+												);
+											},
+										},
+									},
 									...(data.colorType == "card"
 										? {
 												cardSize: {
@@ -545,9 +540,10 @@ export default function ColorComponent() {
 														"regular",
 														"tall",
 													],
+													show: () => false,
 												},
 												// showColorCode: "boolean",
-												showColorName: "boolean",
+												// showColorName: "boolean",
 										  }
 										: {}),
 							  }
@@ -557,6 +553,40 @@ export default function ColorComponent() {
 									colors: {
 										type: "swatch",
 									},
+									palettePicker: {
+										type: "grid",
+										label: "",
+										hint: "Click (or drag and drop) palette to add to your canvas",
+										choices: [
+											"circles",
+											"regular",
+											"strip",
+										],
+										noBorder: true,
+										meta: {
+											columns: 1,
+											aspectRatio: "2/0.8",
+											render(paletteStyle) {
+												const url =
+													new ColorComponentDrawer().draw(
+														{
+															...data,
+															paletteStyle,
+														}
+													);
+												return (
+													<DraggableImage
+														className="p-3 h-full max-w-full object-fit"
+														src={url}
+														style={{
+															objectFit:
+																"contain",
+														}}
+													/>
+												);
+											},
+										},
+									},
 									paletteStyle: {
 										type: "card",
 										// inline: true,
@@ -565,6 +595,7 @@ export default function ColorComponent() {
 											"strip",
 											"circles",
 										],
+										show: () => false,
 										meta: {
 											// transparent: true,
 											renderChoice(value) {
@@ -582,7 +613,7 @@ export default function ColorComponent() {
 															<g
 																fill="none"
 																stroke="#4b4b4b"
-																stroke-width="30"
+																strokeWidth="30"
 																data-name="Ellipse 3"
 																transform="translate(138 258)"
 															>
@@ -603,7 +634,7 @@ export default function ColorComponent() {
 															<g
 																fill="none"
 																stroke="#4b4b4b"
-																stroke-width="30"
+																strokeWidth="30"
 																data-name="Ellipse 4"
 																transform="translate(381 258)"
 															>
@@ -639,7 +670,7 @@ export default function ColorComponent() {
 															<g
 																fill="rgba(255,255,255,0)"
 																stroke="#0d0d0d"
-																stroke-width="20"
+																strokeWidth="20"
 																data-name="Rectangle 19"
 															>
 																<path
@@ -654,7 +685,7 @@ export default function ColorComponent() {
 															<g
 																fill="rgba(255,255,255,0)"
 																stroke="#0d0d0d"
-																stroke-width="20"
+																strokeWidth="20"
 																data-name="Rectangle 19"
 															>
 																<path
@@ -669,7 +700,7 @@ export default function ColorComponent() {
 															<g
 																fill="rgba(255,255,255,0)"
 																stroke="#0d0d0d"
-																stroke-width="20"
+																strokeWidth="20"
 																data-name="Rectangle 19"
 															>
 																<path
@@ -684,7 +715,7 @@ export default function ColorComponent() {
 															<g
 																fill="rgba(255,255,255,0)"
 																stroke="#0d0d0d"
-																stroke-width="20"
+																strokeWidth="20"
 																data-name="Rectangle 19"
 															>
 																<path
@@ -736,8 +767,7 @@ export default function ColorComponent() {
 									},
 									stroke: {
 										type: "boolean",
-										// show: (data) =>
-										// 	data.paletteStyle == "regular",
+										show: (data) => false,
 									},
 									roundedCorners: {
 										type: "radio",
@@ -749,7 +779,11 @@ export default function ColorComponent() {
 											"full",
 										],
 									},
-									fold: "boolean",
+									fold: {
+										type: "boolean",
+										show: (data) => false,
+										// data.paletteStyle == "circles",
+									},
 							  }
 							: {}),
 					}}

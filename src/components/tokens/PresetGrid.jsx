@@ -4,7 +4,7 @@ import { camelCaseToSentenceCase } from "../utils";
 
 const PresetGrid = ({ presets, onSelect }) => {
 	return (
-		<div className="flex flex-wrap">
+		<div className="flex flex-wrap border-t">
 			{Object.entries(presets).map(([name, value], index) => {
 				const { props, component, ...styles } = value;
 				const {
@@ -18,7 +18,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 				return (
 					<div
 						key={index}
-						className="hoverable parent relative pt-3 flex-shrink-0 font-bold text-center bg-gray-100 overflow-hidden relative flex flex-col center-center"
+						className="hoverable parent relative pt-3 flex-shrink-0 text-center bg-gray-100 overflow-hidden relative flex flex-col center-center"
 						style={{
 							width: fullWidth
 								? "100%"
@@ -27,7 +27,7 @@ const PresetGrid = ({ presets, onSelect }) => {
 								: "50%",
 							border: "solid #e5e5e5",
 							borderWidth: "0 1px 1px 0",
-							paddingBottom: "1.8rem",
+							paddingBottom: "2.5rem",
 						}}
 						onClick={() => onSelect(component, name)}
 					>
@@ -66,9 +66,9 @@ const PresetGrid = ({ presets, onSelect }) => {
 							</span>
 						) : (
 							<span
-								className="absolute bottom-0 font-medium block text-center mb-1 text-sm"
+								className="absolute bottom-0 block text-center mb-2 text-sm"
 								style={{
-									fontSize: "0.6rem",
+									fontSize: "0.72rem",
 									lineHeight: "1.5",
 								}}
 							>

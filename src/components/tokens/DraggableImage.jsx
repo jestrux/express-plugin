@@ -1,13 +1,16 @@
 import React, { useEffect, useRef } from "react";
 
-export default function DraggableImage(props) {
+export default function DraggableImage({ wrapped, ...props }) {
 	const imageRef = useRef();
 
 	useEffect(() => {
-		window.AddOnSdk?.app.enableDragToDocument(imageRef.current, {
-			previewCallback: (element) => new URL(element.src),
-			completionCallback: exportImage,
-		});
+		window.AddOnSdk?.app.enableDragToDocument(
+			wrapped ? imageRef.current.parentElement : imageRef.current,
+			{
+				previewCallback: () => new URL(imageRef.current.src),
+				completionCallback: exportImage,
+			}
+		);
 	}, []);
 
 	const exportImage = async (e) => {
@@ -20,5 +23,24 @@ export default function DraggableImage(props) {
 		else window.AddOnSdk?.app.document.addImage(blob);
 	};
 
-	return <img ref={imageRef} draggable onClick={exportImage} {...props} />;
+	if (!wrapped)
+		return (
+			<img
+				className="hoverable"
+				ref={imageRef}
+				{...props}
+				onClick={exportImage}
+			/>
+		);
+
+	return (
+		<div
+			draggable
+			className="hoverable relative relative bg-transparent flex center-center p-3"
+			style={{ height: "20vh" }}
+			onClick={exportImage}
+		>
+			<img ref={imageRef} className="max-h-full max-w-full" {...props} />
+		</div>
+	);
 }

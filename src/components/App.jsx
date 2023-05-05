@@ -25,8 +25,8 @@ import ColorComponent from "./ColorComponent";
 import LayoutsComponent from "./layouts";
 import GridComponent from "./GridComponent";
 import ArrowComponent from "./ArrowComponent";
-import StickersComponent from "./StickersComponent";
 import FlowerHeadsComponent from "./FlowerHeadsComponent";
+import ShapesComponent from "./ShapesComponent";
 
 const componentMap = {
 	TornPaperComponent,
@@ -52,7 +52,8 @@ const componentMap = {
 	LayoutsComponent,
 	GridComponent,
 	ArrowComponent,
-	FlowerHeadsComponent
+	FlowerHeadsComponent,
+	ShapesComponent,
 };
 
 const presets = {
@@ -74,10 +75,10 @@ const presets = {
 		// fullWidth: true,
 		component: "TornPaperComponent",
 	},
-	charts: {
-		props: {},
-		component: "ChartComponent",
-	},
+	// charts: {
+	// 	props: {},
+	// 	component: "ChartComponent",
+	// },
 	map: {
 		props: {},
 		component: "MapComponent",
@@ -90,14 +91,18 @@ const presets = {
 		props: {},
 		component: "GridComponent",
 	},
-	cylinder: {
+	polaroid: {
+		props: {},
+		component: "PolaroidComponent",
+	},
+	pill: {
 		props: {},
 		component: "CylinderComponent",
 	},
-	frame: {
-		props: {},
-		component: "FrameComponent",
-	},
+	// frame: {
+	// 	props: {},
+	// 	component: "FrameComponent",
+	// },
 	// poppyFlower: {
 	// 	props: {},
 	// 	component: "PoppyFlowerComponent",
@@ -106,10 +111,10 @@ const presets = {
 		props: {},
 		component: "FlowerHeadsComponent",
 	},
-	clock: {
-		props: {},
-		component: "ClockWidgetComponent",
-	},
+	// clock: {
+	// 	props: {},
+	// 	component: "ClockWidgetComponent",
+	// },
 	stickerBadge: {
 		props: {},
 		component: "StickerBadgeComponent",
@@ -117,10 +122,6 @@ const presets = {
 	waves: {
 		props: {},
 		component: "WaveComponent",
-	},
-	polaroid: {
-		props: {},
-		component: "PolaroidComponent",
 	},
 	arrows: {
 		props: {},
@@ -130,26 +131,26 @@ const presets = {
 		props: {},
 		component: "WeatherWidgetComponent",
 	},
-	ribbon: {
-		props: {},
-		component: "RibbonComponent",
-	},
+	// ribbon: {
+	// 	props: {},
+	// 	component: "RibbonComponent",
+	// },
 	spiral: {
 		props: {},
 		component: "SpiralComponent",
 	},
-	calendar: {
-		props: {},
-		component: "CalendarComponent",
-	},
+	// calendar: {
+	// 	props: {},
+	// 	component: "CalendarComponent",
+	// },
 	color: {
 		props: {},
 		component: "ColorComponent",
 	},
-	// "Deco Shapes": {
-	// 	props: {},
-	// 	component: "SpotifyComponent",
-	// },
+	"Deco Shapes": {
+		props: {},
+		component: "ShapesComponent",
+	},
 	// contour: {
 	// 	props: {},
 	// 	component: "ContourComponent",
@@ -168,7 +169,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(FlowerHeadsComponent);
+	// const component = useRef(WeatherWidgetComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {
@@ -181,9 +182,9 @@ export default function App() {
 
 		return (
 			<>
-				<div className="px-4 mb-3 flex items-center gap-2">
+				<div className="px-2 border-b pb-3 flex items-center gap-2">
 					<button
-						className="border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-sm aspect-square"
+						className="back-button border hoverable inline-flex center-center cursor-pointer bg-black26 rounded-sm aspect-square"
 						onClick={() => handleSetCurrentComponent(null)}
 						style={{
 							width: "24px",
@@ -208,7 +209,12 @@ export default function App() {
 
 					<span
 						className="capitalize font-medium"
-						style={{ fontSize: "1rem" }}
+						style={{
+							fontSize: "1rem",
+							lineHeight: "1",
+							fontWeight: "bold",
+							letterSpacing: "-0.03em",
+						}}
 					>
 						{camelCaseToSentenceCase(currentComponent)}
 					</span>

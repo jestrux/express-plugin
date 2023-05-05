@@ -9,6 +9,9 @@ import Toggle from "./Toggle";
 import ImagePicker from "./ImagePicker";
 import ColorSwatch from "./ColorSwatch";
 import GridList from "./GridList";
+import SliderInput from "./SliderInput";
+import CardList from "./CardList";
+import InfoCard from "./InfoCard";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -156,6 +159,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		__data,
 		optional,
 		label,
+		hint,
 		type,
 		choices,
 		defaultValue,
@@ -202,9 +206,11 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		"icon",
 		"radio",
 		"tag",
+		"card",
 		"grid",
 		"image",
 		"logo",
+		"range",
 	].includes(type);
 
 	let { className, ...otherMeta } = meta;
@@ -227,12 +233,23 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 				inline && "flex items-center justify-between"
 			}`}
 		>
+			{hint && hint.length && (
+				<div
+					className="-mx-12px mb-2"
+					style={{ marginTop: "-0.75rem" }}
+				>
+					<InfoCard>{hint}</InfoCard>
+				</div>
+			)}
+
 			{label && label.length && (
 				<div
 					className="flex items-center justify-between"
 					style={{
 						marginBottom:
-							isCustomFieldType && !inline ? "0.4rem" : 0,
+							isCustomFieldType && !inline && type != "boolean"
+								? "0.4rem"
+								: 0,
 					}}
 				>
 					<label
@@ -257,6 +274,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 				<React.Fragment>
 					{type == "grid" && (
 						<GridList
+							value={value}
+							choices={choices}
+							onChange={handleChange}
+							{...meta}
+						/>
+					)}
+
+					{type == "card" && (
+						<CardList
 							value={value}
 							choices={choices}
 							onChange={handleChange}
@@ -329,6 +355,17 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					{type == "image" && (
 						<div className="mt-1">
 							<ImagePicker onChange={handleChange} {...meta} />
+						</div>
+					)}
+
+					{type == "range" && (
+						<div style={{ margin: "-0.25rem 0" }}>
+							<SliderInput
+								label={label}
+								value={value}
+								onChange={handleChange}
+								{...meta}
+							/>
 						</div>
 					)}
 

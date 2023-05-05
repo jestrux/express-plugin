@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import staticImages from "../../staticImages";
 import ComponentFields from "../tokens/ComponentFields";
 import { resizeImage, showPreview } from "../utils";
 import * as icons from "./icons";
+import DraggableImage from "../tokens/DraggableImage";
 
 const themes = [
 	// light:
@@ -18,34 +19,6 @@ const themes = [
 	{ backgroundColor: "#d6f2ff", textColor: "#55bef0", iconColor: "#FFFFFF" },
 ];
 
-const colorMap = {
-	light: {
-		backgroundColor: "#fff",
-		textColor: "#333",
-		iconColor: "#333",
-	},
-	dark: {
-		backgroundColor: "#333",
-		textColor: "#fff",
-		iconColor: "#fff",
-	},
-	yellow: {
-		backgroundColor: "#fff6d6",
-		textColor: "#fc0",
-		iconColor: "#c1b78f",
-	},
-	green: {
-		backgroundColor: "#ebffee",
-		textColor: "#83d891",
-		iconColor: "#93b899",
-	},
-	blue: {
-		backgroundColor: "#d6f2ff",
-		textColor: "#55bef0",
-		iconColor: "#93b6c8",
-	},
-};
-
 class WeatherWidgetDrawer {
 	temperature = 72;
 	background = "#333";
@@ -58,26 +31,16 @@ class WeatherWidgetDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(userProps = {}) {
+	draw(userProps = {}) {
 		const props = structuredClone({ ...userProps, ...userProps.colors });
-		// const [backgroundColor, textColor, iconColor] = props.colors;
-		// const colorProps = colorMap[props.theme || "dark"] || colorMap.dark;
-		// Object.keys(colorProps).forEach((key) => {
-		// 	if (!props[key]) props[key] = colorProps[key];
-		// });
 
 		Object.assign(this, {
 			...props,
-			// backgroundColor,
-			// textColor,
-			// iconColor,
 		});
 
 		this.icon = icons[props.icon];
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-		// this.img = await loadImageFromUrl(props.src);
 
 		return this.drawImage();
 	}
@@ -97,7 +60,7 @@ class WeatherWidgetDrawer {
 		return canvas;
 	}
 
-	async drawImage() {
+	drawImage() {
 		const width = this.canvas.width;
 		const height = this.canvas.height;
 		const ctx = this.ctx;
@@ -146,109 +109,70 @@ class WeatherWidgetDrawer {
 }
 
 export default function WeatherWidgetComponent() {
-	const previewRef = useRef(null);
-	const weatherWidgetDrawerRef = useRef((data) => {
-		if (!window.weatherWidgetDrawer)
-			window.weatherWidgetDrawer = new WeatherWidgetDrawer();
-
-		window.weatherWidgetDrawer.draw(data).then(setUrl);
+	const [data, updateField] = useDataSchema({
+		src: staticImages.presets.spotify,
+		colors: themes[1],
+		temperature: "72",
+		icon: "partlyCloudyRain",
 	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			src: staticImages.presets.spotify,
-			colors: themes[1],
-			temperature: "72",
-			icon: "partlyCloudyRain",
-		},
-		weatherWidgetDrawerRef.current
-	);
-
-	useEffect(() => {
-		weatherWidgetDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "20vh" }}
-					/>
-				</div>
-			</div>
-
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						// theme: {
-						// 	type: "tag",
-						// 	choices: Object.keys(colorMap),
+						// temperature: {
+						// 	type: "number",
+						// 	inline: true,
+						// 	meta: {
+						// 		min: -120,
+						// 		max: 120,
+						// 		className: "inline-number-field",
+						// 	},
 						// },
-						temperature: {
-							type: "number",
-							inline: true,
-							meta: {
-								min: -120,
-								max: 120,
-								className: "inline-number-field",
-							},
-						},
-						icon: {
-							type: "tag",
-							label: "Weather",
-							choices: Object.keys(icons),
-						},
 						colors: {
 							label: "Theme",
 							type: "swatch",
 							meta: { themes },
 						},
-						// backgroundColor: {
-						// 	type: "color",
-						// 	optional: true,
-						// 	meta: {
-						// 		colors: ["#fff6d6", "#ebffee", "#d6f2ff"],
-						// 	},
-						// },
-						// textColor: {
-						// 	type: "color",
-						// 	optional: true,
-						// 	meta: {
-						// 		colors: ["#fc0", "#83d891", "#55bef0"],
-						// 	},
-						// },
-						// iconColor: {
-						// 	type: "color",
-						// 	optional: true,
-						// 	meta: {
-						// 		colors: ["#c1b78f", "#93b899", "#93b6c8"],
-						// 	},
-						// },
+						widgetPicker: {
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) widget to add to your canvas",
+							choices: Object.keys(icons),
+							noBorder: true,
+							meta: {
+								columns: 2,
+								// aspectRatio: "2/0.8",
+								render(weather) {
+									const temperatureMap = {
+										clearNight: 40,
+										partlyCloudy: 32,
+										partlyCloudyRain: 18,
+										rainyNight: 13,
+										snow: -20,
+										sunny: 72,
+										windySnow: -5,
+									};
+
+									const url = new WeatherWidgetDrawer().draw({
+										...data,
+										icon: weather,
+										temperature: temperatureMap[weather],
+									});
+									return (
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.1px 0.9px rgba(0, 0, 0, 0.3))",
+											}}
+										/>
+									);
+								},
+							},
+						},
 					}}
 					onChange={updateField}
 					data={data}

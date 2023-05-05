@@ -1,14 +1,23 @@
 import React from "react";
 import { camelCaseToSentenceCase } from "../utils";
 
-function GridList({ choices = [], render, onChange, ...props }) {
+function GridList({
+	choices = [],
+	columns = 4,
+	aspectRatio = "1",
+	transparent,
+	render,
+	onChange,
+	...props
+}) {
 	return (
 		<div
-			className="mt-1 flex flex-wrap"
+			className="mt-1 grid gap-2"
 			style={{
-				display: "grid",
-				gridTemplateColumns: "1fr 1fr 1fr 1fr",
-				gap: "0.25rem",
+				gridTemplateColumns: Array(columns)
+					.fill(12)
+					.map((_) => "1fr")
+					.join(" "),
 			}}
 		>
 			{choices.map((choice, index) => {
@@ -20,7 +29,7 @@ function GridList({ choices = [], render, onChange, ...props }) {
 				return (
 					<div
 						key={index}
-						className={`hoverable aspect-square flex flex-col flex-wrap center-center border rounded ${
+						className={`hoverables flex flex-col flex-wrap center-center border rounded-sm ${
 							selected
 								? "bg-black26 border-dark-gray"
 								: "text-darker-gray"
@@ -28,9 +37,14 @@ function GridList({ choices = [], render, onChange, ...props }) {
 						style={{
 							width: "100%",
 							overflow: "hidden",
-							borderColor: selected ? "" : "#d5d5d5",
+							borderColor: transparent
+								? "transparent"
+								: selected
+								? ""
+								: "#d5d5d5",
+							aspectRatio,
 						}}
-						onClick={() => onChange(value, index)}
+						// onClick={() => onChange(value, index)}
 					>
 						{typeof render == "function" ? (
 							render(value)

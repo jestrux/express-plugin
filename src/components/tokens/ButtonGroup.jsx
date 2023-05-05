@@ -13,23 +13,25 @@ function ButtonGroup({ choices = [], onChange, ...props }) {
 				const selected = props.value == value;
 
 				return (
-					<span
+					<button
 						key={index}
-						className={`capitalize rounded-xs cursor-pointer font-medium ${
-							index < choices.length - 1 && `border-r`
+						className={`capitalize cursor-pointer ${
+							index < choices.length - 1
+								? "border-r"
+								: "border border-transparent"
 						} ${
 							selected
-								? "bg-primary text-white"
-								: "text-darker-gray"
+								? "rounded-xs bg-dark-gray text-white"
+								: "bg-transparent text-darker-gray"
 						}`}
 						style={{
-							fontSize: "12px",
-							padding: "0.4rem 0.5rem",
+							fontSize: "13px",
+							padding: "0.25rem 0.5rem",
 						}}
 						onClick={() => onChange(value, index)}
 					>
 						{label.toString()}
-					</span>
+					</button>
 				);
 			})}
 		</div>

@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import useDataSchema from "../hooks/useDataSchema";
-import { showPreview } from "./utils";
 import ComponentFields from "./tokens/ComponentFields";
+import DraggableImage from "./tokens/DraggableImage";
 
 class SpiralDrawer {
 	constructor() {
@@ -36,7 +36,7 @@ class SpiralDrawer {
 		ctx.restore();
 	}
 
-	async completeSpiral() {
+	completeSpiral() {
 		const step = this.compact ? 0.16 : 0.225;
 		let scale = this.compact ? 1 : 0.9;
 		while (scale > step / 2) {
@@ -45,7 +45,7 @@ class SpiralDrawer {
 		}
 	}
 
-	async regularSpiral() {
+	regularSpiral() {
 		const ctx = this.ctx;
 		const width = this.canvas.width;
 		const height = this.canvas.height;
@@ -72,7 +72,7 @@ class SpiralDrawer {
 		ctx.restore();
 	}
 
-	async drawSpiral() {
+	drawSpiral() {
 		const ctx = this.ctx;
 		ctx.strokeStyle = this.color;
 		this.lineWidth = this.compact ? 15 : 22;
@@ -83,93 +83,31 @@ class SpiralDrawer {
 
 		const res = this.canvas.toDataURL();
 
-		showPreview(res);
-
 		return res;
 	}
 }
 
 export default function SpiralComponent() {
-	const previewRef = useRef(null);
-	const spiralDrawerRef = useRef((data) => {
-		if (!window.spiralDrawer) window.spiralDrawer = new SpiralDrawer();
-
-		window.spiralDrawer.draw(data).then(setUrl);
+	const [data, updateField] = useDataSchema({
+		color: "#7129F4", // "#FF2E6D",
+		compact: true,
 	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			color: "#7129F4", // "#FF2E6D",
-			infinite: true,
-			compact: true,
-		},
-		spiralDrawerRef.current
-	);
-
-	useEffect(() => {
-		spiralDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div className="relative border-b flex center-center p-3">
-				<div className="relative">
-					<div
-						className="w-full image-item relative"
-						draggable="true"
-					>
-						<img
-							onClick={exportImage}
-							ref={previewRef}
-							className="drag-target max-w-full"
-							src={url}
-							style={{
-								maxHeight: "20vh",
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-
 			<div className="px-12px pt-1 pb-3">
 				<ComponentFields
 					schema={{
-						infinite: {
-							label: "Shape",
-							type: "radio",
-							inline: true,
-							choices: [
-								{
-									label: "Spiral",
-									value: true,
-								},
-								{
-									label: "Circles",
-									value: false,
-								},
-							],
+						color: {
+							type: "color",
+							meta: {
+								singleChoice: true,
+								choiceSize: 30,
+							},
 						},
 						compact: {
 							label: "Spacing",
-							type: "radio",
-							inline: true,
+							type: "card",
 							choices: [
 								{
 									label: "compact",
@@ -180,18 +118,65 @@ export default function SpiralComponent() {
 									value: false,
 								},
 							],
-						},
-						color: {
-							type: "color",
-							inline: true,
 							meta: {
-								choiceSize: 26,
-								colors: [
-									"#7129F4",
-									"#FF2E6D",
-									"#333333",
-									"#FFFFFF",
-								],
+								transparent: true,
+								renderChoice(compact) {
+									const url = new SpiralDrawer().draw({
+										infinite: true,
+										compact,
+									});
+
+									return (
+										<img
+											className="bg-gray p-1"
+											src={url}
+											style={{
+												height: "200%",
+												transform:
+													"translate(-45%, -40%)",
+											}}
+										/>
+									);
+								},
+							},
+						},
+						infinite: {
+							label: "Shape",
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) shape to add it to your canvas",
+							noBorder: true,
+							choices: [
+								{
+									label: "Spiral",
+									value: true,
+								},
+								{
+									label: "Concentric circles",
+									value: false,
+								},
+							],
+							meta: {
+								columns: 2,
+								// aspectRatio: "2/1.4",
+								// transparent: true,
+								render(infinite) {
+									const url = new SpiralDrawer().draw({
+										...data,
+										infinite,
+									});
+
+									return (
+										<DraggableImage
+											className="p-2 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
+								},
 							},
 						},
 					}}

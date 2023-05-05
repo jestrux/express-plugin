@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import staticImages from "../../staticImages";
 import { DEFAULT_COLORS } from "../constants";
 import { tinyColor } from "../utils";
+import useDebounce from "../../hooks/useDebounce";
 
 const ColorCard = ({
 	fullWidth,
 	height,
-	color,
+	color: colorProp,
 	selected,
 	showIndicator,
 	onChange,
 }) => {
+	const [color, setColor] = useState(colorProp);
 	const transparent = color == "transparent";
+	const debouncedValue = useDebounce(color);
+
+	useEffect(() => {
+		onChange(debouncedValue);
+	}, [debouncedValue]);
 
 	return (
 		<label
@@ -32,7 +39,7 @@ const ColorCard = ({
 					  }
 					: { backgroundColor: color }),
 			}}
-			onClick={() => onChange(color)}
+			onClick={() => setColor(color)}
 		>
 			{!transparent && (
 				<input
@@ -40,7 +47,7 @@ const ColorCard = ({
 					style={{ width: 0, height: 0 }}
 					type="color"
 					defaultValue={color}
-					onChange={(e) => onChange(e.target.value)}
+					onChange={(e) => setColor(e.target.value)}
 				/>
 			)}
 

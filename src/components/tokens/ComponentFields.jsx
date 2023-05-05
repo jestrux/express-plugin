@@ -161,7 +161,7 @@ function ComponentFieldSection({
 							</button>
 						)}
 
-						<label>{camelCaseToSentenceCase(field.label)}</label>
+						<label className="fieldEditorLabel">{camelCaseToSentenceCase(field.label)}</label>
 					</div>
 
 					{field.optional && (
@@ -296,7 +296,7 @@ function ComponentFields({ schema, data, onChange }) {
 	const fields = schemaToFields(schema, data);
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-5">
 			{fields.map((field, index) => {
 				if (typeof field.show == "function" && !field.show(data)) {
 					return null;
@@ -336,7 +336,7 @@ function ComponentFields({ schema, data, onChange }) {
 						key={index}
 						className="relative"
 						style={{
-							marginBottom: field.noMargin ? "-0.8rem" : "",
+							marginBottom: field.noMargin ? "-1.05rem" : "",
 						}}
 					>
 						<ComponentFieldEditor
@@ -351,8 +351,10 @@ function ComponentFields({ schema, data, onChange }) {
 									top: "auto",
 									left: "-12px",
 									right: "-12px",
-									bottom: "-0.75rem",
-									opacity: 0.5,
+									// left: "0px",
+									// right: "0px",
+									bottom: "-1rem",
+									opacity: 1,
 								}}
 							></div>
 						)}

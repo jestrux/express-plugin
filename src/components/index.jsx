@@ -93,6 +93,8 @@
 import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { Provider } from "@adobe/react-spectrum";
+import { theme } from "@react-spectrum/theme-express";
 import App from "./App";
 import "./index.css";
 
@@ -101,5 +103,11 @@ AddOnSdk.ready.then(() => {
 	window.AddOnSdk = AddOnSdk;
 
 	const root = createRoot(document.getElementById("root"));
-	root.render(<App addOnSdk={AddOnSdk} />);
+	root.render(
+		<Provider theme={theme} colorScheme="light">
+			<div className="bg-white">
+				<App addOnSdk={AddOnSdk} />
+			</div>
+		</Provider>
+	);
 });

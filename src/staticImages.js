@@ -24,7 +24,7 @@ export default {
 		clock: "static/images/posters/clock.png",
 		cloud: "static/images/posters/cloud.png",
 		color: "static/images/posters/color.png",
-		cylinder: "static/images/posters/cylinder.png",
+		pill: "static/images/posters/cylinder.png",
 		contour: "static/images/posters/contour.png",
 		"Deco Shapes": "static/images/posters/shapes.png",
 		frame: "static/images/posters/frame.png",

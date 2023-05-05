@@ -1,8 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
-import { loadImage } from "./utils";
+import { showPreview } from "./utils";
+import useImage from "../hooks/useImage";
+import DraggableImage from "./tokens/DraggableImage";
+import Loader from "./tokens/Loader";
 
 class PolaroidDrawer {
 	constructor() {
@@ -46,156 +49,131 @@ class PolaroidDrawer {
 		const height = canvas.height;
 		const landScape = width > height;
 
-		// const padding = landScape ? 30 : 20;
-		// const paddingBottom = landScape ? 120 : 60;
-		const px = landScape ? width * 0.03 : width * 0.04;
-		const pt = this.evenSides ? px : height * 0.03;
-		const pb = this.evenSides ? pt : pt * 5;
+		const px = width * 0.025;
+		const pt = px;
+		const pb = this.evenSides ? px : px * 5;
 
 		const polaroid = document.createElement("canvas");
-		polaroid.width = width;
-		polaroid.height = height;
+		polaroid.width = width + px;
+		polaroid.height = height + pt + pb;
 
 		const ctx = polaroid.getContext("2d");
 
 		ctx.save();
-		ctx.rect(5, 5, width - 10, height - 10);
+		ctx.beginPath();
 		ctx.fillStyle = "white";
 		ctx.shadowColor = "rgba(0,0,0,0.2)";
 		ctx.shadowBlur = 10;
 		ctx.shadowOffsetX = 2;
 		ctx.shadowOffsetY = 2;
+		ctx.rect(5, 5, width - 10, height - 10);
 		ctx.fill();
 		ctx.restore();
+		ctx.clip();
 
 		ctx.drawImage(
 			this.toasterGradient(width, height),
-			px + 5,
-			pt + 5,
-			width - 10 - px * 2,
-			height - 10 - pt - pb
+			px,
+			pt,
+			width - px * 2,
+			height - pt - pb
 		);
 
-		ctx.save();
 		if (this.filter) ctx.globalCompositeOperation = this.filter;
 
-		ctx.drawImage(
-			canvas,
-			px + 5,
-			pt + 5,
-			width - 10 - px * 2,
-			height - 10 - pt - pb
-		);
-		ctx.restore();
+		ctx.drawImage(this.img, 0, 0);
 
 		return polaroid;
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.canvas.width = props.img.naturalWidth;
+		this.canvas.height = props.img.naturalHeight;
 
-		// if (!this.img || props.src != this.src)
-		await loadImage(this, props.src);
+		this.ctx.clearRect(0, 0, 2000, 2000);
+
 		return this.drawImage();
 	}
 
-	async drawImage() {
-		this.ctx.drawImage(this.img, 0, 0);
+	drawImage() {
+		const res = this.addPolaroid().toDataURL();
 
-		if (this.polaroid) return this.addPolaroid().toDataURL();
+		showPreview(res);
 
-		return this.canvas.toDataURL();
+		return res;
 	}
 }
 
 export default function PolaroidComponent() {
-	const previewRef = useRef(null);
-	const polaroidDrawerRef = useRef((data) => {
-		if (!window.polaroidDrawer)
-			window.polaroidDrawer = new PolaroidDrawer();
+	const {
+		loading,
+		image: img,
+		picker: Picker,
+	} = useImage(staticImages.presets.polaroid);
 
-		window.polaroidDrawer.draw(data).then(setUrl);
+	const [data, updateField] = useDataSchema({
+		evenSides: false,
+		filter: "exclusion",
 	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			src: staticImages.presets.polaroid,
-			polaroid: true,
-			filter: "exclusion",
-		},
-		polaroidDrawerRef.current
-	);
-
-	useEffect(() => {
-		polaroidDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "30vh" }}
-					/>
-				</div>
+			<div className="border-t">
+				<Picker />
 			</div>
 
-			<div className="px-12px mt-2">
+			<div className="px-12px">
+				{(!img || loading) && (
+					<div className="relative" style={{ height: "80px" }}>
+						<Loader fillParent={true} />
+					</div>
+				)}
+
 				<ComponentFields
 					schema={{
-						src: { type: "image", label: "" },
-						polaroid: {
-							label: "",
-							type: "boolean",
-							group: "polaroid",
-							optional: "group",
-						},
-						evenSides: {
-							label: "Even spaces",
-							type: "boolean",
-							group: "polaroid",
-							optional: "group",
-							defaultValue: false,
-						},
-						filter: {
-							type: "tag",
-							defaultValue: "color-dodge",
-							group: "polaroid",
-							optional: true,
-							// offValue: false,
-							choices: [
-								"color-dodge",
-								"exclusion",
-								"lighten",
-								"luminosity",
-								"screen",
-							],
-						},
+						...(loading || !img
+							? {}
+							: {
+									picker: {
+										type: "grid",
+										label: "",
+										hint: "Click (or drag and drop) image to add it to your canvas",
+										choices: [
+											"color-dodge",
+											// "exclusion",
+											"lighten",
+											// "luminosity",
+											"screen",
+										],
+										noBorder: true,
+										meta: {
+											transparent: true,
+											columns: 2,
+											aspectRatio: "1.5/2",
+											aspectRatio: `${img.naturalWidth} / ${img.naturalHeight}`,
+											render(filter) {
+												const url =
+													new PolaroidDrawer().draw({
+														...data,
+														img,
+														filter,
+													});
+												return (
+													<DraggableImage
+														className="h-full max-w-full object-fit"
+														src={url}
+														style={{
+															objectFit:
+																"contain",
+															filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+														}}
+													/>
+												);
+											},
+										},
+									},
+							  }),
 					}}
 					onChange={updateField}
 					data={data}

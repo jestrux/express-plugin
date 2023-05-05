@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
-import {
-	backgroundSpec,
-	showPreview,
-	solidGradientBg,
-} from "./utils";
+import { backgroundSpec, showPreview, solidGradientBg } from "./utils";
 import staticImages from "../staticImages";
 import { loadImageFromUrl } from "./utils";
 import { resizeImage } from "./utils";
 import { resizeToAspectRatio } from "./utils";
+import useImage from "../hooks/useImage";
+import DraggableImage from "./tokens/DraggableImage";
+import Loader from "./tokens/Loader";
+import ComponentFieldEditor from "./tokens/ComponentFieldEditor";
 
 const mapBlobs = [
 	{
@@ -44,7 +44,7 @@ class MapComponentDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		const canvas = this.canvas;
@@ -62,11 +62,7 @@ class MapComponentDrawer {
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-		this.markerSize = this.marker.size;
-		this.markerColor = this.marker.color;
-		this.markerPlacement = this.marker.placement;
-
-		this.img = await loadImageFromUrl(props.image);
+		this.markerPlacement = "center";
 
 		return this.drawImage();
 	}
@@ -229,7 +225,7 @@ class MapComponentDrawer {
 		return canvas;
 	}
 
-	async drawImage() {
+	drawImage() {
 		const width = this.canvas.width;
 		const height = this.canvas.height;
 		const ctx = this.ctx;
@@ -302,120 +298,102 @@ class MapComponentDrawer {
 }
 
 export default function MapComponent() {
-	const previewRef = useRef(null);
-	const mapComponentDrawerRef = useRef((data) => {
-		if (!window.mapComponentDrawer)
-			window.mapComponentDrawer = new MapComponentDrawer();
-
-		window.mapComponentDrawer.draw(data).then(setUrl);
-	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			image: staticImages.presets.map,
-			shape: "folded",
-			blob: 0,
-			marker: {
-				size: "regular",
-				placement: "center",
-				color: {
-					type: "gradient",
-					color: "#DC3535",
-					gradient: ["#d53369", "#daae51"],
-				},
-			},
+	const [data, updateField] = useDataSchema({
+		src: staticImages.mapRegular,
+		shape: "folded",
+		blob: 0,
+		markerSize: "large",
+		markerColor: {
+			type: "gradient",
+			color: "#DC3535",
+			gradient: ["#d53369", "#daae51"],
 		},
-		mapComponentDrawerRef.current
-	);
+	});
 
-	useEffect(() => {
-		mapComponentDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
+	const { loading, image: img } = useImage(data.src);
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "20vh" }}
-					/>
-				</div>
-			</div>
-
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						shape: {
-							type: "tag",
-							label: "",
-							choices: ["regular", "circle", "blob", "folded"],
+						src: {
+							type: "card",
+							label: "Map theme",
+							choices: ["mapRegular", "mapDark", "mapGreen"].map(
+								(label) => {
+									return {
+										label: label.replace("map", ""),
+										value: staticImages[label],
+									};
+								}
+							),
 						},
-						blob: {
-							type: "grid",
-							show: (state) => state.shape == "blob",
-							choices: Object.keys(mapBlobs),
-							meta: {
-								render(value) {
-									const { width, height, path } =
-										mapBlobs[value];
+						markerColor: backgroundSpec(),
+					}}
+					onChange={updateField}
+					data={data}
+				/>
 
-									return (
-										<svg
-											className="p-2"
-											viewBox={`0 0 ${width} ${height}`}
-										>
-											<path fill="#d1d8e0" d={path} />
-										</svg>
-									);
-								},
-							},
-						},
-						marker: {
-							type: "section",
-							children: {
-								size: {
-									type: "radio",
-									choices: ["small", "regular", "large"],
-								},
-								...(data.shape == "folded"
-									? {
-											placement: {
-												type: "radio",
-												choices: [
-													"left",
-													"center",
-													"right",
-												],
+				<div className="mt-3"></div>
+
+				<ComponentFields
+					schema={{
+						...(loading || !img
+							? {}
+							: {
+									picker: {
+										type: "grid",
+										label: "",
+										hint: "Click (or drag and drop) image to add it to your canvas",
+										choices: [
+											"folded",
+											// "circle",
+											"blob0",
+											"blob1",
+											"blob2",
+										],
+										noBorder: true,
+										meta: {
+											transparent: true,
+											columns: 2,
+											aspectRatio: "2/2",
+											gap: "1.25rem",
+											render(shape) {
+												const url =
+													new MapComponentDrawer().draw(
+														{
+															...data,
+															img,
+															shape:
+																shape.indexOf(
+																	"blob"
+																) != -1
+																	? "blob"
+																	: shape,
+															blob: Number(
+																shape.replace(
+																	"blob",
+																	""
+																) ?? 0
+															),
+														}
+													);
+												return (
+													<DraggableImage
+														className="h-full max-w-full object-fit"
+														src={url}
+														style={{
+															objectFit:
+																"contain",
+															filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+														}}
+													/>
+												);
 											},
-									  }
-									: {}),
-								color: backgroundSpec(),
-							},
-						},
+										},
+									},
+							  }),
 					}}
 					onChange={updateField}
 					data={data}

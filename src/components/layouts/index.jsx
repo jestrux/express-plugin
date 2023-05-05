@@ -11,6 +11,8 @@ import MasonryTemplate from "./masonry";
 import HoneyCombTemplate from "./honeycomb";
 import StackTemplate from "./stack";
 import HeartTemplate from "./heart";
+import DraggableImage from "../tokens/DraggableImage";
+import InfoCard from "../tokens/InfoCard";
 
 const templateMap = {
 	stack: StackTemplate,
@@ -174,7 +176,6 @@ class LayoutsComponentDrawer {
 
 export default function LayoutsComponent() {
 	const initialRef = useRef(null);
-	const previewRef = useRef(null);
 	const layoutsComponentDrawerRef = useRef((data) => {
 		if (!window.layoutsComponentDrawer)
 			window.layoutsComponentDrawer = new LayoutsComponentDrawer(
@@ -185,16 +186,16 @@ export default function LayoutsComponent() {
 				}
 			);
 
-		window.layoutsComponentDrawer.draw(data); //.then(setUrl);
+		window.layoutsComponentDrawer.draw(data);
 	});
 	const [url, setUrl] = useState();
 	const [data, updateField] = useDataSchema(
 		{
-			background: {
-				type: "gradient",
-				color: "#A5292A",
-				gradient: ["#FFD4A2", "#ECE6FF"],
-			},
+			// background: {
+			// 	type: "gradient",
+			// 	color: "#A5292A",
+			// 	gradient: ["#FFD4A2", "#ECE6FF"],
+			// },
 			template: "heart",
 			images: staticImages.templatePictures,
 		},
@@ -207,44 +208,14 @@ export default function LayoutsComponent() {
 
 		layoutsComponentDrawerRef.current(data);
 
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-
 		return () => (window.layoutsComponentDrawer = null);
 	}, []);
 
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
-
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "20vh" }}
-					/>
-				</div>
-			</div>
+			<DraggableImage info wrapped src={url} />
 
-			<div className="px-12px">
+			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
 						images: {
@@ -254,7 +225,7 @@ export default function LayoutsComponent() {
 							},
 						},
 						template: {
-							type: "tag",
+							type: "card",
 							choices: [
 								// "oval",
 								"scattered",
@@ -264,57 +235,57 @@ export default function LayoutsComponent() {
 								"honeycomb",
 							],
 						},
-						background: backgroundSpec({
-							optional: true,
-							defaultType: "gradient",
-							colorProps: {
-								defaultValue: "#A5292A",
-							},
-							gradientProps: {
-								defaultValue: ["#FFD4A2", "#ECE6FF"],
-							},
-						}),
-						text: {
-							type: "section",
-							optional: true,
-							children: {
-								label: {
-									label: "",
-									noMargin: true,
-									defaultValue: "Fun Summer\\n ~ 2023 ~ ",
-									meta: {
-										className: "mt-2 mb-1",
-									},
-								},
-								color: {
-									label: "Text color",
-									type: "color",
-									defaultValue: "#5258E4",
-									inline: true,
-									meta: {
-										colors: [
-											"#FFFFFF",
-											"#000000",
-											"#5258E4",
-										],
-									},
-								},
-								highlight: {
-									label: "Highlight color",
-									type: "color",
-									defaultValue: "#FFFFFF",
-									inline: true,
-									meta: {
-										showTransparent: true,
-										colors: [
-											"#FFFFFF",
-											"#000000",
-											"#5258E4",
-										],
-									},
-								},
-							},
-						},
+						// background: backgroundSpec({
+						// 	optional: true,
+						// 	defaultType: "gradient",
+						// 	colorProps: {
+						// 		defaultValue: "#A5292A",
+						// 	},
+						// 	gradientProps: {
+						// 		defaultValue: ["#FFD4A2", "#ECE6FF"],
+						// 	},
+						// }),
+						// text: {
+						// 	type: "section",
+						// 	optional: true,
+						// 	children: {
+						// 		label: {
+						// 			label: "",
+						// 			noMargin: true,
+						// 			defaultValue: "Fun Summer\\n ~ 2023 ~ ",
+						// 			meta: {
+						// 				className: "mt-2 mb-1",
+						// 			},
+						// 		},
+						// 		color: {
+						// 			label: "Text color",
+						// 			type: "color",
+						// 			defaultValue: "#5258E4",
+						// 			inline: true,
+						// 			meta: {
+						// 				colors: [
+						// 					"#FFFFFF",
+						// 					"#000000",
+						// 					"#5258E4",
+						// 				],
+						// 			},
+						// 		},
+						// 		highlight: {
+						// 			label: "Highlight color",
+						// 			type: "color",
+						// 			defaultValue: "#FFFFFF",
+						// 			inline: true,
+						// 			meta: {
+						// 				showTransparent: true,
+						// 				colors: [
+						// 					"#FFFFFF",
+						// 					"#000000",
+						// 					"#5258E4",
+						// 				],
+						// 			},
+						// 		},
+						// 	},
+						// },
 					}}
 					onChange={updateField}
 					data={data}

@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
-import {
-	backgroundSpec,
-	loadImageFromUrl,
-	resizeToAspectRatio,
-	solidGradientBg,
-} from "./utils";
+import { backgroundSpec, resizeToAspectRatio, solidGradientBg } from "./utils";
+import DraggableImage from "./tokens/DraggableImage";
+import useImage from "../hooks/useImage";
 
 class CylinderDrawer {
 	padding = 40;
@@ -65,19 +62,19 @@ class CylinderDrawer {
 		return canvas;
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		this.canvas.width = props.half ? 1000 : 600;
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		// if (!this.img || props.src != this.src)
-		this.img = await loadImageFromUrl(props.src);
+		// this.img = await loadImageFromUrl(props.src);
 
 		return this.drawImage();
 	}
 
-	async drawImage() {
+	drawImage() {
 		const width = this.canvas.width;
 		const height = this.canvas.height;
 		const ctx = this.ctx;
@@ -110,101 +107,96 @@ class CylinderDrawer {
 }
 
 export default function CylinderComponent() {
-	const previewRef = useRef(null);
-	const cylinderDrawerRef = useRef((data) => {
-		if (!window.cylinderDrawer)
-			window.cylinderDrawer = new CylinderDrawer();
+	const {
+		loading,
+		image,
+		picker: Picker,
+	} = useImage(staticImages.presets.cylinder);
 
-		window.cylinderDrawer.draw(data).then(setUrl);
-	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			src: staticImages.presets.cylinder,
-			half: true,
-			inset: true,
-			smoothCorners: true,
-			border: "#aaaaaa",
-			background: {
-				type: "gradient",
-				color: "#ffc107",
-				gradient: ["#BF953F", "#FCF6BA", "#AA771C"],
-			},
+	const [data, updateField] = useDataSchema({
+		half: true,
+		inset: true,
+		smoothCorners: true,
+		border: "#aaaaaa",
+		background: {
+			type: "gradient",
+			color: "#ffc107",
+			gradient: ["#BF953F", "#FCF6BA", "#AA771C"],
 		},
-		cylinderDrawerRef.current
-	);
-
-	useEffect(() => {
-		cylinderDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
+	});
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "30vh" }}
-					/>
-				</div>
-			</div>
+			<Picker />
 
-			<div className="px-12px mt-1">
+			<div className="px-12px">
 				<ComponentFields
 					schema={{
-						src: {
-							type: "image",
-							label: "",
-						},
-						half: "boolean",
-						smoothCorners: {
-							type: "boolean",
-							show: (state) => state.half,
-						},
-						inset: "boolean",
-						border: {
-							type: "color",
-							inline: true,
-							defaultValue: "#888",
-							meta: {
-								showTransparent: true,
-								colors: ["#aaaaaa"],
-							},
-							show: (state) => state.inset,
-						},
+						// half: "boolean",
+						// smoothCorners: {
+						// 	type: "boolean",
+						// 	show: (state) => state.half,
+						// },
+						// inset: "boolean",
+						// border: {
+						// 	type: "color",
+						// 	inline: true,
+						// 	defaultValue: "#888",
+						// 	meta: {
+						// 		showTransparent: true,
+						// 		colors: ["#aaaaaa"],
+						// 	},
+						// 	show: (state) => state.inset,
+						// },
 						background: backgroundSpec({
-							show: (state) => state.inset,
 							colorProps: {
 								meta: {
-									singleChoice: false,
-									showTransparent: true,
-									choiceSize: 25,
+									// singleChoice: false,
+									// showTransparent: true,
+									// choiceSize: 25,
 								},
 							},
 						}),
+						// src: {
+						// 	type: "image",
+						// 	label: "",
+						// },
+						inset: "boolean",
+						...(loading || !image
+							? {}
+							: {
+									picker: {
+										type: "grid",
+										label: "",
+										hint: "Click (or drag and drop) shape to add it to your canvas",
+										choices: [true, false],
+										noBorder: true,
+										meta: {
+											columns: 1,
+											aspectRatio: "2/1.5",
+											render(half) {
+												const url =
+													new CylinderDrawer().draw({
+														...data,
+														img: image,
+														half,
+													});
+
+												return (
+													<DraggableImage
+														className="p-3 h-full max-w-full object-fit"
+														src={url}
+														style={{
+															objectFit:
+																"contain",
+															filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+														}}
+													/>
+												);
+											},
+										},
+									},
+							  }),
 					}}
 					onChange={updateField}
 					data={data}

@@ -47,11 +47,18 @@ import template6 from "./images/template-pictures/6.jpg";
 import template7 from "./images/template-pictures/7.jpg";
 import template8 from "./images/template-pictures/8.jpg";
 
+import mapRegular from "./images/map-regular.jpg";
+import mapGreen from "./images/map-green.jpg";
+import mapDark from "./images/map-dark.jpg";
+
 export default {
 	transparency,
 	flowers,
 	flowers2,
 	spotifyWave,
+	mapDark,
+	mapGreen,
+	mapRegular,
 	templatePictures: [
 		template1,
 		template2,

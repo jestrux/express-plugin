@@ -3,6 +3,7 @@ import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
 import { showPreview, tinyColor } from "../utils";
 import * as icons from "./icons";
+import DraggableImage from "../tokens/DraggableImage";
 
 class PatternEffect {
 	constructor({ shape, style, color, effect, spacing }) {
@@ -130,7 +131,7 @@ class BackgroundPatternDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -138,7 +139,7 @@ class BackgroundPatternDrawer {
 		return this.drawImage();
 	}
 
-	async drawImage() {
+	drawImage() {
 		const width = this.canvas.width;
 		const height = this.canvas.height;
 		const ctx = this.ctx;
@@ -164,64 +165,16 @@ class BackgroundPatternDrawer {
 }
 
 export default function BackgroundPatternComponent() {
-	const previewRef = useRef(null);
-	const backgroundPatternDrawerRef = useRef((data) => {
-		if (!window.backgroundPatternDrawer)
-			window.backgroundPatternDrawer = new BackgroundPatternDrawer();
-
-		window.backgroundPatternDrawer.draw(data).then(setUrl);
+	const [data, updateField] = useDataSchema({
+		shape: "square",
+		style: "alternate",
+		spacing: "loose",
+		color: "#ac1f40",
+		effect: "none",
 	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			shape: "square",
-			style: "alternate",
-			spacing: "loose",
-			// background: "#EDDED4",
-			color: "#ac1f40",
-			effect: "none",
-		},
-		backgroundPatternDrawerRef.current
-	);
-
-	useEffect(() => {
-		backgroundPatternDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "20vh" }}
-					/>
-				</div>
-			</div>
-
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
@@ -236,49 +189,51 @@ export default function BackgroundPatternComponent() {
 								"circle",
 							],
 						},
-						style: {
-							type: "tag",
-							label: "Shape style",
-							choices: ["outline", "filled", "alternate"],
-						},
-						spacing: {
-							type: "tag",
-							label: "Pattern spacing",
-							choices: ["compact", "snug", "loose"],
-						},
-						effect: {
-							type: "tag",
-							label: "Color effect",
-							choices: [
-								"none",
-								"contrast",
-								{
-									label: "Color shift",
-									value: "splitcomplement",
-								},
-								// "complement",
-								// "triad",
-								// "tetrad",
-								// // "monochromatic",
-								// "splitcomplement",
-								// "analogous",
-							],
-						},
-						background: {
-							optional: true,
+						color: {
 							type: "color",
-							// inline: true,
-							defaultValue: "#EDDED4",
 							meta: {
 								singleChoice: true,
 								choiceSize: 30,
 							},
 						},
-						color: {
-							type: "color",
-							inline: true,
+						picker: {
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) a pattern to add it to your canvas",
+							choices: [
+								"filled none",
+								"alternate none",
+								"filled contrast",
+								// "alternate contrast",
+								"filled splitcomplement",
+								// "alternate splitcomplement",
+							],
 							meta: {
-								singleChoice: true,
+								columns: 1,
+								aspectRatio: "2/1",
+								gap: "1rem",
+								render(entry) {
+									const [style, effect] = entry.split(" ");
+
+									const url =
+										new BackgroundPatternDrawer().draw({
+											...data,
+											style,
+											effect,
+										});
+
+									return (
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+												transform: "scale(1.8)",
+											}}
+										/>
+									);
+								},
 							},
 						},
 					}}

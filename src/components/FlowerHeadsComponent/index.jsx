@@ -4,6 +4,7 @@ import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
 import { showPreview } from "../utils";
 import flowerHeads from "./flower-heads";
+import DraggableImage from "../tokens/DraggableImage";
 
 class FlowerHeadsComponentDrawer {
 	constructor() {
@@ -12,13 +13,13 @@ class FlowerHeadsComponentDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		return this.drawImage();
 	}
 
-	async drawImage() {
+	drawImage() {
 		const ctx = this.ctx;
 		const { width, height, path } = flowerHeads[this.flowerHead];
 		this.canvas.width = width;
@@ -40,116 +41,57 @@ class FlowerHeadsComponentDrawer {
 }
 
 export default function FlowerHeadsComponent() {
-	const previewRef = useRef(null);
-	const flowerHeadsComponentDrawerRef = useRef((data) => {
-		if (!window.flowerHeadsComponentDrawer)
-			window.flowerHeadsComponentDrawer =
-				new FlowerHeadsComponentDrawer();
-
-		window.flowerHeadsComponentDrawer.draw(data).then(setUrl);
+	const [data, updateField] = useDataSchema({
+		color: "#ed2232",
 	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			color: "#ed2232",
-			flowerHead: Object.keys(flowerHeads)[0],
-		},
-		flowerHeadsComponentDrawerRef.current
-	);
-
-	const handleChange = (key, value) => {
-		if (key == "flowerHead") {
-			const { fill: color } = flowerHeads[value];
-
-			updateField({
-				flowerHead: value,
-				color,
-			});
-
-			return;
-		}
-		updateField(key, value);
-	};
-
-	useEffect(() => {
-		flowerHeadsComponentDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ height: "20vh" }}
-					/>
-				</div>
-			</div>
-
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						flowerHead: {
+						color: {
+							type: "color",
+							// inline: true,
+							meta: {
+								singleChoice: true,
+								choiceSize: 30,
+								// colors: [
+								// 	"#379b98",
+								// 	"#f25629",
+								// 	"#ebd913",
+								// 	"#ed2232",
+								// ],
+							},
+						},
+						flowerPicker: {
 							type: "grid",
 							label: "",
+							hint: "Click (or drag and drop) a flower to add it to your canvas",
 							choices: Object.keys(flowerHeads),
 							meta: {
-								render(value) {
-									const { width, height, path, fill } =
-										flowerHeads[value];
+								render(flowerHead) {
+									const url =
+										new FlowerHeadsComponentDrawer().draw({
+											...data,
+											flowerHead,
+										});
 
 									return (
-										<svg
-											className="p-3 w-full"
-											viewBox={`0 0 ${width} ${height}`}
-											fill={fill}
-										>
-											<path d={path} />
-										</svg>
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
 									);
 								},
 							},
 						},
-						color: {
-							type: "color",
-							// label: "",
-							inline: true,
-							meta: {
-								// singleChoice: true,
-								// choiceSize: 30,
-								colors: [
-									"#379b98",
-									"#f25629",
-									"#ebd913",
-									"#ed2232",
-								],
-							},
-						},
 					}}
-					onChange={handleChange}
+					onChange={updateField}
 					data={data}
 				/>
 			</div>

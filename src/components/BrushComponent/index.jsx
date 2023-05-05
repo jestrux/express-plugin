@@ -4,6 +4,7 @@ import staticImages from "../../staticImages";
 import ComponentFields from "../tokens/ComponentFields";
 import { backgroundSpec, solidGradientBg } from "../utils";
 import * as brushes from "./brushes";
+import DraggableImage from "../tokens/DraggableImage";
 
 class BrushDrawer {
 	constructor() {
@@ -12,7 +13,7 @@ class BrushDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		this.brush = brushes[props.brush];
@@ -25,7 +26,7 @@ class BrushDrawer {
 		return this.drawImage();
 	}
 
-	async drawImage() {
+	drawImage() {
 		const ctx = this.ctx;
 		const width = this.canvas.width;
 		const height = this.canvas.height;
@@ -53,87 +54,32 @@ class BrushDrawer {
 }
 
 export default function BrushComponent() {
-	const previewRef = useRef(null);
-	const brushDrawerRef = useRef((data) => {
-		if (!window.brushDrawer) window.brushDrawer = new BrushDrawer();
-
-		window.brushDrawer.draw(data).then(setUrl);
-	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			src: staticImages.presets.cylinder,
-			brush: "splotch",
-			// text: {
-			// 	label: "Splat",
-			// 	color: "#FFF",
-			// },
-			background: {
-				type: "gradient",
-				color: "#995533",
-				gradient: ["#9055FF", "#13E2DA"],
-			},
+	const [data, updateField] = useDataSchema({
+		src: staticImages.presets.cylinder,
+		background: {
+			type: "gradient",
+			color: "#995533",
+			gradient: ["#9055FF", "#13E2DA"],
 		},
-		brushDrawerRef.current
-	);
-
-	useEffect(() => {
-		brushDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
+	});
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "20vh" }}
-					/>
-				</div>
-			</div>
-
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						brush: {
-							type: "tag",
-							choices: Object.keys(brushes),
-						},
+						background: backgroundSpec(),
 						text: {
 							type: "section",
 							optional: true,
+							collapsible: false,
 							children: {
 								label: {
 									label: "",
 									defaultValue: "Text",
-									noMargin: true,
 								},
 								color: {
 									type: "color",
-									label: "",
 									defaultValue: "#FFFFFF",
 									meta: {
 										singleChoice: true,
@@ -142,7 +88,33 @@ export default function BrushComponent() {
 								},
 							},
 						},
-						background: backgroundSpec(),
+						brushPicker: {
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) a brush to add it to your canvas",
+							choices: Object.keys(brushes),
+							noBorder: true,
+							meta: {
+								columns: 3,
+								render(brush) {
+									const url = new BrushDrawer().draw({
+										...data,
+										brush,
+									});
+
+									return (
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
+								},
+							},
+						},
 					}}
 					onChange={updateField}
 					data={data}

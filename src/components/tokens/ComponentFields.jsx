@@ -53,6 +53,8 @@ function ComponentFieldSection({
 	const [collapsed, setCollapsed] = useState(false);
 
 	useEffect(() => {
+		if (field.collapsible === false) return;
+
 		if (collapsedRef?.current == null) {
 			const initialCollapsed = field.collapsed || false;
 			collapsedRef.current = initialCollapsed;
@@ -119,7 +121,7 @@ function ComponentFieldSection({
 
 				<div className="relative flex items-center justify-between px-12px py-2">
 					<div className="flex items-center gap-1">
-						{rootLevel && (
+						{rootLevel && field.collapsible != false && (
 							<button
 								className="hoverable rounded-xs border flex center-center"
 								onClick={() =>
@@ -161,7 +163,9 @@ function ComponentFieldSection({
 							</button>
 						)}
 
-						<label className="fieldEditorLabel">{camelCaseToSentenceCase(field.label)}</label>
+						<label className="fieldEditorLabel">
+							{camelCaseToSentenceCase(field.label)}
+						</label>
 					</div>
 
 					{field.optional && (

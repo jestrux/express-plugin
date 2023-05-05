@@ -5,6 +5,7 @@ function GridList({
 	choices = [],
 	columns = 4,
 	aspectRatio = "1",
+	gap = "0.5rem",
 	transparent,
 	render,
 	onChange,
@@ -12,8 +13,9 @@ function GridList({
 }) {
 	return (
 		<div
-			className="mt-1 grid gap-2"
+			className="mt-1 grid"
 			style={{
+				gap,
 				gridTemplateColumns: Array(columns)
 					.fill(12)
 					.map((_) => "1fr")

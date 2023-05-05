@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
 import { showPreview } from "./utils";
+import DraggableImage from "./tokens/DraggableImage";
 
 class GridComponentDrawer {
 	constructor() {
@@ -12,7 +13,7 @@ class GridComponentDrawer {
 		this.ctx = canvas.getContext("2d");
 	}
 
-	async draw(props = {}) {
+	draw(props = {}) {
 		Object.assign(this, props);
 
 		return this.drawImage();
@@ -88,7 +89,7 @@ class GridComponentDrawer {
 		}
 	}
 
-	async drawImage() {
+	drawImage() {
 		if (this.gridType == "mesh") this.drawMesh();
 		else this.drawDots();
 
@@ -101,85 +102,63 @@ class GridComponentDrawer {
 }
 
 export default function GridComponent() {
-	const previewRef = useRef(null);
-	const gridComponentDrawerRef = useRef((data) => {
-		if (!window.gridComponentDrawer)
-			window.gridComponentDrawer = new GridComponentDrawer();
-
-		window.gridComponentDrawer.draw(data).then(setUrl);
+	const [data, updateField] = useDataSchema({
+		gridType: "mesh",
+		aspectRatio: "square",
+		color: "#F09D0F", // #5258e4
 	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			gridType: "mesh",
-			aspectRatio: "square",
-			color: "#333333",
-		},
-		gridComponentDrawerRef.current
-	);
-
-	useEffect(() => {
-		gridComponentDrawerRef.current(data);
-
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
-		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
-	};
 
 	return (
 		<>
-			<div
-				className="relative relative border-b flex center-center p-3"
-				style={{ display: !url ? "none" : "" }}
-			>
-				<div className="image-item relative" draggable="true">
-					<img
-						onClick={exportImage}
-						ref={previewRef}
-						className="drag-target max-w-full"
-						src={url}
-						style={{ maxHeight: "20vh" }}
-					/>
-				</div>
-			</div>
-
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						gridType: {
-							label: "",
-							type: "tag",
-							choices: ["mesh", "dot"].map((value) => ({
-								value,
-								label: value + " grid",
-							})),
-						},
-						aspectRatio: {
-							type: "radio",
-							choices: ["square", "wide", "tall"],
-						},
 						color: {
 							type: "color",
 							meta: {
-								colors: [
-									"#F09D0F",
-									"#5258e4",
-									"#333333",
-									"#FFFFFF",
-								],
+								singleChoice: true,
+								choiceSize: 30,
+							},
+						},
+						gridPicker: {
+							label: "",
+							noBorder: true,
+							type: "grid",
+							hint: "Click (or drag and drop) grid to add it to your canvas",
+							choices: [
+								"square mesh",
+								"tall mesh",
+								"wide mesh",
+								"square dot",
+								"tall dot",
+								"wide dot",
+							].map((value) => ({
+								value,
+								label: value + " grid",
+							})),
+							meta: {
+								columns: 2,
+								render(grid) {
+									const [aspectRatio, gridType] =
+										grid.split(" ");
+
+									const url = new GridComponentDrawer().draw({
+										...data,
+										gridType,
+										aspectRatio,
+									});
+
+									return (
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
+								},
 							},
 						},
 					}}

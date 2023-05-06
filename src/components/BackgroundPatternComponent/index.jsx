@@ -166,7 +166,7 @@ class BackgroundPatternDrawer {
 
 export default function BackgroundPatternComponent() {
 	const [data, updateField] = useDataSchema({
-		shape: "square",
+		shape: "star",
 		style: "alternate",
 		spacing: "loose",
 		color: "#ac1f40",

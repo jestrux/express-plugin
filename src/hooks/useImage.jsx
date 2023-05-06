@@ -4,19 +4,45 @@ import ImagePicker from "../components/tokens/ImagePicker";
 export default function useImage(src) {
 	const [loading, setLoading] = useState(false);
 	const image = useRef(null);
+	const images = useRef(null);
 
-	const loadImage = (url) => {
+	const loadImage = (url, imageId) => {
+		if (imageId) images.current[imageId] = null;
+		else image.current = null;
+
+		return new Promise((resolve) => {
+			if (!imageId) setLoading(true);
+
+			const img = new Image();
+
+			img.onload = () => {
+				if (imageId) images.current[imageId] = img;
+				else {
+					image.current = img;
+					setLoading(false);
+				}
+
+				resolve(img);
+			};
+
+			img.src = url;
+		});
+	};
+
+	const loadImages = async (urls) => {
+		images.current = {};
 		setLoading(true);
-
-		image.current = new Image();
-
-		image.current.onload = () => setLoading(false);
-
-		image.current.src = url;
+		await Promise.all(
+			Object.entries(urls).map(([id, image]) => loadImage(image, id))
+		);
+		setLoading(false);
 	};
 
 	useEffect(() => {
-		if (src) loadImage(src);
+		if (!src) return;
+
+		if (typeof src == "object") loadImages(src);
+		else loadImage(src);
 	}, [src]);
 
 	const picker = () => {
@@ -29,6 +55,7 @@ export default function useImage(src) {
 
 	return {
 		picker,
+		images: images.current,
 		image: image.current,
 		loading,
 	};

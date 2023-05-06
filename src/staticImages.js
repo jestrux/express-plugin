@@ -15,10 +15,41 @@ export default {
 	flowers: "static/images/flowers.jpg",
 	spotifyWave: "static/images/spotify-wave.png",
 
-	mapDark: "static/images/posters/mapDark.jpg",
-	mapGreen: "static/images/posters/mapGreen.jpg",
-	mapRegular: "static/images/posters/mapRegular.jpg",
-	mapRegular,
+	maps: {
+		regular: {
+			blob: "static/images/maps/blob-regular.png",
+			folded: "static/images/maps/folded-regular.png",
+			regular: "static/images/maps/regular.png",
+		},
+		green: {
+			blob: "static/images/maps/blob-green.png",
+			folded: "static/images/maps/folded-green.png",
+			regular: "static/images/maps/green.png",
+		},
+		dark: {
+			blob: "static/images/maps/blob-dark.png",
+			folded: "static/images/maps/folded-dark.png",
+			regular: "static/images/maps/dark.png",
+		},
+		withMarker: {
+			regular: {
+				blob: "static/images/maps/with-marker/blob-regular.png",
+				folded: "static/images/maps/with-marker/folded-regular.png",
+				regular: "static/images/maps/with-marker/regular.png",
+			},
+			green: {
+				blob: "static/images/maps/with-marker/blob-green.png",
+				folded: "static/images/maps/with-marker/folded-green.png",
+				regular: "static/images/maps/with-marker/green.png",
+			},
+			dark: {
+				blob: "static/images/maps/with-marker/blob-dark.png",
+				folded: "static/images/maps/with-marker/folded-dark.png",
+				regular: "static/images/maps/with-marker/dark.png",
+			},
+		},
+	},
+
 	posters: {
 		arrows: "static/images/posters/arrows.png",
 		brushBackground: "static/images/posters/brush.png",

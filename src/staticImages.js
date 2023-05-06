@@ -47,18 +47,69 @@ import template6 from "./images/template-pictures/6.jpg";
 import template7 from "./images/template-pictures/7.jpg";
 import template8 from "./images/template-pictures/8.jpg";
 
-import mapRegular from "./images/map-regular.jpg";
-import mapGreen from "./images/map-green.jpg";
-import mapDark from "./images/map-dark.jpg";
+import blobMapRegular from "./images/maps/blob-regular.png";
+import blobMapGreen from "./images/maps/blob-green.png";
+import blobMapDark from "./images/maps/blob-dark.png";
+
+import foldedMapRegular from "./images/maps/folded-regular.png";
+import foldedMapGreen from "./images/maps/folded-green.png";
+import foldedMapDark from "./images/maps/folded-dark.png";
+
+import mapRegular from "./images/maps/regular.jpg";
+import mapGreen from "./images/maps/green.jpg";
+import mapDark from "./images/maps/dark.jpg";
+
+import blobMapRegularWithMarker from "./images/maps/with-marker/blob-regular.png";
+import blobMapGreenWithMarker from "./images/maps/with-marker/blob-green.png";
+import blobMapDarkWithMarker from "./images/maps/with-marker/blob-dark.png";
+
+import foldedMapRegularWithMarker from "./images/maps/with-marker/folded-regular.png";
+import foldedMapGreenWithMarker from "./images/maps/with-marker/folded-green.png";
+import foldedMapDarkWithMarker from "./images/maps/with-marker/folded-dark.png";
+
+import mapRegularWithMarker from "./images/maps/with-marker/regular.jpg";
+import mapGreenWithMarker from "./images/maps/with-marker/green.jpg";
+import mapDarkWithMarker from "./images/maps/with-marker/dark.jpg";
 
 export default {
 	transparency,
 	flowers,
 	flowers2,
 	spotifyWave,
-	mapDark,
-	mapGreen,
-	mapRegular,
+	maps: {
+		regular: {
+			blob: blobMapRegular,
+			folded: foldedMapRegular,
+			regular: mapRegular,
+		},
+		green: {
+			blob: blobMapGreen,
+			folded: foldedMapGreen,
+			regular: mapGreen,
+		},
+		dark: {
+			blob: blobMapDark,
+			folded: foldedMapDark,
+			regular: mapDark,
+		},
+		withMarker: {
+			regular: {
+				blob: blobMapRegularWithMarker,
+				folded: foldedMapRegularWithMarker,
+				regular: mapRegularWithMarker,
+			},
+			green: {
+				blob: blobMapGreenWithMarker,
+				folded: foldedMapGreenWithMarker,
+				regular: mapGreenWithMarker,
+			},
+			dark: {
+				blob: blobMapDarkWithMarker,
+				folded: foldedMapDarkWithMarker,
+				regular: mapDarkWithMarker,
+			},
+		}
+	},
 	templatePictures: [
 		template1,
 		template2,

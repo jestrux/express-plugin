@@ -1,15 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
-import { backgroundSpec, showPreview, solidGradientBg } from "./utils";
+import { showPreview, solidGradientBg } from "./utils";
 import staticImages from "../staticImages";
-import { loadImageFromUrl } from "./utils";
 import { resizeImage } from "./utils";
 import { resizeToAspectRatio } from "./utils";
 import useImage from "../hooks/useImage";
 import DraggableImage from "./tokens/DraggableImage";
 import Loader from "./tokens/Loader";
-import ComponentFieldEditor from "./tokens/ComponentFieldEditor";
+import InfoCard from "./tokens/InfoCard";
 
 const mapBlobs = [
 	{
@@ -299,101 +298,96 @@ class MapComponentDrawer {
 
 export default function MapComponent() {
 	const [data, updateField] = useDataSchema({
-		src: staticImages.mapRegular,
+		theme: "regular",
 		shape: "folded",
-		blob: 0,
-		markerSize: "large",
-		markerColor: {
-			type: "gradient",
-			color: "#DC3535",
-			gradient: ["#d53369", "#daae51"],
-		},
+		showMarker: true,
 	});
 
-	const { loading, image: img } = useImage(data.src);
+	const { loading, images } = useImage(
+		data.showMarker
+			? staticImages.maps.withMarker[data.theme]
+			: staticImages.maps[data.theme]
+	);
 
 	return (
 		<>
+			<InfoCard infoIcon>Map images were sourced from Mapbox</InfoCard>
+
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						src: {
+						theme: {
 							type: "card",
 							label: "Map theme",
-							choices: ["mapRegular", "mapDark", "mapGreen"].map(
-								(label) => {
-									return {
-										label: label.replace("map", ""),
-										value: staticImages[label],
-									};
-								}
-							),
-						},
-						markerColor: backgroundSpec(),
-					}}
-					onChange={updateField}
-					data={data}
-				/>
-
-				<div className="mt-3"></div>
-
-				<ComponentFields
-					schema={{
-						...(loading || !img
-							? {}
-							: {
-									picker: {
-										type: "grid",
-										label: "",
-										hint: "Click (or drag and drop) image to add it to your canvas",
-										choices: [
-											"folded",
-											// "circle",
-											"blob0",
-											"blob1",
-											"blob2",
+							choices: [
+								"regular",
+								{ label: "light", value: "green" },
+								"dark",
+							],
+							meta: {
+								renderChoice(value) {
+									const gradient = {
+										regular: [
+											"#efebe5",
+											"#b6e59e",
+											"#ebdbc7",
 										],
-										noBorder: true,
-										meta: {
-											transparent: true,
-											columns: 2,
-											aspectRatio: "2/2",
-											gap: "1.25rem",
-											render(shape) {
-												const url =
-													new MapComponentDrawer().draw(
-														{
-															...data,
-															img,
-															shape:
-																shape.indexOf(
-																	"blob"
-																) != -1
-																	? "blob"
-																	: shape,
-															blob: Number(
-																shape.replace(
-																	"blob",
-																	""
-																) ?? 0
-															),
-														}
-													);
-												return (
-													<DraggableImage
-														className="h-full max-w-full object-fit"
-														src={url}
-														style={{
-															objectFit:
-																"contain",
-															filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
-														}}
-													/>
-												);
-											},
-										},
-									},
-							  }),
+										green: [
+											"#eaf3f1",
+											"#c1d7c7",
+											"#e7eeed",
+										],
+										dark: ["#575755", "#5f5f5e", "#484846"],
+									}[value];
+
+									const gradientString = gradient
+										.map((color, idx) => {
+											return `${color} ${
+												(idx * 100) / 2
+											}%`;
+										})
+										.join(", ");
+
+									return (
+										<div
+											className="h-full border"
+											style={{
+												background: `linear-gradient(90deg, ${gradientString})`,
+											}}
+										></div>
+									);
+								},
+							},
+						},
+						showMarker: "boolean",
+						picker: {
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) image to add it to your canvas",
+							choices: ["folded", "blob", "regular"],
+							noBorder: true,
+							meta: {
+								transparent: true,
+								columns: 1,
+								aspectRatio: "2/1.3",
+								gap: "1.25rem",
+								render(shape) {
+									if (!images || loading)
+										return <Loader fillParent={true} />;
+
+									return (
+										<DraggableImage
+											className="h-full max-w-full object-fit"
+											src={images[shape].src}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
+								},
+							},
+						},
 					}}
 					onChange={updateField}
 					data={data}

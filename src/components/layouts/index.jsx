@@ -213,6 +213,10 @@ export default function LayoutsComponent() {
 
 	return (
 		<>
+			<InfoCard infoIcon>
+				Default images are royalty free, sourced from Unsplash
+			</InfoCard>
+
 			<DraggableImage info wrapped src={url} />
 
 			<div className="px-12px mt-1">

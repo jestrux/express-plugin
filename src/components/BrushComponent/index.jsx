@@ -16,6 +16,7 @@ class BrushDrawer {
 	draw(props = {}) {
 		Object.assign(this, props);
 
+		this.brushName = props.brush;
 		this.brush = brushes[props.brush];
 
 		this.canvas.width = this.brush.width;
@@ -36,16 +37,34 @@ class BrushDrawer {
 		ctx.fill(p);
 
 		if (this.text) {
-			ctx.fillStyle = this.text.color;
-			const fontSize = 140;
-			ctx.font = `bold ${fontSize}px 'Sacre Bleu MVB, script'`;
 			const text = this.text.label;
+			ctx.fillStyle = this.text.color;
+
+			const fontFamily = {
+				serif: "Georgia, serif",
+				"sans serif":
+					"Helvetica, 'Helvetica Neue', Verdana, sans-serif",
+				script: "'Sacre Bleu MVB', fantasy, serif",
+			}[this.text.font || "serif"];
+
+			let fontSize = width / 8;
+			ctx.font = `bold ${fontSize}px ${fontFamily}`;
+
+			while (ctx.measureText(text).width > width - 180) {
+				fontSize -= 5;
+				ctx.font = `bold ${fontSize}px ${fontFamily}`;
+			}
+
 			const metrics = ctx.measureText(text);
+			let margin = 30;
+			if (this.brushName == "edgy") margin = 20;
+			if (this.brushName == "fishy") margin = -10;
+			if (this.brushName == "ruff") margin = 20;
 
 			ctx.fillText(
 				text,
 				(width - metrics.width) / 2,
-				(fontSize + height) / 2 - 30
+				(fontSize + height) / 2 - margin
 			);
 		}
 
@@ -56,6 +75,11 @@ class BrushDrawer {
 export default function BrushComponent() {
 	const [data, updateField] = useDataSchema({
 		src: staticImages.presets.cylinder,
+		text: {
+			label: "",
+			color: "#FFFFFF",
+			font: "serif",
+		},
 		background: {
 			type: "gradient",
 			color: "#995533",
@@ -71,20 +95,29 @@ export default function BrushComponent() {
 						background: backgroundSpec(),
 						text: {
 							type: "section",
-							optional: true,
 							collapsible: false,
+							noMargin: true,
 							children: {
 								label: {
 									label: "",
-									defaultValue: "Text",
+									noMargin: true,
+									meta: {
+										placeholder: "Enter text here...",
+										className: "mb-1",
+									},
 								},
 								color: {
 									type: "color",
-									defaultValue: "#FFFFFF",
+									inline: true,
+									noMargin: true,
 									meta: {
 										singleChoice: true,
-										choiceSize: 28,
 									},
+								},
+								font: {
+									type: "radio",
+									inline: true,
+									choices: ["serif", "sans serif", "script"],
 								},
 							},
 						},
@@ -95,7 +128,7 @@ export default function BrushComponent() {
 							choices: Object.keys(brushes),
 							noBorder: true,
 							meta: {
-								columns: 3,
+								columns: 2,
 								render(brush) {
 									const url = new BrushDrawer().draw({
 										...data,

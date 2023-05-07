@@ -66,7 +66,7 @@ function CardList({
 							}`}
 						>
 							{typeof renderChoice == "function" &&
-								renderChoice(value)}
+								renderChoice(value, selected)}
 						</div>
 
 						<div

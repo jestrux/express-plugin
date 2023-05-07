@@ -187,63 +187,24 @@ export const solidGradientImageBg = async (source, background) => {
 export const backgroundSpec = ({
 	imageAsOption = false,
 	imageProps = {},
-	gradientProps = { meta: { singleChoice: true } },
-	colorProps = { meta: { showTransparent: true } },
+	gradientProps,
+	colorProps,
 	defaultType = "color",
 	...backgroundProps
 } = {}) => {
-	const { meta: gradientPropsMeta, ...otherGradientProps } = gradientProps;
-	const { meta: colorPropsMeta, ...otherColorProps } = colorProps;
-
 	return {
-		type: "section",
+		type: "background",
 		...backgroundProps,
-		children: {
-			type: {
-				label: "",
-				type: "radio",
-				inline: true,
-				noMargin: true,
-				choices: [
-					"color",
-					"gradient",
-					...(imageAsOption ? ["image"] : []),
-				],
-				defaultValue: defaultType,
-			},
-			color: {
-				type: "color",
-				label: "",
-				defaultValue: "#ff2e6d",
-				show: (state) => state.type == "color",
-				...otherColorProps,
-				meta: {
-					choiceSize: 30,
-					singleChoice: true,
-					...colorPropsMeta,
-				},
-			},
-			gradient: {
-				label: "",
-				type: "gradient",
-				defaultValue: ["#E233FF", "#FF6B00"],
-				show: (state) => state.type == "gradient",
-				...otherGradientProps,
-				meta: {
-					singleChoice: true,
-					...gradientPropsMeta,
-				},
-			},
-			...(imageAsOption
-				? {
-						image: {
-							label: "",
-							type: "image",
-							show: (state) => state.type == "image",
-							...imageProps,
-						},
-				  }
-				: {}),
+		meta: {
+			defaultType,
+			colorProps,
+			gradientProps,
+			imageProps,
+		},
+		defaultValue: {
+			type: defaultType,
+			color: "#ffc107",
+			gradient: ["#E233FF", "#FF6B00"],
 		},
 	};
 };

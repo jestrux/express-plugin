@@ -25,8 +25,6 @@ class FlowerHeadsComponentDrawer {
 		this.canvas.width = width;
 		this.canvas.height = height;
 
-		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
 		ctx.fillStyle = this.color;
 
 		ctx.beginPath();
@@ -41,9 +39,7 @@ class FlowerHeadsComponentDrawer {
 }
 
 export default function FlowerHeadsComponent() {
-	const [data, updateField] = useDataSchema({
-		color: "#ed2232",
-	});
+	const [data, updateField] = useDataSchema({});
 
 	return (
 		<>
@@ -52,7 +48,13 @@ export default function FlowerHeadsComponent() {
 					schema={{
 						color: {
 							type: "color",
-							// inline: true,
+							label: "Customize color",
+							optional: true,
+							defaultValue: "#ed2232",
+							noMargin: true,
+							wrapperProps: {
+								className: "pb-3",
+							},
 							meta: {
 								singleChoice: true,
 								choiceSize: 30,
@@ -70,10 +72,14 @@ export default function FlowerHeadsComponent() {
 							hint: "Click (or drag and drop) a flower to add it to your canvas",
 							choices: Object.keys(flowerHeads),
 							meta: {
+								columns: 3,
 								render(flowerHead) {
 									const url =
 										new FlowerHeadsComponentDrawer().draw({
 											...data,
+											color:
+												data.color ||
+												flowerHeads[flowerHead].fill,
 											flowerHead,
 										});
 

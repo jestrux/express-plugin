@@ -13,6 +13,10 @@
 	accent-color: #5258e4;
 }
 
+input::placeholder {
+	opacity: 0.6;
+}
+
 .back-button:not(:hover) {
 	border-color: transparent;
 	background-color: transparent;

@@ -3,7 +3,7 @@ import React from "react";
 function ButtonGroup({ choices = [], onChange, ...props }) {
 	return (
 		<div
-			className="inline-flex border bg-white rounded-sm overflow-hidden"
+			className="inline-flex border rounded-sm overflow-hidden"
 			style={{ padding: "0.1rem", borderColor: "#ccc" }}
 		>
 			{choices.map((choice, index) => {
@@ -25,7 +25,7 @@ function ButtonGroup({ choices = [], onChange, ...props }) {
 								: "bg-transparent text-darker-gray"
 						}`}
 						style={{
-							fontSize: "13px",
+							fontSize: "12px",
 							padding: "0.25rem 0.5rem",
 						}}
 						onClick={() => onChange(value, index)}

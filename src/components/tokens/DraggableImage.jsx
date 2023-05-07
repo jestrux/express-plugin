@@ -6,6 +6,7 @@ export default function DraggableImage({
 	wrapped,
 	loading = false,
 	info = false,
+	wrapperProps,
 	...props
 }) {
 	const imageRef = useRef();
@@ -61,7 +62,7 @@ export default function DraggableImage({
 					/>
 				)}
 			</div>
-			{props.info && <InfoCard />}
+			{info && <InfoCard />}
 		</>
 	);
 }

@@ -6,6 +6,7 @@ import { showPreview } from "./utils";
 import useImage from "../hooks/useImage";
 import DraggableImage from "./tokens/DraggableImage";
 import Loader from "./tokens/Loader";
+import InfoCard from "./tokens/InfoCard";
 
 class PolaroidDrawer {
 	constructor() {
@@ -119,61 +120,59 @@ export default function PolaroidComponent() {
 
 	return (
 		<>
+			<InfoCard infoIcon>
+				Default image is royalty free, sourced from Unsplash
+			</InfoCard>
+
 			<div className="border-t">
 				<Picker />
 			</div>
 
 			<div className="px-12px">
-				{(!img || loading) && (
-					<div className="relative" style={{ height: "80px" }}>
-						<Loader fillParent={true} />
-					</div>
-				)}
-
 				<ComponentFields
 					schema={{
-						...(loading || !img
-							? {}
-							: {
-									picker: {
-										type: "grid",
-										label: "",
-										hint: "Click (or drag and drop) image to add it to your canvas",
-										choices: [
-											"color-dodge",
-											// "exclusion",
-											"lighten",
-											// "luminosity",
-											"screen",
-										],
-										noBorder: true,
-										meta: {
-											transparent: true,
-											columns: 2,
-											aspectRatio: "1.5/2",
-											aspectRatio: `${img.naturalWidth} / ${img.naturalHeight}`,
-											render(filter) {
-												const url =
-													new PolaroidDrawer().draw({
-														...data,
-														img,
-														filter,
-													});
-												return (
-													<DraggableImage
-														className="h-full max-w-full object-fit"
-														src={url}
-														style={{
-															objectFit:
-																"contain",
-															filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
-														}}
-													/>
-												);
-											},
-										},
-									},
-							  }),
+						picker: {
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) image to add it to your canvas",
+							choices: [
+								"color-dodge",
+								// "exclusion",
+								"lighten",
+								// "luminosity",
+								"screen",
+							],
+							noBorder: true,
+							meta: {
+								transparent: true,
+								columns: 2,
+								aspectRatio: "1.5/2",
+								aspectRatio:
+									!img || loading
+										? undefined
+										: `${img.naturalWidth} / ${img.naturalHeight}`,
+								render(filter) {
+									if (!img || loading)
+										return <Loader fillParent={true} />;
+
+									const url = new PolaroidDrawer().draw({
+										...data,
+										img,
+										filter,
+									});
+									return (
+										<DraggableImage
+											className="h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
+								},
+							},
+						},
 					}}
 					onChange={updateField}
 					data={data}

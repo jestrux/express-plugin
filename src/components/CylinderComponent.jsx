@@ -5,6 +5,8 @@ import ComponentFields from "./tokens/ComponentFields";
 import { backgroundSpec, resizeToAspectRatio, solidGradientBg } from "./utils";
 import DraggableImage from "./tokens/DraggableImage";
 import useImage from "../hooks/useImage";
+import Loader from "./tokens/Loader";
+import InfoCard from "./tokens/InfoCard";
 
 class CylinderDrawer {
 	padding = 40;
@@ -127,7 +129,13 @@ export default function CylinderComponent() {
 
 	return (
 		<>
-			<Picker />
+			<InfoCard infoIcon>
+				Default image is royalty free, sourced from Unsplash
+			</InfoCard>
+
+			<div className="border-t">
+				<Picker />
+			</div>
 
 			<div className="px-12px">
 				<ComponentFields
@@ -138,65 +146,51 @@ export default function CylinderComponent() {
 						// 	show: (state) => state.half,
 						// },
 						// inset: "boolean",
-						// border: {
-						// 	type: "color",
-						// 	inline: true,
-						// 	defaultValue: "#888",
-						// 	meta: {
-						// 		showTransparent: true,
-						// 		colors: ["#aaaaaa"],
-						// 	},
-						// 	show: (state) => state.inset,
-						// },
+						inset: {},
+						borderColor: {
+							type: "color",
+							meta: {
+								singleChoice: true,
+								choiceSize: 30,
+							},
+							show: ({ inset }) => inset == "border",
+						},
 						background: backgroundSpec({
-							colorProps: {
-								meta: {
-									// singleChoice: false,
-									// showTransparent: true,
-									// choiceSize: 25,
+							show: ({ inset }) => inset == "background",
+						}),
+						inset: "boolean",
+						picker: {
+							type: "grid",
+							label: "",
+							hint: "Click (or drag and drop) shape to add it to your canvas",
+							choices: [true, false],
+							noBorder: true,
+							meta: {
+								columns: 1,
+								aspectRatio: "2/1.5",
+								render(half) {
+									if (loading || !image)
+										return <Loader fillParent={true} />;
+
+									const url = new CylinderDrawer().draw({
+										...data,
+										img: image,
+										half,
+									});
+
+									return (
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
 								},
 							},
-						}),
-						// src: {
-						// 	type: "image",
-						// 	label: "",
-						// },
-						inset: "boolean",
-						...(loading || !image
-							? {}
-							: {
-									picker: {
-										type: "grid",
-										label: "",
-										hint: "Click (or drag and drop) shape to add it to your canvas",
-										choices: [true, false],
-										noBorder: true,
-										meta: {
-											columns: 1,
-											aspectRatio: "2/1.5",
-											render(half) {
-												const url =
-													new CylinderDrawer().draw({
-														...data,
-														img: image,
-														half,
-													});
-
-												return (
-													<DraggableImage
-														className="p-3 h-full max-w-full object-fit"
-														src={url}
-														style={{
-															objectFit:
-																"contain",
-															filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
-														}}
-													/>
-												);
-											},
-										},
-									},
-							  }),
+						},
 					}}
 					onChange={updateField}
 					data={data}

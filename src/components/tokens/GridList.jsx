@@ -31,7 +31,7 @@ function GridList({
 				return (
 					<div
 						key={index}
-						className={`hoverables flex flex-col flex-wrap center-center border rounded-sm ${
+						className={`relative hoverables flex flex-col flex-wrap center-center border rounded-sm ${
 							selected
 								? "bg-black26 border-dark-gray"
 								: "text-darker-gray"

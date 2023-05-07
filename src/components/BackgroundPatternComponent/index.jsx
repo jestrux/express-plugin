@@ -12,51 +12,24 @@ class PatternEffect {
 		this.ctx = ctx;
 		this.color = color;
 
-		const icon = icons[shape];
-		const path = new Path2D(icon.path);
-		const lineWidth = 5;
+		const [shape1, shape2] = Array.isArray(shape) ? shape : [shape];
+		const icon1 = icons[shape1];
+		const icon2 = icons[shape2 || shape1];
 
-		const fillPath = () => {
-			if (style == "outline") {
-				ctx.strokeStyle = color;
-				ctx.lineWidth = lineWidth;
-				ctx.stroke(path);
-			} else {
-				ctx.strokeStyle = color;
-				ctx.fillStyle = color;
-				ctx.fill(path);
-			}
-		};
+		canvas.width = (Number(icon1.width) + Number(icon2.width)) * 2.5;
+		canvas.height = (Number(icon1.height) + Number(icon2.height)) * 2;
 
-		if (spacing == "loose") {
-			canvas.width = icon.width * 5;
-			canvas.height = icon.height * 4;
+		ctx.fillStyle = color;
+		ctx.fill(new Path2D(icon1.path));
 
-			fillPath();
-
-			ctx.translate(icon.width * 2.5, icon.height * 2);
-		} else if (spacing == "snug") {
-			canvas.width = icon.width * 2;
-			canvas.height = icon.height * 2;
-
-			fillPath();
-
-			ctx.translate(icon.width, icon.height);
-		} else {
-			canvas.width = icon.width * 2;
-			canvas.height = icon.height;
-
-			fillPath();
-
-			ctx.translate(icon.width, 0);
-		}
+		ctx.translate(
+			Number(icon1.width) + Number(icon2.width),
+			Number(icon1.height) + Number(icon2.height)
+		);
 
 		if (effect != "none") this[`${effect}Effect`]();
 
-		if (["outline", "alternate"].includes(style)) {
-			ctx.lineWidth = lineWidth;
-			ctx.stroke(path);
-		} else ctx.fill(path);
+		ctx.fill(new Path2D(icon2.path));
 
 		return ctx.createPattern(canvas, "repeat");
 	}
@@ -167,30 +140,137 @@ class BackgroundPatternDrawer {
 export default function BackgroundPatternComponent() {
 	const [data, updateField] = useDataSchema({
 		shape: "star",
-		style: "alternate",
 		spacing: "loose",
 		color: "#ac1f40",
-		effect: "none",
+		multiple: false,
 	});
 
 	return (
 		<>
-			<div className="px-12px mt-1">
+			<div className="px-12px">
 				<ComponentFields
 					schema={{
+						multiple: {
+							type: "card",
+							label: "Pattern shape",
+							noMargin: true,
+							noBorder: true,
+							wrapperProps: {
+								className: data.multiple ? "pb-2" : "",
+							},
+							choices: [
+								{
+									label: "Single shape",
+									value: false,
+								},
+								{
+									label: "Combined",
+									value: true,
+								},
+							],
+							meta: {
+								renderChoice(choice) {
+									return (
+										<div
+											className="h-full flex flex-col justify-between"
+											style={{
+												background: choice
+													? "#ebd913"
+													: "#379b98",
+												color: choice
+													? "#5d5501"
+													: "#caf1f0",
+												padding: "0.3rem",
+											}}
+										>
+											{(!choice
+												? ["paw", "paw"]
+												: ["heart", "heartAlt"]
+											).map((icon, index) => {
+												// "#379b98",
+												// "#f25629",
+												// "#ebd913",
+												// "#ed2232",
+												const { width, height, path } =
+													icons[icon];
+
+												return (
+													<svg
+														key={index}
+														fill="currentColor"
+														xmlns="http://www.w3.org/2000/svg"
+														viewBox={`0 0 ${width} ${height}`}
+														width="45%"
+														style={{
+															marginLeft:
+																index == 1
+																	? "auto"
+																	: "",
+														}}
+													>
+														<path d={path} />
+													</svg>
+												);
+											})}
+										</div>
+									);
+								},
+							},
+						},
 						shape: {
 							type: "tag",
+							// label: data.multiple ? "Shapes" : "Shape",
+							label: "",
+							noMargin: true,
+							noBorder: true,
+							hint: !data.multiple
+								? null
+								: {
+										type: "info",
+										text: "Select any two shapes to make a pattern",
+								  },
 							choices: [
-								"heart",
 								"star",
-								"square",
-								"triangle",
-								{ label: "Music Note", value: "music" },
-								"circle",
+								"starAlt",
+								"paw",
+								"heart",
+								"heartAlt",
+								"flower",
+								"music",
+								"musicAlt",
+								"bird",
+								// "triangle",
+								// "square",
+								// "circle",
 							],
+							meta: {
+								multiple: data.multiple,
+								maxSelections: 2,
+								icon(icon) {
+									const { width, height, path } = icons[icon];
+
+									return (
+										<svg
+											fill="currentColor"
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox={`0 0 ${width} ${height}`}
+										>
+											<path d={path} />
+										</svg>
+									);
+								},
+							},
 						},
 						color: {
 							type: "color",
+							label: "Pattern color",
+							noMargin: true,
+							// inline: true,
+							wrapperProps: {
+								className: data.multiple
+									? "border-t -mx-12px px-12px py-2"
+									: "",
+							},
 							meta: {
 								singleChoice: true,
 								choiceSize: 30,
@@ -202,24 +282,23 @@ export default function BackgroundPatternComponent() {
 							hint: "Click (or drag and drop) a pattern to add it to your canvas",
 							choices: [
 								"filled none",
-								"alternate none",
-								"filled contrast",
-								// "alternate contrast",
 								"filled splitcomplement",
-								// "alternate splitcomplement",
+								"filled contrast",
 							],
 							meta: {
 								columns: 1,
 								aspectRatio: "2/1",
 								gap: "1rem",
 								render(entry) {
-									const [style, effect] = entry.split(" ");
+									const [style, effect, spacing = "loose"] =
+										entry.split(" ");
 
 									const url =
 										new BackgroundPatternDrawer().draw({
 											...data,
 											style,
 											effect,
+											spacing,
 										});
 
 									return (
@@ -228,7 +307,7 @@ export default function BackgroundPatternComponent() {
 											src={url}
 											style={{
 												objectFit: "contain",
-												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+												filter: "drop-shadow(0.1px 0.1px 0.1px rgba(0, 0, 0, 0.55))",
 												transform: "scale(1.8)",
 											}}
 										/>

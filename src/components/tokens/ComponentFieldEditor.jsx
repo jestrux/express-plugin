@@ -12,6 +12,7 @@ import GridList from "./GridList";
 import SliderInput from "./SliderInput";
 import CardList from "./CardList";
 import InfoCard from "./InfoCard";
+import BackgroundPicker from "./BackgroundPicker";
 
 function ListEditor({ links, activeLink, onChange, onChangeActiveLink }) {
 	const [linkBeingEdited, setLinkBeingEdited] = React.useState(null);
@@ -159,7 +160,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		__data,
 		optional,
 		label,
-		hint,
+		hint: hintProp,
 		type,
 		choices,
 		defaultValue,
@@ -169,9 +170,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		value,
 		inline,
 		meta = {},
+		wrapperProps = {},
 	} = {
 		...(field ? field : {}),
 	};
+	const { text: hint, type: hintType } = !hintProp
+		? { text: null }
+		: typeof hintProp == "object"
+		? hintProp
+		: { text: hintProp };
 
 	function handleToggle(newValue) {
 		const fieldTypeIsText =
@@ -201,6 +208,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 	const isCustomFieldType = [
 		"boolean",
 		"color",
+		"background",
 		"swatch",
 		"gradient",
 		"icon",
@@ -213,6 +221,7 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 		"range",
 	].includes(type);
 
+	let { className: wrapperClassName, ...otherWrapperProps } = wrapperProps;
 	let { className, ...otherMeta } = meta;
 	let initialValue = value;
 
@@ -229,16 +238,17 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 
 	return (
 		<div
-			className={`ComponentFieldEditor mt-2 ${
+			className={`ComponentFieldEditor mt-2 ${wrapperClassName} ${
 				inline && "flex items-center justify-between"
 			}`}
+			{...otherWrapperProps}
 		>
 			{hint && hint.length && (
 				<div
 					className="-mx-12px mb-2"
 					style={{ marginTop: "-0.75rem" }}
 				>
-					<InfoCard>{hint}</InfoCard>
+					<InfoCard infoIcon={hintType == "info"}>{hint}</InfoCard>
 				</div>
 			)}
 
@@ -247,7 +257,10 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 					className="flex items-center justify-between"
 					style={{
 						marginBottom:
-							isCustomFieldType && !inline && type != "boolean"
+							isCustomFieldType &&
+							!inline &&
+							type != "boolean" &&
+							(!optional || value)
 								? "0.4rem"
 								: 0,
 					}}
@@ -312,6 +325,15 @@ const ComponentFieldEditor = function ({ inset, field = {}, onChange }) {
 						<ColorList
 							colors={choices}
 							selectedColor={value}
+							onChange={handleChange}
+							{...meta}
+						/>
+					)}
+
+					{type == "background" && (
+						<BackgroundPicker
+							optional={optional}
+							value={value}
 							onChange={handleChange}
 							{...meta}
 						/>

@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
-import { loadImage } from "./utils";
+import InfoCard from "./tokens/InfoCard";
+import DraggableImage from "./tokens/DraggableImage";
+import useImage from "../hooks/useImage";
+import { backgroundSpec, showPreview, solidGradientBg } from "./utils";
 
 class TornPaperDrawer {
+	cornerRadius = 20;
 	constructor() {
 		const canvas = document.createElement("canvas");
-		canvas.width = 320;
-		canvas.height = 120;
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 	}
@@ -34,163 +36,212 @@ class TornPaperDrawer {
 		return outputImage;
 	}
 
-	tornPaper(img) {
-		const canvas = this.canvas;
-		const ctx = this.ctx;
+	getPath(canvas, img) {
+		const { width, height } = img;
+		canvas.width = width;
+		canvas.height = height;
 
-		let lastX = 0,
-			randX,
-			randY;
+		const randX = () => (Math.floor(Math.random() * 7.5) / 100) * width;
+		const randY = () =>
+			((Math.floor(Math.random() * 5) + 95) / 100) * height;
 
-		ctx.save();
-		ctx.beginPath();
-		ctx.moveTo(0, 0);
+		let points = this.cropPoints;
 
-		randY =
-			((Math.floor(Math.random() * 8) + 85) / 100) *
-			canvas.height *
-			this.cropPercent;
-		ctx.lineTo(0, randY);
+		if (!points) {
+			points = [];
+			let lastX = 0;
+			while (lastX <= width) {
+				lastX = lastX + randX();
+				points.push([lastX, randY()]);
+			}
 
-		while (lastX <= canvas.width) {
-			randX = (Math.floor(Math.random() * 7.5) / 100) * canvas.width;
-			randY =
-				((Math.floor(Math.random() * 8) + 85) / 100) *
-				canvas.height *
-				this.cropPercent;
-			lastX = lastX + randX;
-			ctx.lineTo(lastX, randY);
+			this.cropPoints = points;
 		}
-		ctx.lineTo(canvas.width, 0);
-		ctx.closePath();
 
-		ctx.shadowColor = "rgba(0,0,0,0.16)";
-		ctx.shadowBlur = 15;
-		ctx.shadowOffsetX = 5;
-		ctx.shadowOffsetY = 5;
-		ctx.fill();
+		const path = new Path2D();
+		path.moveTo(0, 0);
+		path.lineTo(0, randY() * this.cropPercent);
 
-		ctx.clip();
+		const closingPoints = [
+			[width, this.cornerRadius],
+			[width - this.cornerRadius, 0, width, 0],
+			[this.cornerRadius, 0],
+			[0, this.cornerRadius, 0, 0],
+		];
+
+		[...points, ...closingPoints].forEach(([x, y, qx, qy]) => {
+			if (qx != undefined) path.quadraticCurveTo(qx, qy, x, y);
+			else path.lineTo(x, y * this.cropPercent);
+		});
+
+		return path;
+	}
+
+	tornPaper(img) {
+		const canvas = document.createElement("canvas");
+		const ctx = canvas.getContext("2d");
+
+		ctx.clip(this.getPath(canvas, img));
 		ctx.drawImage(img, 0, 0);
 		ctx.restore();
 
-		const aspectRatio = canvas.width / canvas.height / this.cropPercent;
-		return this.cropToFit(canvas, aspectRatio);
+		return canvas;
 	}
 
-	async draw(props = {}) {
-		Object.assign(this, props);
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	draw(props = {}) {
+		if (props.img?.src != this.img?.src) this.cropPoints = null;
 
-		// if (!this.img || props.src != this.src)
-		await loadImage(this, props.src);
+		if (props.img)
+			this.cornerRadius =
+				Math.max(props.img.height, props.img.width) * 0.015;
+
+		Object.assign(this, props);
+
 		return this.drawImage();
 	}
 
-	async drawImage() {
-		if (this.crop) return this.tornPaper(this.img).toDataURL();
+	drawImage() {
+		const paper = this.tornPaper(this.img);
+		const ctx = this.ctx;
+		const shadowInset = 15;
+		const { width, height } = this.img;
 
-		this.ctx.drawImage(this.img, 0, 0);
+		this.canvas.width = width;
+		this.canvas.height = height * this.cropPercent;
+		const padding = this.background?.padding ?? 0;
+		const scale = 1 - padding;
 
-		return this.canvas.toDataURL();
+		if (this.background) {
+			ctx.fillStyle = solidGradientBg(this.canvas, this.background.color);
+
+			ctx.beginPath();
+			ctx.roundRect(
+				0,
+				0,
+				this.canvas.width,
+				this.canvas.height,
+				this.cornerRadius * 1.2
+			);
+			ctx.closePath();
+			ctx.fill();
+			ctx.clip();
+		} else {
+			this.canvas.width += shadowInset * 2;
+			this.canvas.height += shadowInset * 2;
+
+			ctx.translate(shadowInset, shadowInset);
+		}
+
+		ctx.save();
+		ctx.shadowColor = "rgba(0,0,0,0.16)";
+		ctx.shadowBlur = shadowInset;
+		ctx.shadowOffsetX = -0.5;
+		ctx.shadowOffsetY = 2;
+
+		const dx = width - paper.width * scale;
+		const dy = height - paper.height * scale;
+
+		ctx.drawImage(
+			paper,
+			dx / 2,
+			(dy * this.cropPercent) / 2,
+			paper.width * scale,
+			paper.height * scale
+		);
+
+		ctx.restore();
+
+		const res = this.canvas.toDataURL();
+		showPreview(res);
+
+		return res;
 	}
 }
 
 export default function TornPaperComponent() {
-	const previewRef = useRef(null);
-	const tornPaperDrawerRef = useRef((data) => {
-		if (!window.tornPaperDrawer)
-			window.tornPaperDrawer = new TornPaperDrawer();
-
-		window.tornPaperDrawer.draw(data).then(setUrl);
-	});
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			src: staticImages.presets.clippedImage,
-			crop: true,
-			cropPercent: 1,
+	const drawerRef = useRef(new TornPaperDrawer());
+	const {
+		image: img,
+		loading,
+		picker: Picker,
+	} = useImage(staticImages.presets.clippedImage);
+	const [data, updateField] = useDataSchema({
+		cropPercent: 1,
+		background: {
+			padding: 0.06,
+			color: backgroundSpec({
+				defaultType: "gradient",
+			}).defaultValue,
 		},
-		tornPaperDrawerRef.current
-	);
+	});
 
-	useEffect(() => {
-		tornPaperDrawerRef.current(data);
+	const Preview = () => {
+		const url =
+			!img || loading
+				? null
+				: drawerRef.current.draw({
+						...data,
+						img,
+				  });
 
-		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
-			previewCallback: (element) => {
-				return new URL(element.src);
-			},
-			completionCallback: exportImage,
-		});
-	}, []);
-
-	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
-		const blob = await fetch(previewRef.current.src).then((response) =>
-			response.blob()
+		return (
+			<DraggableImage
+				wrapped
+				info
+				className="max-h-full w-full"
+				src={url}
+				style={{
+					filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.2))",
+				}}
+			/>
 		);
-
-		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
 	};
 
 	return (
 		<>
-			<div
-				className="p-3 border-b"
-				style={{ display: data?.src || url ? "" : "none" }}
-			>
-				<div className="relative relative flex center-center">
-					<img
-						className="max-w-full object-contain object-top"
-						src={data.src}
-						style={{
-							maxHeight: "30vh",
-							opacity: 0.1,
-						}}
-					/>
+			{!loading &&
+				img?.src.indexOf(staticImages.presets.clippedImage) != -1 && (
+					<InfoCard infoIcon>
+						Default image is a screenshot from The Verge and may be
+						subject to copyright.
+					</InfoCard>
+				)}
 
-					<div
-						className="absolute top-0 left-0 w-full image-item relative"
-						draggable="true"
-					>
-						<img
-							onClick={exportImage}
-							ref={previewRef}
-							className="drag-target w-full"
-							src={url}
-							style={{
-								opacity: url?.length ? 1 : 0,
-							}}
-						/>
-					</div>
-				</div>
-			</div>
+			<Preview />
 
-			<div className="px-12px mt-2">
+			<Picker />
+
+			<div className="px-12px mt-1 mb-4">
 				<ComponentFields
 					schema={{
-						src: { type: "image", label: "" },
-						crop: {
-							label: "",
-							type: "boolean",
-							group: "crop",
-							optional: "group",
-						},
 						cropPercent: {
-							group: "crop",
-							optional: "group",
-							label: "Cut off distance",
+							label: "Clip distance from bottom",
 							type: "range",
-							defaultValue: 1,
-							min: 0,
-							max: 1,
-							step: 1,
 							meta: {
-								min: 0,
+								min: 0.2,
 								max: 1,
 								step: 0.1,
+							},
+						},
+						background: {
+							type: "section",
+							optional: true,
+							collapsible: false,
+							children: {
+								padding: {
+									inline: true,
+									type: "radio",
+									choices: [
+										{ label: "SM", value: 0.03 },
+										{ label: "MD", value: 0.06 },
+										{ label: "LG", value: 0.09 },
+										{ label: "XL", value: 0.135 },
+									],
+									defaultValue: 0.06,
+								},
+								color: backgroundSpec({
+									defaultType: "gradient",
+								}),
 							},
 						},
 					}}

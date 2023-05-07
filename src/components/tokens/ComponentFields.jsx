@@ -97,12 +97,18 @@ function ComponentFieldSection({
 	return (
 		<div
 			className={`SectionField -mx-12px ${
-				data && (rootLevel || !isLast) && "border-b "
+				data &&
+				((rootLevel && !field.noBorder) || !isLast) &&
+				"border-b "
 			} 
-				${!data && rootLevel && "border-b"}
+				${!data && rootLevel && !field.noBorder && "border-b"}
 			`}
 			style={{
-				marginBottom: rootLevel ? "-0.75rem" : "",
+				marginBottom: rootLevel
+					? field.noMargin
+						? "-1rem"
+						: "-0.75rem"
+					: "",
 			}}
 		>
 			<div className="relative">

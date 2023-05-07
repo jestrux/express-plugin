@@ -38,10 +38,24 @@ class StickerBadgeDrawer {
 		ctx.fill(p);
 
 		if (this.text) {
-			ctx.fillStyle = this.text.color;
-			const fontSize = 200;
-			ctx.font = `bold ${fontSize}px Georgia`;
 			const text = this.text.label;
+			ctx.fillStyle = this.text.color;
+
+			const fontFamily = {
+				serif: "Georgia, serif",
+				"sans serif":
+					"Helvetica, 'Helvetica Neue', Verdana, sans-serif",
+				script: "'Sacre Bleu MVB', fantasy, serif",
+			}[this.text.font || "serif"];
+
+			let fontSize = 200;
+			ctx.font = `bold ${fontSize}px ${fontFamily}`;
+
+			while (ctx.measureText(text).width > width - 300) {
+				fontSize -= 5;
+				ctx.font = `bold ${fontSize}px ${fontFamily}`;
+			}
+
 			const metrics = ctx.measureText(text);
 
 			ctx.fillText(
@@ -60,6 +74,11 @@ export default function StickerBadgeComponent() {
 		src: staticImages.presets.cylinder,
 		sticker: "new",
 		border: "transparent",
+		text: {
+			label: "",
+			color: "#FFFFFF",
+			font: "serif",
+		},
 		background: {
 			type: "gradient",
 			color: "#ff2e6d",
@@ -75,20 +94,29 @@ export default function StickerBadgeComponent() {
 						background: backgroundSpec(),
 						text: {
 							type: "section",
-							optional: true,
 							collapsible: false,
+							noMargin: true,
 							children: {
 								label: {
 									label: "",
-									defaultValue: "Text",
+									noMargin: true,
+									meta: {
+										placeholder: "Enter text here...",
+										className: "mb-1",
+									},
 								},
 								color: {
 									type: "color",
-									defaultValue: "#FFFFFF",
+									inline: true,
+									noMargin: true,
 									meta: {
 										singleChoice: true,
-										choiceSize: 28,
 									},
+								},
+								font: {
+									type: "radio",
+									inline: true,
+									choices: ["serif", "sans serif", "script"],
 								},
 							},
 						},

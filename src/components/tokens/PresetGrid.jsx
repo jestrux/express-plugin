@@ -1,15 +1,10 @@
 import React from "react";
 import staticImages from "../../staticImages";
 import { camelCaseToSentenceCase } from "../utils";
-import InfoCard from "./InfoCard";
 
 const PresetGrid = ({ presets, onSelect }) => {
 	return (
 		<div className="flex flex-wrap border-t">
-			<InfoCard infoIcon>
-				Default images are royalty free, sourced from Unsplash
-			</InfoCard>
-
 			{Object.entries(presets).map(([name, value], index) => {
 				const { props, component, ...styles } = value;
 				const {

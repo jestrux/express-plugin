@@ -12,6 +12,8 @@ export default function DraggableImage({
 	const imageRef = useRef();
 
 	useEffect(() => {
+		if (loading || !props.src) return;
+
 		window.AddOnSdk?.app.enableDragToDocument(
 			wrapped ? imageRef.current.parentElement : imageRef.current,
 			{
@@ -19,7 +21,7 @@ export default function DraggableImage({
 				completionCallback: exportImage,
 			}
 		);
-	}, []);
+	}, [loading, props.src]);
 
 	const exportImage = async (e) => {
 		const fromDrag = e?.target?.nodeName != "IMG";

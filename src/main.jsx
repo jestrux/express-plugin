@@ -11,6 +11,19 @@ const render = (sdk = true) => {
 	if (sdk) {
 		console.log("AddOnSdk is ready for use.");
 		window.AddOnSdk = AddOnSdk;
+	} else {
+		window.AddOnSdk = {
+			app: {
+				enableDragToDocument: (el, props = {}) => {
+					if (!el) console.log("No element found");
+
+					if (props.previewCallback) props.previewCallback(el);
+					if (props.completionCallback) props.completionCallback(el);
+
+					return;
+				},
+			},
+		};
 	}
 
 	ReactDOM.createRoot(document.getElementById("root")).render(

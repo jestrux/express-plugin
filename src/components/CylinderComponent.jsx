@@ -148,8 +148,6 @@ export default function CylinderComponent() {
 						// 	type: "boolean",
 						// 	show: (state) => state.half,
 						// },
-						// inset: "boolean",
-						inset: {},
 						borderColor: {
 							type: "color",
 							meta: {

@@ -149,7 +149,6 @@ export default function PolaroidComponent() {
 							meta: {
 								transparent: true,
 								columns: 2,
-								aspectRatio: "1.5/2",
 								aspectRatio:
 									!img || loading
 										? undefined

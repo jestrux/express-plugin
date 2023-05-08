@@ -141,7 +141,6 @@ export default function SpiralComponent() {
 							},
 						},
 						infinite: {
-							label: "Shape",
 							type: "grid",
 							label: "",
 							hint: "Click (or drag and drop) shape to add it to your canvas",

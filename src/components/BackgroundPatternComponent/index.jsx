@@ -156,7 +156,7 @@ export default function BackgroundPatternComponent() {
 							noMargin: true,
 							noBorder: true,
 							wrapperProps: {
-								className: data.multiple ? "pb-2" : "",
+								className: "pb-3",
 							},
 							choices: [
 								{
@@ -223,12 +223,15 @@ export default function BackgroundPatternComponent() {
 							label: "",
 							noMargin: true,
 							noBorder: true,
-							hint: !data.multiple
-								? null
-								: {
-										type: "info",
-										text: "Select any two shapes to make a pattern",
-								  },
+							wrapperProps: {
+								className: "pb-1 flex flex-col",
+							},
+							hint: {
+								type: "info",
+								text: data.multiple
+									? "Select any two shapes to make a pattern"
+									: "Select a shape to make a pattern",
+							},
 							choices: [
 								"star",
 								"starAlt",
@@ -267,9 +270,7 @@ export default function BackgroundPatternComponent() {
 							noMargin: true,
 							// inline: true,
 							wrapperProps: {
-								className: data.multiple
-									? "border-t -mx-12px px-12px py-2"
-									: "",
+								className: "-mx-12px px-12px pb-2 mb-1",
 							},
 							meta: {
 								singleChoice: true,
@@ -279,6 +280,7 @@ export default function BackgroundPatternComponent() {
 						picker: {
 							type: "grid",
 							label: "",
+							noBorder: true,
 							hint: "Click (or drag and drop) a pattern to add it to your canvas",
 							choices: [
 								"filled none",

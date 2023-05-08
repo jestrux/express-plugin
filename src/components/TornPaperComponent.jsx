@@ -203,7 +203,7 @@ export default function TornPaperComponent() {
 				img?.src.indexOf(staticImages.presets.clippedImage) != -1 && (
 					<InfoCard infoIcon>
 						Default image is a screenshot from The Verge and may be
-						subject to copyright.
+						subject to copyright
 					</InfoCard>
 				)}
 

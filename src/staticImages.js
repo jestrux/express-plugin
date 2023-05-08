@@ -19,33 +19,33 @@ export default {
 		regular: {
 			blob: "static/images/maps/blob-regular.png",
 			folded: "static/images/maps/folded-regular.png",
-			regular: "static/images/maps/regular.png",
+			regular: "static/images/maps/regular.jpg",
 		},
 		green: {
 			blob: "static/images/maps/blob-green.png",
 			folded: "static/images/maps/folded-green.png",
-			regular: "static/images/maps/green.png",
+			regular: "static/images/maps/green.jpg",
 		},
 		dark: {
 			blob: "static/images/maps/blob-dark.png",
 			folded: "static/images/maps/folded-dark.png",
-			regular: "static/images/maps/dark.png",
+			regular: "static/images/maps/dark.jpg",
 		},
 		withMarker: {
 			regular: {
 				blob: "static/images/maps/with-marker/blob-regular.png",
 				folded: "static/images/maps/with-marker/folded-regular.png",
-				regular: "static/images/maps/with-marker/regular.png",
+				regular: "static/images/maps/with-marker/regular.jpg",
 			},
 			green: {
 				blob: "static/images/maps/with-marker/blob-green.png",
 				folded: "static/images/maps/with-marker/folded-green.png",
-				regular: "static/images/maps/with-marker/green.png",
+				regular: "static/images/maps/with-marker/green.jpg",
 			},
 			dark: {
 				blob: "static/images/maps/with-marker/blob-dark.png",
 				folded: "static/images/maps/with-marker/folded-dark.png",
-				regular: "static/images/maps/with-marker/dark.png",
+				regular: "static/images/maps/with-marker/dark.jpg",
 			},
 		},
 	},

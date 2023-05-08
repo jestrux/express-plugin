@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./components/App";
 import { Provider } from "@adobe/react-spectrum";
 import { theme } from "@react-spectrum/theme-express";
+import { ToastContainer } from "@react-spectrum/toast";
 
 import "./App.css";
 
@@ -31,12 +32,14 @@ const render = (sdk = true) => {
 			<Provider theme={theme} colorScheme="light">
 				<div className="bg-white">
 					<App />
+
+					<ToastContainer />
 				</div>
 			</Provider>
 		</React.StrictMode>
 	);
 };
 
-render(false);
+// render(false);
 
-// AddOnSdk.ready.then(render);
+AddOnSdk.ready.then(render);

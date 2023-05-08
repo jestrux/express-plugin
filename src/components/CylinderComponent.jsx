@@ -113,6 +113,7 @@ export default function CylinderComponent() {
 		loading,
 		image: img,
 		picker: Picker,
+		changed,
 	} = useImage(staticImages.presets.cylinder);
 
 	const [data, updateField] = useDataSchema({
@@ -129,12 +130,11 @@ export default function CylinderComponent() {
 
 	return (
 		<>
-			{!loading &&
-				img?.src.indexOf(staticImages.presets.cylinder) != -1 && (
-					<InfoCard infoIcon>
-						Default image is royalty free, sourced from Unsplash
-					</InfoCard>
-				)}
+			{!changed && (
+				<InfoCard infoIcon>
+					Default image is royalty free, sourced from Unsplash
+				</InfoCard>
+			)}
 
 			<div className="border-t">
 				<Picker />

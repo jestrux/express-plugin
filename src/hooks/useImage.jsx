@@ -7,9 +7,11 @@ export default function useImage(src) {
 	const [image, setImage] = useState(null);
 	const [images, setImages] = useState(null);
 	const [multiple, setMultiple] = useState(false);
+	const [changed, setChanged] = useState(false);
 	const imagesRef = useRef({});
 
 	const handleImagePicked = (img) => {
+		setChanged(true);
 		if (multiple) loadImages(img);
 		else loadImage(img);
 	};
@@ -74,5 +76,6 @@ export default function useImage(src) {
 		images,
 		image,
 		loading,
+		changed,
 	};
 }

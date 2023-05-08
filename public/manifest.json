@@ -1,7 +1,7 @@
 {
 	"testId": "Vision Board",
 	"name": "Vision Board",
-	"version": "1.0.0",
+	"version": "1.2.0",
 	"manifestVersion": 2,
 	"requirements": {
 		"apps": [
@@ -16,7 +16,10 @@
 		{
 			"type": "panel",
 			"id": "panel1",
-			"main": "index.html"
+			"main": "index.html",
+			"permissions": {
+				"sandbox": ["allow-popups", "allow-popups-to-escape-sandbox"]
+			}
 		}
 	]
 }

@@ -1,7 +1,21 @@
 import React from "react";
 import Input from "./Input";
+import { ToastQueue } from "@react-spectrum/toast";
 import { Button } from "@adobe/react-spectrum";
 
+const sweetAlert = (title, description) => {
+	if (typeof window.AddOnSdk?.app?.showModalDialog == "function") {
+		window.AddOnSdk.app.showModalDialog({
+			variant: "error",
+			title,
+			description: [description],
+		});
+
+		return;
+	}
+
+	ToastQueue.negative(`${title} - ${description}`);
+};
 const readFile = (file) => {
 	return new Promise((res) => {
 		const reader = new FileReader();
@@ -16,11 +30,55 @@ export default function ImagePicker({ multiple, onChange }) {
 
 		if (!files?.length) return;
 
-		onChange(null);
+		// onChange(null);
+
+		const supportedFileTypes = ["jpg", "jpeg", "png", "webp", "gif"];
+		const maxSize = 6 * 1000000; // 6 MB
+
+		let error;
+
+		const fileList = Array.from(files);
+		Array.from(files).forEach((file, index) => {
+			const typeSupported =
+				!file.type || !file.type.length
+					? null
+					: supportedFileTypes.find(
+							(type) =>
+								file.type.toLowerCase().indexOf(type) != -1
+					  );
+
+			const fileSize = file.size; // file size in bytes
+
+			if (fileSize > maxSize)
+				error = `size ( ${(fileSize / 1000000).toFixed(1)} MB )`;
+			if (!typeSupported) error = `type (${file.type})`;
+
+			if (!typeSupported || fileSize > maxSize) fileList.splice(index, 1);
+		});
+
+		if (!fileList.length && error) {
+			const message =
+				error.indexOf("type") != -1
+					? `Invalid file ${error}. Please pick an image with from one of these types .${supportedFileTypes.join(
+							",."
+					  )}.`
+					: `File ${error} is too large. Max file size is ${
+							maxSize / 1000000
+					  } MB.`;
+
+			e.target.value = "";
+
+			return sweetAlert(
+				error.indexOf("type") != -1
+					? "Unsupported file type"
+					: "File too large",
+				message
+			);
+		}
 
 		const res = await (multiple
-			? Promise.all(Array.from(files).map(readFile))
-			: readFile(files[0]));
+			? Promise.all(Array.from(fileList).map(readFile))
+			: readFile(fileList[0]));
 
 		onChange(res);
 
@@ -50,6 +108,7 @@ export default function ImagePicker({ multiple, onChange }) {
 				type="file"
 				name="image"
 				onChange={processImage}
+				accept=".jpg, .png, .jpeg, .gif|image/*"
 				{...(multiple ? { multiple: true } : {})}
 			/>
 

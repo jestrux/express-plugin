@@ -27,8 +27,7 @@ export default function DraggableImage({
 	}, [loading, props.src]);
 
 	const exportImage = async (e) => {
-		const el = e?.target;
-		const fromDrag = el?.nodeName != "DIV";
+		const fromDrag = !e?.target;
 		const blob = await fetch(src()).then((response) => response.blob());
 
 		if (fromDrag) return [{ blob }];
@@ -48,6 +47,7 @@ export default function DraggableImage({
 	if (!wrapped) {
 		return (
 			<div
+				key={src()}
 				ref={imageRef}
 				draggable
 				className="w-full h-full flex center-center"
@@ -65,6 +65,7 @@ export default function DraggableImage({
 	return (
 		<>
 			<div
+				key={src()}
 				ref={imageRef}
 				draggable
 				className="hoverable relative relative bg-transparent"

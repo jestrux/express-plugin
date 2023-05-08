@@ -111,6 +111,7 @@ export default function PolaroidComponent() {
 		loading,
 		image: img,
 		picker: Picker,
+		changed,
 	} = useImage(staticImages.presets.polaroid);
 
 	const [data, updateField] = useDataSchema({
@@ -120,12 +121,11 @@ export default function PolaroidComponent() {
 
 	return (
 		<>
-			{!loading &&
-				img?.src.indexOf(staticImages.presets.polaroid) != -1 && (
-					<InfoCard infoIcon>
-						Default image is royalty free, sourced from Unsplash
-					</InfoCard>
-				)}
+			{!changed && (
+				<InfoCard infoIcon>
+					Default image is royalty free, sourced from Unsplash
+				</InfoCard>
+			)}
 
 			<div className="border-t">
 				<Picker />

@@ -95,18 +95,21 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "@adobe/react-spectrum";
 import { theme } from "@react-spectrum/theme-express";
+import { ToastContainer } from "@react-spectrum/toast";
+
 import App from "./App";
 import "./index.css";
 
 AddOnSdk.ready.then(() => {
-	console.log("AddOnSdk is ready for use.");
 	window.AddOnSdk = AddOnSdk;
+	console.log("AddOnSdk is ready for use.", window.AddOnSdk);
 
 	const root = createRoot(document.getElementById("root"));
 	root.render(
 		<Provider theme={theme} colorScheme="light">
 			<div className="bg-white">
 				<App addOnSdk={AddOnSdk} />
+				<ToastContainer />
 			</div>
 		</Provider>
 	);

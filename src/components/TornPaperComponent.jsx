@@ -164,6 +164,7 @@ export default function TornPaperComponent() {
 		image: img,
 		loading,
 		picker: Picker,
+		changed,
 	} = useImage(staticImages.presets.clippedImage);
 	const [data, updateField] = useDataSchema({
 		cropPercent: 1,
@@ -199,13 +200,12 @@ export default function TornPaperComponent() {
 
 	return (
 		<>
-			{!loading &&
-				img?.src.indexOf(staticImages.presets.clippedImage) != -1 && (
-					<InfoCard infoIcon>
-						Default image is a screenshot from The Verge and may be
-						subject to copyright
-					</InfoCard>
-				)}
+			{!changed && (
+				<InfoCard infoIcon>
+					Default image is a screenshot from The Verge and may be
+					subject to copyright
+				</InfoCard>
+			)}
 
 			<Preview />
 

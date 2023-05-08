@@ -120,9 +120,12 @@ export default function PolaroidComponent() {
 
 	return (
 		<>
-			<InfoCard infoIcon>
-				Default image is royalty free, sourced from Unsplash
-			</InfoCard>
+			{!loading &&
+				img?.src.indexOf(staticImages.presets.polaroid) != -1 && (
+					<InfoCard infoIcon>
+						Default image is royalty free, sourced from Unsplash
+					</InfoCard>
+				)}
 
 			<div className="border-t">
 				<Picker />

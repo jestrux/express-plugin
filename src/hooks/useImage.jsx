@@ -6,7 +6,13 @@ export default function useImage(src) {
 	const [loading, setLoading] = useState(false);
 	const [image, setImage] = useState(null);
 	const [images, setImages] = useState(null);
+	const [multiple, setMultiple] = useState(false);
 	const imagesRef = useRef({});
+
+	const handleImagePicked = (img) => {
+		if (multiple) loadImages(img);
+		else loadImage(img);
+	};
 
 	const updateImage = (id, newValue) => {
 		updateImages({
@@ -36,6 +42,7 @@ export default function useImage(src) {
 	};
 
 	const loadImages = async (urls) => {
+		setMultiple(true);
 		updateImages({});
 		setLoading(true);
 		await Promise.all(
@@ -48,13 +55,16 @@ export default function useImage(src) {
 		if (!src) return;
 
 		if (typeof src == "object") loadImages(src);
-		else loadImage(src);
+		else {
+			loadImage(src);
+			setMultiple(false);
+		}
 	}, [src]);
 
 	const picker = () => {
 		return (
 			<div className="px-12px border-b mt-3 pb-3 mb-1 flex items-center">
-				<ImagePicker onChange={loadImage} />
+				<ImagePicker multiple={multiple} onChange={handleImagePicked} />
 			</div>
 		);
 	};

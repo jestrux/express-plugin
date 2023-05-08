@@ -111,7 +111,7 @@ class CylinderDrawer {
 export default function CylinderComponent() {
 	const {
 		loading,
-		image,
+		image: img,
 		picker: Picker,
 	} = useImage(staticImages.presets.cylinder);
 
@@ -129,9 +129,12 @@ export default function CylinderComponent() {
 
 	return (
 		<>
-			<InfoCard infoIcon>
-				Default image is royalty free, sourced from Unsplash
-			</InfoCard>
+			{!loading &&
+				img?.src.indexOf(staticImages.presets.cylinder) != -1 && (
+					<InfoCard infoIcon>
+						Default image is royalty free, sourced from Unsplash
+					</InfoCard>
+				)}
 
 			<div className="border-t">
 				<Picker />
@@ -156,7 +159,7 @@ export default function CylinderComponent() {
 							show: ({ inset }) => inset == "border",
 						},
 						background: backgroundSpec({
-							show: ({ inset }) => inset == "background",
+							// show: ({ inset }) => inset == "background",
 						}),
 						inset: "boolean",
 						picker: {
@@ -169,12 +172,12 @@ export default function CylinderComponent() {
 								columns: 1,
 								aspectRatio: "2/1.5",
 								render(half) {
-									if (loading || !image)
+									if (loading || !img)
 										return <Loader fillParent={true} />;
 
 									const url = new CylinderDrawer().draw({
 										...data,
-										img: image,
+										img,
 										half,
 									});
 

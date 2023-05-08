@@ -21,7 +21,7 @@ export default function DraggableImage({
 		if (loading || !props.src) return;
 
 		window.AddOnSdk?.app.enableDragToDocument(imageRef.current, {
-			previewCallback: () => new URL(props.src),
+			previewCallback: () => new URL(src()),
 			completionCallback: exportImage,
 		});
 	}, [loading, props.src]);

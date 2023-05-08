@@ -207,6 +207,7 @@ export default function GridComponent() {
 														}}
 														{...(gridType == "mesh"
 															? {
+																	fill: "none",
 																	stroke: data.color,
 																	strokeWidth:
 																		"5",

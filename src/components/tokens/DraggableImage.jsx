@@ -20,36 +20,43 @@ export default function DraggableImage({
 	useEffect(() => {
 		if (loading || !props.src) return;
 
-		window.AddOnSdk?.app.enableDragToDocument(
-			wrapped ? imageRef.current.parentElement : imageRef.current,
-			{
-				previewCallback: () => new URL(src()),
-				completionCallback: exportImage,
-			}
-		);
+		window.AddOnSdk?.app.enableDragToDocument(imageRef.current, {
+			previewCallback: () => new URL(props.src),
+			completionCallback: exportImage,
+		});
 	}, [loading, props.src]);
 
 	const exportImage = async (e) => {
-		const fromDrag = e?.target?.nodeName != "IMG";
+		const el = e?.target;
+		const fromDrag = el?.nodeName != "DIV";
 		const blob = await fetch(src()).then((response) => response.blob());
 
 		if (fromDrag) return [{ blob }];
 		else window.AddOnSdk?.app.document.addImage(blob);
 	};
 
+	if (loading || !src())
+		return (
+			<div
+				className="w-full h-full flex center-center relative"
+				style={{ height: wrapped ? "20vh" : "", minHeight: "50px" }}
+			>
+				<Loader fillParent />
+			</div>
+		);
+
 	if (!wrapped) {
-		return loading || !src() ? (
-			<Loader />
-		) : (
-			<div className="w-full h-full flex center-center" ref={imageRef}>
+		return (
+			<div
+				ref={imageRef}
+				draggable
+				className="w-full h-full flex center-center"
+				onClick={exportImage}
+			>
 				{props.children ? (
 					props.children
 				) : (
-					<img
-						className="hoverable"
-						{...props}
-						onClick={exportImage}
-					/>
+					<img className="hoverable" {...props} />
 				)}
 			</div>
 		);
@@ -58,21 +65,19 @@ export default function DraggableImage({
 	return (
 		<>
 			<div
+				ref={imageRef}
 				draggable
 				className="hoverable relative relative bg-transparent"
 				style={{ height: "20vh" }}
 				onClick={exportImage}
 			>
-				{props.loading || src() ? (
-					<Loader />
-				) : (
-					<div
-						ref={imageRef}
-						className="h-full w-full flex center-center p-3"
-					>
+				<div className="h-full w-full flex center-center p-3">
+					{props.children ? (
+						props.children
+					) : (
 						<img className="max-h-full max-w-full" {...props} />
-					</div>
-				)}
+					)}
+				</div>
 			</div>
 			{info && <InfoCard />}
 		</>

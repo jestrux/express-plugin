@@ -59,26 +59,16 @@ const componentMap = {
 const presets = {
 	layouts: {
 		props: {},
-		// height: 70,
-		// fullWidth: true,
 		component: "LayoutsComponent",
 	},
 	backgroundPattern: {
 		props: {},
-		// height: 70,
-		// fullWidth: true,
 		component: "BackgroundPatternComponent",
 	},
 	clippedImage: {
 		props: {},
-		// height: 70,
-		// fullWidth: true,
 		component: "TornPaperComponent",
 	},
-	// charts: {
-	// 	props: {},
-	// 	component: "ChartComponent",
-	// },
 	map: {
 		props: {},
 		component: "MapComponent",
@@ -99,22 +89,14 @@ const presets = {
 		props: {},
 		component: "CylinderComponent",
 	},
-	// frame: {
-	// 	props: {},
-	// 	component: "FrameComponent",
-	// },
-	// poppyFlower: {
-	// 	props: {},
-	// 	component: "PoppyFlowerComponent",
-	// },
 	flowerHeads: {
 		props: {},
 		component: "FlowerHeadsComponent",
 	},
-	// clock: {
-	// 	props: {},
-	// 	component: "ClockWidgetComponent",
-	// },
+	color: {
+		props: {},
+		component: "ColorComponent",
+	},
 	stickerBadge: {
 		props: {},
 		component: "StickerBadgeComponent",
@@ -131,26 +113,38 @@ const presets = {
 		props: {},
 		component: "WeatherWidgetComponent",
 	},
-	// ribbon: {
-	// 	props: {},
-	// 	component: "RibbonComponent",
-	// },
 	spiral: {
 		props: {},
 		component: "SpiralComponent",
 	},
+	ribbon: {
+		props: {},
+		component: "RibbonComponent",
+	},
+	// charts: {
+	// 	props: {},
+	// 	component: "ChartComponent",
+	// },
+	// frame: {
+	// 	props: {},
+	// 	component: "FrameComponent",
+	// },
+	// poppyFlower: {
+	// 	props: {},
+	// 	component: "PoppyFlowerComponent",
+	// },
+	// clock: {
+	// 	props: {},
+	// 	component: "ClockWidgetComponent",
+	// },
 	// calendar: {
 	// 	props: {},
 	// 	component: "CalendarComponent",
 	// },
-	color: {
-		props: {},
-		component: "ColorComponent",
-	},
-	"Deco Shapes": {
-		props: {},
-		component: "ShapesComponent",
-	},
+	// "Deco Shapes": {
+	// 	props: {},
+	// 	component: "ShapesComponent",
+	// },
 	// contour: {
 	// 	props: {},
 	// 	component: "ContourComponent",
@@ -169,7 +163,7 @@ const presets = {
 
 export default function App() {
 	const [currentComponent, setCurrentComponent] = useState();
-	// const component = useRef(WeatherWidgetComponent);
+	// const component = useRef(RibbonComponent);
 	const component = useRef();
 
 	function handleSetCurrentComponent(currentComponent, name = "") {

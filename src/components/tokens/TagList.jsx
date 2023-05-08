@@ -35,7 +35,7 @@ function TagList({
 	return (
 		<div
 			className="flex flex-wrap mt-1 rounded-xs overflow-hidden"
-			style={{ gap: "0.4rem" }}
+			style={{ gap: "0.6rem" }}
 		>
 			{choices.map((choice, index) => {
 				const isObject = typeof choice == "object";

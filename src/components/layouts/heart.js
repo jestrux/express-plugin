@@ -4,13 +4,13 @@ import { loadImageFromUrl, resizeImage, resizeToAspectRatio } from "../utils";
 class HeartTemplate {
 	constructor({ canvas, callback, images }) {
 		this.images = images;
-		this.callback = callback;
+		this.callback = () => {};
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 		this.canvas.width = 2200;
 		this.canvas.height = 2200;
 
-		callback();
+		// callback();
 	}
 
 	drawCard(img, userOptions, callback) {
@@ -77,13 +77,7 @@ class HeartTemplate {
 			inset * 1.5
 		);
 
-		// resolve(canvas);
-		// });
-		// });
-
-		setTimeout(() => {
-			callback(canvas);
-		});
+		callback(canvas);
 
 		return canvas;
 	}
@@ -132,7 +126,7 @@ class HeartTemplate {
 					cardBottomLeft.width * 0.05,
 					height - cardBottomLeft.height * 1.5
 				);
-				ctx.restore()
+				ctx.restore();
 				this.callback();
 			}
 		);
@@ -219,6 +213,8 @@ class HeartTemplate {
 				this.callback();
 			}
 		);
+
+		return this.canvas;
 	}
 }
 

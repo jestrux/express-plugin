@@ -5,13 +5,13 @@ class HoneyCombTemplate {
 	constructor({ canvas, callback, images, hideCenterCard = false }) {
 		this.inset = 60;
 		this.images = images;
-		this.callback = callback;
+		this.callback = () => {};
 		this.canvas = canvas;
 		this.hideCenterCard = hideCenterCard;
 		this.canvas.width = (this.canvas.height * 16) / 9;
 		this.ctx = canvas.getContext("2d");
 
-		callback();
+		// callback();
 	}
 
 	drawCard(img, userOptions, callback) {
@@ -64,9 +64,7 @@ class HoneyCombTemplate {
 			0
 		);
 
-		setTimeout(() => {
-			callback(canvas);
-		});
+		callback(canvas);
 	}
 
 	draw() {
@@ -156,6 +154,8 @@ class HoneyCombTemplate {
 				this.callback();
 			}
 		);
+
+		return this.canvas;
 	}
 }
 

@@ -5,12 +5,12 @@ class MasonryTemplate {
 	constructor({ canvas, callback, images }) {
 		this.inset = 30;
 		this.images = images;
-		this.callback = callback;
+		this.callback = () => {};
 		this.canvas = canvas;
 		this.canvas.width = (this.canvas.height * 16) / 9;
 		this.ctx = canvas.getContext("2d");
 
-		callback();
+		// callback();
 	}
 
 	drawCard(img, userOptions, callback) {
@@ -43,9 +43,8 @@ class MasonryTemplate {
 			inset * 1.5
 		);
 
-		setTimeout(() => {
-			callback(canvas);
-		});
+		callback(canvas);
+		console.log(canvas);
 	}
 
 	draw() {
@@ -146,6 +145,8 @@ class MasonryTemplate {
 				this.callback();
 			}
 		);
+
+		return this.canvas;
 	}
 }
 

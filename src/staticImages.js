@@ -1,37 +1,37 @@
-import arrowPoster from "./images/posters/arrows.png";
-import brushPoster from "./images/posters/brush.png";
-import backgroundPatternPoster from "./images/posters/background-pattern.png";
-import calendarPoster from "./images/posters/calendar.png";
-import chartsPoster from "./images/posters/charts.png";
+import arrowPoster from "./images/posters/arrows.webp";
+import brushPoster from "./images/posters/brush.webp";
+import backgroundPatternPoster from "./images/posters/background-pattern.webp";
+import calendarPoster from "./images/posters/calendar.webp";
+import chartsPoster from "./images/posters/charts.webp";
 import clippedImagePoster from "./images/posters/crop.webp";
-import clockPoster from "./images/posters/clock.png";
-import cloudPoster from "./images/posters/cloud.png";
-import colorPoster from "./images/posters/color.png";
-import cylinderPoster from "./images/posters/cylinder.png";
-import contourPoster from "./images/posters/contour.png";
-import gridPoster from "./images/posters/grid.png";
-import flowerHeadsPoster from "./images/posters/flowerHeads.png";
-import framedImagePoster from "./images/posters/frame.png";
-import layoutsPoster from "./images/posters/layouts.png";
-import mapPoster from "./images/posters/map.png";
+import clockPoster from "./images/posters/clock.webp";
+import cloudPoster from "./images/posters/cloud.webp";
+import colorPoster from "./images/posters/color.webp";
+import cylinderPoster from "./images/posters/cylinder.webp";
+import contourPoster from "./images/posters/contour.webp";
+import gridPoster from "./images/posters/grid.webp";
+import flowerHeadsPoster from "./images/posters/flowerHeads.webp";
+import framedImagePoster from "./images/posters/frame.webp";
+import layoutsPoster from "./images/posters/layouts.webp";
+import mapPoster from "./images/posters/map.webp";
 import polaroidCardPoster from "./images/posters/polaroid.webp";
-import poppyFlowerPoster from "./images/posters/poppyFlower.png";
-import shapesPoster from "./images/posters/shapes.png";
-import spiralPoster from "./images/posters/spiral.png";
-import spotifyCardPoster from "./images/posters/spotify.png";
-import ribbonPoster from "./images/posters/ribbon.png";
-import stickerBadgePoster from "./images/posters/sticker-badge.png";
-import weatherWidgetPoster from "./images/posters/weather.png";
-import wavesPoster from "./images/posters/waves.png";
+import poppyFlowerPoster from "./images/posters/poppyFlower.webp";
+import shapesPoster from "./images/posters/shapes.webp";
+import spiralPoster from "./images/posters/spiral.webp";
+import spotifyCardPoster from "./images/posters/spotify.webp";
+import ribbonPoster from "./images/posters/ribbon.webp";
+import stickerBadgePoster from "./images/posters/sticker-badge.webp";
+import weatherWidgetPoster from "./images/posters/weather.webp";
+import wavesPoster from "./images/posters/waves.webp";
 
-import calendarPreset from "./images/presets/calendar.jpg";
-import clippedImagePreset from "./images/presets/tornPaper.png";
-import clockPreset from "./images/presets/clock.jpg";
-import cylinderPreset from "./images/presets/cylinder.jpg";
-import polaroidPreset from "./images/presets/polaroid.jpg";
-import framePreset from "./images/presets/frame.jpg";
+import calendarPreset from "./images/presets/calendar.webp";
+import clippedImagePreset from "./images/presets/tornPaper.webp";
+import clockPreset from "./images/presets/clock.webp";
+import cylinderPreset from "./images/presets/cylinder.webp";
+import polaroidPreset from "./images/presets/polaroid.webp";
+import framePreset from "./images/presets/frame.webp";
 import spotifyPreset from "./images/presets/spotify.jpg";
-import mapPreset from "./images/presets/map.jpg";
+import mapPreset from "./images/presets/map.webp";
 
 import transparency from "./images/transparency.png";
 import flowers2 from "./images/flowers2.jpg";
@@ -47,29 +47,29 @@ import template6 from "./images/template-pictures/6.jpg";
 import template7 from "./images/template-pictures/7.jpg";
 import template8 from "./images/template-pictures/8.jpg";
 
-import blobMapRegular from "./images/maps/blob-regular.png";
-import blobMapGreen from "./images/maps/blob-green.png";
-import blobMapDark from "./images/maps/blob-dark.png";
+import blobMapRegular from "./images/maps/blob-regular.webp";
+import blobMapGreen from "./images/maps/blob-green.webp";
+import blobMapDark from "./images/maps/blob-dark.webp";
 
-import foldedMapRegular from "./images/maps/folded-regular.png";
-import foldedMapGreen from "./images/maps/folded-green.png";
-import foldedMapDark from "./images/maps/folded-dark.png";
+import foldedMapRegular from "./images/maps/folded-regular.webp";
+import foldedMapGreen from "./images/maps/folded-green.webp";
+import foldedMapDark from "./images/maps/folded-dark.webp";
 
-import mapRegular from "./images/maps/regular.jpg";
-import mapGreen from "./images/maps/green.jpg";
-import mapDark from "./images/maps/dark.jpg";
+import mapRegular from "./images/maps/regular.webp";
+import mapGreen from "./images/maps/green.webp";
+import mapDark from "./images/maps/dark.webp";
 
-import blobMapRegularWithMarker from "./images/maps/with-marker/blob-regular.png";
-import blobMapGreenWithMarker from "./images/maps/with-marker/blob-green.png";
-import blobMapDarkWithMarker from "./images/maps/with-marker/blob-dark.png";
+import blobMapRegularWithMarker from "./images/maps/with-marker/blob-regular.webp";
+import blobMapGreenWithMarker from "./images/maps/with-marker/blob-green.webp";
+import blobMapDarkWithMarker from "./images/maps/with-marker/blob-dark.webp";
 
-import foldedMapRegularWithMarker from "./images/maps/with-marker/folded-regular.png";
-import foldedMapGreenWithMarker from "./images/maps/with-marker/folded-green.png";
-import foldedMapDarkWithMarker from "./images/maps/with-marker/folded-dark.png";
+import foldedMapRegularWithMarker from "./images/maps/with-marker/folded-regular.webp";
+import foldedMapGreenWithMarker from "./images/maps/with-marker/folded-green.webp";
+import foldedMapDarkWithMarker from "./images/maps/with-marker/folded-dark.webp";
 
-import mapRegularWithMarker from "./images/maps/with-marker/regular.jpg";
-import mapGreenWithMarker from "./images/maps/with-marker/green.jpg";
-import mapDarkWithMarker from "./images/maps/with-marker/dark.jpg";
+import mapRegularWithMarker from "./images/maps/with-marker/regular.webp";
+import mapGreenWithMarker from "./images/maps/with-marker/green.webp";
+import mapDarkWithMarker from "./images/maps/with-marker/dark.webp";
 
 export default {
 	transparency,

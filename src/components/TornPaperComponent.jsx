@@ -189,7 +189,7 @@ export default function TornPaperComponent() {
 			<DraggableImage
 				wrapped
 				info
-				className="max-h-full w-full"
+				className="max-h-full w-full object-contain"
 				src={url}
 				style={{
 					filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.2))",

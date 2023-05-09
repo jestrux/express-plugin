@@ -13,6 +13,8 @@ import StackTemplate from "./stack";
 import HeartTemplate from "./heart";
 import DraggableImage from "../tokens/DraggableImage";
 import InfoCard from "../tokens/InfoCard";
+import useImage from "../../hooks/useImage";
+import Loader from "../tokens/Loader";
 
 const templateMap = {
 	stack: StackTemplate,
@@ -36,13 +38,8 @@ class LayoutsComponentDrawer {
 	}
 
 	callback = () => {
-		const canvas = this.templateCanvases[this.template];
-		const width = canvas.width;
-		const height = canvas.height;
-		const ctx = this.ctx;
-
-		this.canvas.height = height;
-		this.canvas.width = width;
+		const width = this.canvas.width;
+		const height = this.canvas.height;
 
 		if (this.background) {
 			ctx.fillStyle = solidGradientBg(this.canvas, this.background);
@@ -108,141 +105,60 @@ class LayoutsComponentDrawer {
 		this.fontLoaded = true;
 	}
 
-	async draw(props = {}) {
-		if (!props.images) return;
-
-		const templateChanged =
-			!this.template || this.template != props.template;
-		const imagesChanged =
-			!this.images || this.images.join("") != props.images.join("");
-		// const imagesChanged = props.imagesChanged;
-
+	draw(props = {}) {
 		Object.assign(this, props);
+		const canvas = this.canvas;
 
-		await this.loadFont();
-
-		if (imagesChanged) {
-			this.templateCanvases = {};
-			this.imagesElements = await Promise.all(
-				// this.images.map(() => this.canvas)
-				this.images.map(loadImageFromUrl)
-			);
+		if (this.background) {
+			this.ctx.fillStyle = solidGradientBg(this.canvas, this.background);
+			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 		}
 
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		const layout = new templateMap[this.template]({
+			canvas,
+			callback: this.callback,
+			images: this.images,
+		}).draw();
 
-		return this.drawImage({
-			templateChanged,
-			imagesChanged,
-		});
-	}
+		this.ctx.drawImage(layout, 0, 0);
 
-	drawImage({ templateChanged, imagesChanged }) {
-		if (templateChanged || imagesChanged) {
-			let canvas = this.templateCanvases[this.template];
+		const res = canvas.toDataURL();
 
-			if (!canvas) {
-				canvas = document.createElement("canvas");
-				canvas.width = 2200;
-				canvas.height = 2200;
+		showPreview(res);
 
-				this.templateCanvases[this.template] = canvas;
-
-				new templateMap[this.template]({
-					canvas,
-					callback: this.callback,
-					images: this.imagesElements,
-				}).draw();
-
-				return;
-			}
-
-			if (imagesChanged) {
-				new templateMap[this.template]({
-					canvas,
-					callback: this.callback,
-					images: this.imagesElements,
-				}).draw();
-
-				return;
-			}
-		}
-
-		setTimeout(() => {
-			this.callback();
-		});
+		return res;
 	}
 }
 
 export default function LayoutsComponent() {
-	const initialRef = useRef(null);
-	const layoutsComponentDrawerRef = useRef((data) => {
-		if (!window.layoutsComponentDrawer)
-			window.layoutsComponentDrawer = new LayoutsComponentDrawer(
-				(url) => {
-					ReactDOM.flushSync(() => {
-						setUrl(url);
-					});
-				}
-			);
-
-		window.layoutsComponentDrawer.draw(data);
-	});
-	const [imagesChanged, setImagesChanged] = useState(false);
-	const [url, setUrl] = useState();
-	const [data, updateField] = useDataSchema(
-		{
-			// background: {
-			// 	type: "gradient",
-			// 	color: "#A5292A",
-			// 	gradient: ["#FFD4A2", "#ECE6FF"],
-			// },
-			template: "heart",
-			images: staticImages.templatePictures,
-		},
-		layoutsComponentDrawerRef.current
-	);
-
-	const handleUpdateField = (key, value) => {
-		if (key == "images") setImagesChanged(true);
-		updateField(key, value);
-	};
-
-	useEffect(() => {
-		if (initialRef.current) return;
-		initialRef.current = true;
-
-		layoutsComponentDrawerRef.current(data);
-
-		return () => (window.layoutsComponentDrawer = null);
-	}, []);
+	const {
+		changed,
+		images,
+		loading,
+		picker: Picker,
+	} = useImage(staticImages.templatePictures);
+	const [data, updateField] = useDataSchema({ aspectRatio: "square" });
 
 	return (
 		<>
-			{!imagesChanged && (
+			{!changed && (
 				<InfoCard infoIcon>
 					Default images are royalty free, sourced from Unsplash
 				</InfoCard>
 			)}
 
-			<DraggableImage info wrapped src={url} />
+			<Picker />
 
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
-						images: {
-							type: "image",
-							label: "",
-							meta: {
-								multiple: true,
-							},
-						},
 						template: {
+							show: () => false,
 							type: "card",
 							choices: [
 								// "oval",
-								"scattered",
 								"heart",
+								"scattered",
 								// "stack",
 								// "masonry",
 								"honeycomb",
@@ -295,7 +211,41 @@ export default function LayoutsComponent() {
 								},
 							},
 						},
+						aspectRatio: {
+							show: () => false,
+							type: "card",
+							choices: ["landscape", "portrait", "square"],
+							meta: {
+								// transparent: "true",
+								renderChoice(aspectRatio) {
+									return (
+										<div className="p-1 w-full h-full flex center-center">
+											<div
+												className="w-full h-full"
+												style={{
+													background: "#999",
+													borderRadius: "2px",
+													width: [
+														"square",
+														"landscape",
+													].includes(aspectRatio)
+														? "80%"
+														: "50%",
+													height: [
+														"square",
+														"portrait",
+													].includes(aspectRatio)
+														? "80%"
+														: "50%",
+												}}
+											></div>
+										</div>
+									);
+								},
+							},
+						},
 						background: backgroundSpec({
+							show: () => false,
 							optional: true,
 							defaultType: "gradient",
 							colorProps: {
@@ -305,6 +255,40 @@ export default function LayoutsComponent() {
 								defaultValue: ["#FFD4A2", "#ECE6FF"],
 							},
 						}),
+						picker: {
+							type: "grid",
+							label: "",
+							noBorder: true,
+							hint: "Click or drag and drop to add layout to canvas",
+							choices: ["heart", "scattered", "honeycomb"],
+							meta: {
+								// transparent: true,
+								columns: 1,
+								aspectRatio: "2/1.4",
+								render(template) {
+									if (!images || loading)
+										return <Loader fillParent={true} />;
+
+									const url =
+										new LayoutsComponentDrawer().draw({
+											...data,
+											images,
+											template,
+										});
+
+									return (
+										<DraggableImage
+											className="p-3 h-full max-w-full object-fit"
+											src={url}
+											style={{
+												objectFit: "contain",
+												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+											}}
+										/>
+									);
+								},
+							},
+						},
 						// text: {
 						// 	type: "section",
 						// 	optional: true,
@@ -347,7 +331,7 @@ export default function LayoutsComponent() {
 						// 	},
 						// },
 					}}
-					onChange={handleUpdateField}
+					onChange={updateField}
 					data={data}
 				/>
 			</div>

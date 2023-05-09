@@ -5,11 +5,11 @@ class ScatteredTemplate {
 	inset = 30;
 	constructor({ canvas, callback, images }) {
 		this.images = images;
-		this.callback = callback;
+		this.callback = () => {};
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 
-		callback();
+		// callback();
 	}
 
 	drawCard(img, userOptions, callback) {
@@ -80,9 +80,7 @@ class ScatteredTemplate {
 		// });
 		// });
 
-		setTimeout(() => {
-			callback(canvas);
-		});
+		callback(canvas);
 
 		return canvas;
 	}
@@ -208,6 +206,8 @@ class ScatteredTemplate {
 				this.callback();
 			}
 		);
+
+		return this.canvas;
 	}
 }
 

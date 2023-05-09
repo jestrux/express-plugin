@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Loader from "./Loader";
 import InfoCard from "./InfoCard";
+
+export const randomId = () => Math.random().toString(36).slice(2);
 
 export default function DraggableImage({
 	wrapped,
@@ -9,6 +11,7 @@ export default function DraggableImage({
 	wrapperProps,
 	...props
 }) {
+	const [key, setKey] = useState(randomId());
 	const imageRef = useRef();
 	const src = () => {
 		if (!props.src) return null;
@@ -24,14 +27,17 @@ export default function DraggableImage({
 			previewCallback: () => new URL(src()),
 			completionCallback: exportImage,
 		});
-	}, [loading, props.src]);
+	}, [key]);
 
 	const exportImage = async (e) => {
 		const fromDrag = !e?.target;
 		const blob = await fetch(src()).then((response) => response.blob());
 
 		if (fromDrag) return [{ blob }];
-		else window.AddOnSdk?.app.document.addImage(blob);
+		else {
+			window.AddOnSdk?.app.document.addImage(blob);
+			setKey(randomId());
+		}
 	};
 
 	if (loading || !src())
@@ -47,10 +53,10 @@ export default function DraggableImage({
 	if (!wrapped) {
 		return (
 			<div
-				key={src()}
+				key={key}
 				ref={imageRef}
 				draggable
-				className="w-full h-full flex center-center"
+				className="hoverable w-full h-full flex center-center"
 				onClick={exportImage}
 			>
 				{props.children ? (
@@ -65,7 +71,7 @@ export default function DraggableImage({
 	return (
 		<>
 			<div
-				key={src()}
+				key={key}
 				ref={imageRef}
 				draggable
 				className="hoverable relative relative bg-transparent"

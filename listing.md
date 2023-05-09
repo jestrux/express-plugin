@@ -2,6 +2,15 @@
 
 The Vision Board add-on provides you with the tools you need to make a vision board in a few minutes
 
+# Summary short
+Create feature-rich vision board with a few clicks
+
+# Help URL
+https://github.com/jestrux/express-plugin/issues/new
+
+# Support email
+wakyj07@gmail.com
+
 # Description
 
 This Add-on provides quick ways to create the following vision board items

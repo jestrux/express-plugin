@@ -49,25 +49,11 @@ const Preview1 = () => {
 				className="text-lg px-12px mb-1"
 				style={{ marginTop: "0.35rem", marginLeft: "0.2rem" }}
 			>
-				{/* <div className="text-lg">How to use this addon</div>
-
-				<div
-					style={{
-						fontSize: "0.8rem",
-						lineHeight: 1.5,
-						opacity: 0.65,
-					}}
-				>
-					A quick tour of the add-on's features
-				</div> */}
-
 				<span
 					className="block opacity-75"
 					style={{ fontSize: "0.82rem", lineHeight: 1.5 }}
 				>
-					{/* Learn how to make a vibrant vision board in just a few
-					minutes. */}
-					How to use the Vision Board add-on for express
+					Quickly learn how to use this add-on
 				</span>
 			</div>
 		</div>
@@ -91,7 +77,7 @@ const Preview2 = () => {
 							className="block"
 							style={{ fontSize: "0.82rem", lineHeight: 1.5 }}
 						>
-							How to use the Vision Board add-on for express
+							Quickly learn how to use this add-on
 						</span>
 					</div>
 
@@ -176,7 +162,7 @@ const Preview3 = () => {
 								paddingBottom: "2px",
 							}}
 						>
-							How to use the Vision Board add-on for express
+							Quickly learn how to use this add-on
 						</span>
 					</div>
 				</div>
@@ -197,9 +183,9 @@ const PresetGrid = ({ presets, onSelect }) => {
 				<Preview1 />
 				<Preview2 />
 				<Preview3 />
-			</a> */}
+			</a>
 
-			{/* <div className="text-lg px-12px mb-1">Components</div> */}
+			<div className="text-lg px-12px mb-1">Components</div> */}
 
 			<div className="flex flex-wrap border-t">
 				{Object.entries(presets).map(([name, value], index) => {

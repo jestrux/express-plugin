@@ -124,7 +124,7 @@ export default function BrushComponent() {
 						brushPicker: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) a brush to add it to your canvas",
+							hint: "Click or drag and drop a brush to add it to your canvas",
 							choices: Object.keys(brushes),
 							noBorder: true,
 							meta: {

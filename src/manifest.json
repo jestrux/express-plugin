@@ -16,7 +16,10 @@
 		{
 			"type": "panel",
 			"id": "panel1",
-			"main": "index.html"
+			"main": "index.html",
+			"permissions": {
+				"sandbox": ["allow-popups", "allow-popups-to-escape-sandbox"]
+			}
 		}
 	]
 }

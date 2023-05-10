@@ -134,11 +134,15 @@ export default function WeatherWidgetComponent() {
 							label: "Theme",
 							type: "swatch",
 							meta: { themes },
+							noMargin: true,
+							wrapperProps: {
+								className: "pb-2",
+							}
 						},
 						widgetPicker: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) widget to add to your canvas",
+							hint: "Click or drag and drop widget to add to your canvas",
 							choices: Object.keys(icons),
 							noBorder: true,
 							meta: {

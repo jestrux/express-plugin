@@ -281,7 +281,7 @@ export default function BackgroundPatternComponent() {
 							type: "grid",
 							label: "",
 							noBorder: true,
-							hint: "Click (or drag and drop) a pattern to add it to your canvas",
+							hint: "Click or drag and drop a pattern to add it to your canvas",
 							choices: [
 								"filled none",
 								"filled splitcomplement",

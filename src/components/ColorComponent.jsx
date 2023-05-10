@@ -507,7 +507,7 @@ export default function ColorComponent() {
 							show: (state) => state.type == "Single color",
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) color to add to your canvas",
+							hint: "Click or drag and drop color to add to your canvas",
 							choices: ["regular", "tall", "splotch", "circle"],
 							noBorder: true,
 							meta: {
@@ -543,7 +543,7 @@ export default function ColorComponent() {
 							show: (data) => data.type == "Color palette",
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) palette to add to your canvas",
+							hint: "Click or drag and drop palette to add to your canvas",
 							choices: ["circles", "regular", "strip"],
 							noBorder: true,
 							meta: {

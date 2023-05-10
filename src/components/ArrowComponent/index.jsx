@@ -56,7 +56,7 @@ export default function ArrowComponent() {
 						wave: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) an arrow to add it to your canvas",
+							hint: "Click or drag and drop an arrow to add it to your canvas",
 							choices: Object.keys(arrows),
 							noBorder: true,
 							meta: {

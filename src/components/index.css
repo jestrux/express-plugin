@@ -799,8 +799,16 @@ hr {
 	opacity: 0 !important;
 }
 
+.pointer-events-none {
+	pointer-events: none;
+}
+
 .aspect-square {
 	aspect-ratio: 1;
+}
+
+.aspect-video {
+	aspect-ratio: 16/9;
 }
 
 .inline-number-field {

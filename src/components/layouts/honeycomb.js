@@ -53,7 +53,7 @@ class HoneyCombTemplate {
 		ctx.stroke();
 		ctx.clip();
 
-		if (!img) return canvas;
+		if (!img) return callback(canvas);
 
 		ctx.drawImage(
 			resizeImage(resizeToAspectRatio(img, innerWidth / innerHeight), {

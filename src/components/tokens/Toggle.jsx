@@ -1,6 +1,19 @@
 import React from "react";
+import { Switch } from "@adobe/react-spectrum";
 
 function Toggle({ checked, onChange }) {
+	return (
+		<div style={{ margin: "-1rem" }}>
+			<Switch
+				defaultSelected={checked}
+				isEmphasized
+				value={checked}
+				onChange={onChange}
+				aria-label="Toggle"
+			/>
+		</div>
+	);
+
 	return (
 		<div
 			className={`cursor-pointer flex border ${

@@ -9,6 +9,7 @@ export default {
 		"static/images/template-pictures/7.jpg",
 		"static/images/template-pictures/8.jpg",
 	],
+	videoPoster: "static/images/video-poster.webp",
 	transparency: "static/images/transparency.png",
 
 	flowers2: "static/images/flowers2.jpg",

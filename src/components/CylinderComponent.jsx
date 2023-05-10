@@ -156,14 +156,25 @@ export default function CylinderComponent() {
 							},
 							show: ({ inset }) => inset == "border",
 						},
+						inset: {
+							type: "boolean",
+							...(!data.inset
+								? {}
+								: {
+										noBorder: true,
+										noMargin: true,
+										wrapperProps: {
+											className: "pb-1",
+										},
+								  }),
+						},
 						background: backgroundSpec({
-							// show: ({ inset }) => inset == "background",
+							show: ({ inset }) => inset,
 						}),
-						inset: "boolean",
 						picker: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) shape to add it to your canvas",
+							hint: "Click or drag and drop shape to add it to your canvas",
 							choices: [true, false],
 							noBorder: true,
 							meta: {

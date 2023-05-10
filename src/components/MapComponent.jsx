@@ -363,7 +363,7 @@ export default function MapComponent() {
 						picker: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) image to add it to your canvas",
+							hint: "Click or drag and drop image to add it to your canvas",
 							choices: ["folded", "blob", "regular"],
 							noBorder: true,
 							meta: {

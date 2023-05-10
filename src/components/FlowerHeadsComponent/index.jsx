@@ -69,7 +69,7 @@ export default function FlowerHeadsComponent() {
 						flowerPicker: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) a flower to add it to your canvas",
+							hint: "Click or drag and drop a flower to add it to your canvas",
 							choices: Object.keys(flowerHeads),
 							meta: {
 								columns: 3,

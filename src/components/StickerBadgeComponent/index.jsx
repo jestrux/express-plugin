@@ -123,7 +123,7 @@ export default function StickerBadgeComponent() {
 						stickerPicker: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) a sticker to add it to your canvas",
+							hint: "Click or drag and drop a sticker to add it to your canvas",
 							choices: Object.keys(stickers),
 							noBorder: true,
 							meta: {

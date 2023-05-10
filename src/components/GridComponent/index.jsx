@@ -153,7 +153,7 @@ export default function GridComponent() {
 							label: "",
 							noBorder: true,
 							type: "grid",
-							hint: "Click (or drag and drop) grid to add it to your canvas",
+							hint: "Click or drag and drop grid to add it to your canvas",
 							choices: [
 								"square dot",
 								"tall dot",

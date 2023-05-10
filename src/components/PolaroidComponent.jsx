@@ -137,7 +137,7 @@ export default function PolaroidComponent() {
 						picker: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) image to add it to your canvas",
+							hint: "Click or drag and drop image to add it to your canvas",
 							choices: [
 								"color-dodge",
 								// "exclusion",

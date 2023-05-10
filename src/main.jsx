@@ -40,6 +40,6 @@ const render = (sdk = true) => {
 	);
 };
 
-// render(false);
+render(false);
 
-AddOnSdk.ready.then(render);
+// AddOnSdk.ready.then(render);

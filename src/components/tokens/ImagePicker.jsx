@@ -122,7 +122,7 @@ export default function ImagePicker({ multiple, onChange }) {
 				</svg>
 			)}
 
-			{multiple ? "Add images from device" : "Add image from device"}
+			{multiple ? "Upload images" : "Upload image"}
 		</label>
 	);
 }

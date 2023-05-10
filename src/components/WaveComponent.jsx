@@ -104,7 +104,7 @@ export default function WaveComponent() {
 						wave: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) a wave to add it to your canvas",
+							hint: "Click or drag and drop a wave to add it to your canvas",
 							choices: Object.keys(waveThreads),
 							noBorder: true,
 							meta: {

@@ -264,6 +264,7 @@ export default function LayoutsComponent() {
 							meta: {
 								// transparent: true,
 								columns: 1,
+								gap: "0.85rem",
 								aspectRatio: "2/1.4",
 								render(template) {
 									if (!images || loading)
@@ -278,10 +279,21 @@ export default function LayoutsComponent() {
 
 									return (
 										<DraggableImage
-											className="p-3 h-full max-w-full object-fit"
+											className="h-full w-full"
 											src={url}
 											style={{
-												objectFit: "contain",
+												height:
+													template == "honeycomb"
+														? "100%"
+														: "auto",
+												padding:
+													template == "honeycomb"
+														? ""
+														: "0 1rem",
+												objectFit:
+													template == "honeycomb"
+														? "cover"
+														: "contain",
 												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
 											}}
 										/>

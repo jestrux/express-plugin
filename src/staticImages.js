@@ -71,7 +71,10 @@ import mapRegularWithMarker from "./images/maps/with-marker/regular.webp";
 import mapGreenWithMarker from "./images/maps/with-marker/green.webp";
 import mapDarkWithMarker from "./images/maps/with-marker/dark.webp";
 
+import videoPoster from "./images/video-poster.webp";
+
 export default {
+	videoPoster,
 	transparency,
 	flowers,
 	flowers2,
@@ -108,7 +111,7 @@ export default {
 				folded: foldedMapDarkWithMarker,
 				regular: mapDarkWithMarker,
 			},
-		}
+		},
 	},
 	templatePictures: [
 		template1,

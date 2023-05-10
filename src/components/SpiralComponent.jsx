@@ -143,7 +143,7 @@ export default function SpiralComponent() {
 						infinite: {
 							type: "grid",
 							label: "",
-							hint: "Click (or drag and drop) shape to add it to your canvas",
+							hint: "Click or drag and drop shape to add it to your canvas",
 							noBorder: true,
 							choices: [
 								{

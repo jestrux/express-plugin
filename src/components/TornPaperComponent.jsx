@@ -5,7 +5,7 @@ import ComponentFields from "./tokens/ComponentFields";
 import InfoCard from "./tokens/InfoCard";
 import DraggableImage from "./tokens/DraggableImage";
 import useImage from "../hooks/useImage";
-import { backgroundSpec, showPreview, solidGradientBg } from "./utils";
+import { addToDocument, backgroundSpec, showPreview, solidGradientBg } from "./utils";
 
 class TornPaperDrawer {
 	cornerRadius = 20;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
-import { backgroundSpec, resizeToAspectRatio, solidGradientBg } from "./utils";
+import { addToDocument, backgroundSpec, resizeToAspectRatio, solidGradientBg } from "./utils";
 import DraggableImage from "./tokens/DraggableImage";
 import useImage from "../hooks/useImage";
 import Loader from "./tokens/Loader";

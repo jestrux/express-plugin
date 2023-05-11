@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
-import staticImages from "../../staticImages";
 import ComponentFields from "../tokens/ComponentFields";
-import { backgroundSpec, solidGradientBg } from "../utils";
+import { addToDocument, backgroundSpec, solidGradientBg } from "../utils";
 import * as brushes from "./brushes";
 import DraggableImage from "../tokens/DraggableImage";
 
@@ -72,9 +71,8 @@ class BrushDrawer {
 	}
 }
 
-export default function BrushComponent() {
-	const [data, updateField] = useDataSchema({
-		src: staticImages.presets.cylinder,
+function BrushComponent() {
+	const [data, updateField] = useDataSchema("brushedBackground", {
 		text: {
 			label: "",
 			color: "#FFFFFF",
@@ -138,6 +136,9 @@ export default function BrushComponent() {
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({brush})
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -156,3 +157,50 @@ export default function BrushComponent() {
 		</>
 	);
 }
+
+BrushComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("brushedBackground", {});
+	const {
+		text,
+		brush = "regular",
+		background = {
+			type: "gradient",
+			color: "#995533",
+			gradient: ["#9055FF", "#13E2DA"],
+		},
+	} = data;
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(
+			new BrushDrawer().draw({
+				brush,
+				background,
+				text,
+			})
+		);
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default BrushComponent;

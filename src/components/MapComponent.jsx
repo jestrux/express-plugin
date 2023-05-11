@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
-import { showPreview, solidGradientBg } from "./utils";
+import { addToDocument, showPreview, solidGradientBg } from "./utils";
 import staticImages from "../staticImages";
 import { resizeImage } from "./utils";
 import { resizeToAspectRatio } from "./utils";
@@ -296,18 +296,25 @@ class MapComponentDrawer {
 	}
 }
 
-export default function MapComponent() {
-	const [data, updateField] = useDataSchema({
+function MapComponent() {
+	const [data, updateField] = useDataSchema("map", {
 		theme: "regular",
-		shape: "folded",
 		showMarker: true,
 	});
 
-	const { loading, images } = useImage(
+	const { loading, images, setSrc } = useImage(
 		data.showMarker
 			? staticImages.maps.withMarker[data.theme]
 			: staticImages.maps[data.theme]
 	);
+
+	useEffect(() => {
+		setSrc(
+			data.showMarker
+				? staticImages.maps.withMarker[data.theme]
+				: staticImages.maps[data.theme]
+		);
+	}, [data]);
 
 	return (
 		<>
@@ -379,6 +386,9 @@ export default function MapComponent() {
 										<DraggableImage
 											className="h-full max-w-full object-fit"
 											src={images[shape].src}
+											onClickOrDrag={() =>
+												updateField({shape})
+											}
 											style={{
 												objectFit: "contain",
 												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
@@ -396,3 +406,42 @@ export default function MapComponent() {
 		</>
 	);
 }
+
+MapComponent.usePreview = () => {
+	const [data] = useDataSchema("map", {});
+	const { theme = "regular", shape = "folded", showMarker = true } = data;
+	const { loading, image } = useImage(
+		showMarker
+			? staticImages.maps.withMarker[theme][shape]
+			: staticImages.maps[theme][shape]
+	);
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(image?.src);
+	};
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{loading || !image ? (
+				<>
+					<Loader small />
+					<span className="flex-1"></span>
+				</>
+			) : (
+				children("Add to canvas")
+			)}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview: image?.src,
+	};
+};
+
+export default MapComponent;

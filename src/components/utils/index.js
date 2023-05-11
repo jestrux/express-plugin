@@ -66,6 +66,14 @@ export const showPreview = (url) => {
 	if (previewer) previewer.src = url;
 };
 
+export const addToDocument = (url) => {
+	showPreview(url);
+
+	fetch(url)
+		.then((response) => response.blob())
+		.then(window.AddOnSdk?.app.document.addImage);
+};
+
 export const resizeImage = (input, { width, height } = {}) => {
 	const isImage = input?.nodeName == "IMG";
 	const inputWidth = isImage ? input.naturalWidth : input.width;

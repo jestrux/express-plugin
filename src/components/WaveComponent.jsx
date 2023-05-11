@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
-import { showPreview } from "./utils";
+import { addToDocument, showPreview } from "./utils";
 import DraggableImage from "./tokens/DraggableImage";
 
 const waveThreads = {
@@ -62,8 +62,8 @@ class WaveDrawer {
 	}
 }
 
-export default function WaveComponent() {
-	const [data, updateField] = useDataSchema({
+function WaveComponent() {
+	const [data, updateField] = useDataSchema("waves", {
 		color: "#28a745",
 		style: "compact",
 	});
@@ -112,13 +112,16 @@ export default function WaveComponent() {
 								aspectRatio: "2/1.2",
 								render(wave) {
 									const url = new WaveDrawer().draw({
-										wave,
 										...data,
+										wave,
 									});
 
 									return (
 										<DraggableImage
 											className="p-2 w-full"
+											onClickOrDrag={() =>
+												updateField({ wave })
+											}
 											src={url}
 											style={{
 												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
@@ -136,3 +139,40 @@ export default function WaveComponent() {
 		</>
 	);
 }
+
+WaveComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("waves", {
+		wave: "beach",
+		color: "#28a745",
+		style: "compact",
+	});
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(new WaveDrawer().draw(data));
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default WaveComponent;

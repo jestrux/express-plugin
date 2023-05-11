@@ -125,8 +125,8 @@ export default {
 	],
 	posters: {
 		arrows: arrowPoster,
-		brushBackground: brushPoster,
-		backgroundPattern: backgroundPatternPoster,
+		brushedBackground: brushPoster,
+		backgroundPatterns: backgroundPatternPoster,
 		calendar: calendarPoster,
 		charts: chartsPoster,
 		clippedImage: clippedImagePoster,

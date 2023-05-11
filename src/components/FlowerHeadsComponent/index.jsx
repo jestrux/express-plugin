@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
-import { showPreview } from "../utils";
+import { addToDocument, showPreview } from "../utils";
 import flowerHeads from "./flower-heads";
 import DraggableImage from "../tokens/DraggableImage";
 
@@ -38,8 +38,8 @@ class FlowerHeadsComponentDrawer {
 	}
 }
 
-export default function FlowerHeadsComponent() {
-	const [data, updateField] = useDataSchema({});
+function FlowerHeadsComponent() {
+	const [data, updateField] = useDataSchema("flowerHeads", {});
 
 	return (
 		<>
@@ -87,6 +87,15 @@ export default function FlowerHeadsComponent() {
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
 											src={url}
+											onClickOrDrag={() =>
+												updateField({
+													flowerColor:
+														data.color ||
+														flowerHeads[flowerHead]
+															.fill,
+													flowerHead,
+												})
+											}
 											style={{
 												objectFit: "contain",
 												filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
@@ -104,3 +113,42 @@ export default function FlowerHeadsComponent() {
 		</>
 	);
 }
+
+FlowerHeadsComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("flowerHeads", {});
+	const { flowerHead = "flower6", color, flowerColor = "#ed2232" } = data;
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(
+			new FlowerHeadsComponentDrawer().draw({
+				flowerHead,
+				color: color || flowerColor,
+			})
+		);
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default FlowerHeadsComponent;

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
@@ -158,7 +158,7 @@ class TornPaperDrawer {
 	}
 }
 
-export default function TornPaperComponent() {
+function TornPaperComponent() {
 	const drawerRef = useRef(new TornPaperDrawer());
 	const {
 		image: img,
@@ -166,14 +166,14 @@ export default function TornPaperComponent() {
 		picker: Picker,
 		changed,
 	} = useImage(staticImages.presets.clippedImage);
-	const [data, updateField] = useDataSchema({
+	const [data, updateField] = useDataSchema("tornPaper", {
 		cropPercent: 1,
-		background: {
-			padding: 0.06,
-			color: backgroundSpec({
-				defaultType: "gradient",
-			}).defaultValue,
-		},
+		// background: {
+		// 	padding: 0.06,
+		// 	color: backgroundSpec({
+		// 		defaultType: "gradient",
+		// 	}).defaultValue,
+		// },
 	});
 
 	const Preview = () => {
@@ -252,3 +252,61 @@ export default function TornPaperComponent() {
 		</>
 	);
 }
+
+TornPaperComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("tornPaper", {
+		cropPercent: 1,
+	});
+	const { changed, image: img, loading, picker: Picker } = useImage();
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (!changed || !img || loading) return;
+
+		const image = new TornPaperDrawer().draw({
+			...data,
+			img,
+		});
+
+		setPreview(image);
+	}, [changed, img, loading]);
+
+	const quickAction = (children) => {
+		const content = children(
+			!preview && !img ? "Upload image" : "Add to canvas"
+		);
+
+		return (
+			<button
+				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+				onClick={handleQuickAction}
+			>
+				{preview ? (
+					content
+				) : loading ? (
+					<>
+						<Loader small />
+						<span className="flex-1"></span>
+					</>
+				) : !img ? (
+					<Picker>{content}</Picker>
+				) : (
+					content
+				)}
+			</button>
+		);
+	};
+
+	return {
+		quickAction,
+		preview,
+		loading,
+	};
+};
+
+export default TornPaperComponent;

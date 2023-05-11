@@ -5,6 +5,7 @@ import InfoCard from "./InfoCard";
 export const randomId = () => Math.random().toString(36).slice(2);
 
 export default function DraggableImage({
+	onClickOrDrag,
 	wrapped,
 	loading = false,
 	info = false,
@@ -38,6 +39,8 @@ export default function DraggableImage({
 			window.AddOnSdk?.app.document.addImage(blob);
 			setKey(randomId());
 		}
+
+		if (typeof onClickOrDrag == "function") onClickOrDrag();
 	};
 
 	if (loading || !src())

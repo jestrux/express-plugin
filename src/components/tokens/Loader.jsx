@@ -2,10 +2,17 @@ import React from "react";
 import { ProgressCircle } from "@adobe/react-spectrum";
 
 const Loader = ({
+	small = false,
 	fillParent = false,
 	scrimColor = "rgba(255, 255, 255, 0.7)",
 }) => {
-	const loader = <ProgressCircle aria-label="Loading…" isIndeterminate />;
+	const loader = (
+		<ProgressCircle
+			size={small ? "S" : "M"}
+			aria-label="Loading…"
+			isIndeterminate
+		/>
+	);
 
 	if (fillParent) {
 		return (

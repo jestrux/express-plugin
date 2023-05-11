@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import staticImages from "../../staticImages";
 import ComponentFields from "../tokens/ComponentFields";
-import { resizeImage, showPreview } from "../utils";
+import { addToDocument, resizeImage, showPreview } from "../utils";
 import * as icons from "./icons";
 import DraggableImage from "../tokens/DraggableImage";
 
@@ -108,9 +108,8 @@ class WeatherWidgetDrawer {
 	}
 }
 
-export default function WeatherWidgetComponent() {
-	const [data, updateField] = useDataSchema({
-		src: staticImages.presets.spotify,
+function WeatherWidgetComponent() {
+	const [data, updateField] = useDataSchema("weather", {
 		colors: themes[1],
 		temperature: "72",
 		icon: "partlyCloudyRain",
@@ -137,7 +136,7 @@ export default function WeatherWidgetComponent() {
 							noMargin: true,
 							wrapperProps: {
 								className: "pb-2",
-							}
+							},
 						},
 						widgetPicker: {
 							type: "grid",
@@ -164,9 +163,17 @@ export default function WeatherWidgetComponent() {
 										icon: weather,
 										temperature: temperatureMap[weather],
 									});
+
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({
+													icon: weather,
+													temperature:
+														temperatureMap[weather],
+												})
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -185,3 +192,41 @@ export default function WeatherWidgetComponent() {
 		</>
 	);
 }
+
+WeatherWidgetComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("weather", {
+		colors: themes[1],
+		icon: "partlyCloudyRain",
+	});
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview || !data?.colors) return;
+
+		setPreview(new WeatherWidgetDrawer().draw(data));
+	}, []);
+
+	const quickAction = !data?.colors
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default WeatherWidgetComponent;

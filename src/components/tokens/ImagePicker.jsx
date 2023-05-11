@@ -24,7 +24,7 @@ const readFile = (file) => {
 	});
 };
 
-export default function ImagePicker({ multiple, onChange }) {
+export default function ImagePicker({ children, multiple, onChange }) {
 	const processImage = async (e) => {
 		const files = e.target.files;
 
@@ -97,6 +97,25 @@ export default function ImagePicker({ multiple, onChange }) {
 	// 		{multiple ? "Add images from device" : "Add image from device"}
 	// 	</Button>
 	// );
+
+	if (children) {
+		return (
+			<label
+				className="cursor-pointer"
+				onClick={(e) => e.stopPropagation()}
+			>
+				<Input
+					className="hidden"
+					type="file"
+					name="image"
+					onChange={processImage}
+					accept=".jpg, .png, .jpeg, .gif|image/*"
+					{...(multiple ? { multiple: true } : {})}
+				/>
+				{children}
+			</label>
+		);
+	}
 
 	return (
 		<label

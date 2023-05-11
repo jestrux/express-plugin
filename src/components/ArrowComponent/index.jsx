@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
 import arrows from "./arrows";
 import DraggableImage from "../tokens/DraggableImage";
+import { addToDocument, showPreview } from "../utils";
 
 class ArrowComponentDrawer {
+	arrow = "swimmingTopRight";
 	constructor() {
 		const canvas = document.createElement("canvas");
 		this.canvas = canvas;
@@ -36,8 +38,8 @@ class ArrowComponentDrawer {
 	}
 }
 
-export default function ArrowComponent() {
-	const [data, updateField] = useDataSchema({
+function ArrowComponent() {
+	const [data, updateField] = useDataSchema("arrows", {
 		color: "#ac1f40",
 	});
 
@@ -64,14 +66,17 @@ export default function ArrowComponent() {
 								render(arrow) {
 									const url = new ArrowComponentDrawer().draw(
 										{
-											arrow,
 											...data,
+											arrow,
 										}
 									);
 
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({ arrow })
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -90,3 +95,39 @@ export default function ArrowComponent() {
 		</>
 	);
 }
+
+ArrowComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("arrows", {
+		arrow: "swimmingTopRight",
+		color: "#ac1f40",
+	});
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(new ArrowComponentDrawer().draw(data));
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default ArrowComponent;

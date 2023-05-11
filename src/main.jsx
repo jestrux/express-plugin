@@ -23,6 +23,11 @@ const render = (sdk = true) => {
 
 					return;
 				},
+				document: {
+					addImage(image) {
+						// showPreview(image);
+					},
+				},
 			},
 		};
 	}

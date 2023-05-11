@@ -1,8 +1,7 @@
-import ReactDOM from "react-dom";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
-import { backgroundSpec, loadImageFromUrl, showPreview } from "../utils";
+import { addToDocument, backgroundSpec, showPreview } from "../utils";
 import staticImages from "../../staticImages";
 import { solidGradientBg } from "../utils";
 import ScatteredTemplate from "./scattered";
@@ -130,14 +129,17 @@ class LayoutsComponentDrawer {
 	}
 }
 
-export default function LayoutsComponent() {
+function LayoutsComponent() {
+	const [data, updateField] = useDataSchema("layouts", {
+		// aspectRatio: "square",
+	});
+
 	const {
 		changed,
 		images,
 		loading,
 		picker: Picker,
 	} = useImage(staticImages.templatePictures);
-	const [data, updateField] = useDataSchema({ aspectRatio: "square" });
 
 	return (
 		<>
@@ -281,6 +283,9 @@ export default function LayoutsComponent() {
 										<DraggableImage
 											className="h-full w-full"
 											src={url}
+											onClickOrDrag={() =>
+												updateField({ template })
+											}
 											style={{
 												height:
 													template == "honeycomb"
@@ -350,3 +355,61 @@ export default function LayoutsComponent() {
 		</>
 	);
 }
+
+LayoutsComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("layouts");
+	const { changed, images, picker: Picker, loading } = useImage([]);
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+		addToDocument(preview);
+	};
+
+	const noImages = !Object.values(images || {})?.length;
+
+	useEffect(() => {
+		if (!changed || noImages || loading) return;
+
+		const image = new LayoutsComponentDrawer().draw({
+			images,
+			template: data.template || "heart",
+		});
+
+		setPreview(image);
+	}, [changed, noImages, loading]);
+
+	const quickAction = (children) => {
+		const content = children(
+			!preview && noImages ? "Upload images" : "Add to canvas"
+		);
+
+		return (
+			<button
+				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+				onClick={handleQuickAction}
+			>
+				{preview ? (
+					content
+				) : loading ? (
+					<>
+						<Loader small />
+						<span className="flex-1"></span>
+					</>
+				) : noImages ? (
+					<Picker>{content}</Picker>
+				) : (
+					content
+				)}
+			</button>
+		);
+	};
+
+	return {
+		quickAction,
+		preview,
+		loading,
+	};
+};
+
+export default LayoutsComponent;

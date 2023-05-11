@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { showPreview } from "../utils";
 import DraggableImage from "../tokens/DraggableImage";
 import ComponentFields from "../tokens/ComponentFields";
@@ -58,12 +58,17 @@ class RibbonDrawer {
 	}
 }
 
-export default function RibbonComponent() {
-	const [data, updateField] = useDataSchema({ color: "#ffc107" });
+function RibbonComponent() {
+	const [data, updateField] = useDataSchema("ribbon", { color: "#ffc107" });
 
 	return (
 		<>
-			<DraggableImage wrapped info src={new RibbonDrawer().draw(data)}>
+			<DraggableImage
+				wrapped
+				info
+				src={new RibbonDrawer().draw(data)}
+				onClickOrDrag={() => updateField(data)}
+			>
 				<div className="p-3 w-full h-full flex center-center">
 					<div className="w-full h-full flex justify-center">
 						<svg
@@ -100,3 +105,40 @@ export default function RibbonComponent() {
 		</>
 	);
 }
+
+RibbonComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("ribbon", {
+		color: "#ffc107"
+	});
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview || !data?.color) return;
+
+		setPreview(new RibbonDrawer().draw(data));
+	}, []);
+
+	const quickAction = !data?.color
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default RibbonComponent;

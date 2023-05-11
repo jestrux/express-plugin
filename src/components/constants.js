@@ -6,8 +6,8 @@ export const DEFAULT_COLORS = [
 	"#28a745",
 	"#ffc107",
 	"#ff2e6d",
-	"black",
-	"white",
+	// "black",
+	// "white",
 ];
 
 export const ELEMENT_TYPES = [

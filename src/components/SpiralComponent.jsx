@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
 import DraggableImage from "./tokens/DraggableImage";
+import { addToDocument } from "./utils";
 
 class SpiralDrawer {
 	constructor() {
@@ -87,9 +88,9 @@ class SpiralDrawer {
 	}
 }
 
-export default function SpiralComponent() {
-	const [data, updateField] = useDataSchema({
-		color: "#7129F4", // "#FF2E6D",
+function SpiralComponent() {
+	const [data, updateField] = useDataSchema("spiral", {
+		color: "#7129F4",
 		compact: true,
 	});
 
@@ -168,6 +169,9 @@ export default function SpiralComponent() {
 									return (
 										<DraggableImage
 											className="p-2 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({ infinite })
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -186,3 +190,41 @@ export default function SpiralComponent() {
 		</>
 	);
 }
+
+SpiralComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("spiral", {
+		color: "#7129F4",
+		compact: true,
+	});
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview || !data?.color) return;
+
+		setPreview(new SpiralDrawer().draw(data));
+	}, []);
+
+	const quickAction = !data?.color
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default SpiralComponent;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
@@ -108,7 +108,7 @@ class CylinderDrawer {
 	}
 }
 
-export default function CylinderComponent() {
+function CylinderComponent() {
 	const {
 		loading,
 		image: img,
@@ -116,7 +116,7 @@ export default function CylinderComponent() {
 		changed,
 	} = useImage(staticImages.presets.cylinder);
 
-	const [data, updateField] = useDataSchema({
+	const [data, updateField] = useDataSchema("cylinder", {
 		half: true,
 		inset: true,
 		smoothCorners: true,
@@ -193,6 +193,9 @@ export default function CylinderComponent() {
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({ half })
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -211,3 +214,66 @@ export default function CylinderComponent() {
 		</>
 	);
 }
+
+CylinderComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("cylinder", {
+		border: "#aaaaaa",
+		background: {
+			type: "gradient",
+			color: "#ffc107",
+			gradient: ["#BF953F", "#FCF6BA", "#AA771C"],
+		},
+	});
+	const { changed, image: img, loading, picker: Picker } = useImage();
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (!changed || !img || loading) return;
+
+		const image = new CylinderDrawer().draw({
+			...data,
+			img,
+		});
+
+		setPreview(image);
+	}, [changed, img, loading]);
+
+	const quickAction = (children) => {
+		const content = children(
+			!preview && !img ? "Upload image" : "Add to canvas"
+		);
+
+		return (
+			<button
+				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+				onClick={handleQuickAction}
+			>
+				{preview ? (
+					content
+				) : loading ? (
+					<>
+						<Loader small />
+						<span className="flex-1"></span>
+					</>
+				) : !img ? (
+					<Picker>{content}</Picker>
+				) : (
+					content
+				)}
+			</button>
+		);
+	};
+
+	return {
+		quickAction,
+		preview,
+		loading,
+	};
+};
+
+export default CylinderComponent;

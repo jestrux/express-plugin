@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
@@ -9,6 +9,8 @@ import Loader from "./tokens/Loader";
 import InfoCard from "./tokens/InfoCard";
 
 class PolaroidDrawer {
+	evenSides = false;
+	filter = "screen";
 	constructor() {
 		const canvas = document.createElement("canvas");
 		canvas.width = 320;
@@ -106,7 +108,7 @@ class PolaroidDrawer {
 	}
 }
 
-export default function PolaroidComponent() {
+function PolaroidComponent() {
 	const {
 		loading,
 		image: img,
@@ -114,9 +116,9 @@ export default function PolaroidComponent() {
 		changed,
 	} = useImage(staticImages.presets.polaroid);
 
-	const [data, updateField] = useDataSchema({
+	const [data, updateField] = useDataSchema("polaroid", {
 		evenSides: false,
-		filter: "exclusion",
+		// filter: "exclusion",
 	});
 
 	return (
@@ -165,6 +167,9 @@ export default function PolaroidComponent() {
 									return (
 										<DraggableImage
 											className="h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({ filter })
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -183,3 +188,59 @@ export default function PolaroidComponent() {
 		</>
 	);
 }
+
+PolaroidComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("polaroid");
+	const { changed, image: img, loading, picker: Picker } = useImage();
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (!changed || !img || loading) return;
+
+		const image = new PolaroidDrawer().draw({
+			...data,
+			img,
+		});
+
+		setPreview(image);
+	}, [changed, img, loading]);
+
+	const quickAction = (children) => {
+		const content = children(
+			!preview && !img ? "Upload image" : "Add to canvas"
+		);
+
+		return (
+			<button
+				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+				onClick={handleQuickAction}
+			>
+				{preview ? (
+					content
+				) : loading ? (
+					<>
+						<Loader small />
+						<span className="flex-1"></span>
+					</>
+				) : !img ? (
+					<Picker>{content}</Picker>
+				) : (
+					content
+				)}
+			</button>
+		);
+	};
+
+	return {
+		quickAction,
+		preview,
+		loading,
+	};
+};
+
+export default PolaroidComponent;

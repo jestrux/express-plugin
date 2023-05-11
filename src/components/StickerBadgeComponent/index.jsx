@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
-import staticImages from "../../staticImages";
 import ComponentFields from "../tokens/ComponentFields";
-import { backgroundSpec, solidGradientBg } from "../utils";
+import {
+	addToDocument,
+	backgroundSpec,
+	solidGradientBg,
+} from "../utils";
 import * as stickers from "./stickers";
 import DraggableImage from "../tokens/DraggableImage";
 
 class StickerBadgeDrawer {
+	sticker = "new";
 	constructor() {
 		const canvas = document.createElement("canvas");
 		canvas.width = 1000;
@@ -18,7 +22,7 @@ class StickerBadgeDrawer {
 	draw(props = {}) {
 		Object.assign(this, props);
 
-		this.sticker = stickers[props.sticker];
+		this.sticker = stickers[props.sticker] || this.sticker;
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -69,22 +73,25 @@ class StickerBadgeDrawer {
 	}
 }
 
-export default function StickerBadgeComponent() {
-	const [data, updateField] = useDataSchema({
-		src: staticImages.presets.cylinder,
-		sticker: "new",
-		border: "transparent",
-		text: {
-			label: "",
-			color: "#FFFFFF",
-			font: "serif",
-		},
-		background: {
-			type: "gradient",
-			color: "#ff2e6d",
-			gradient: ["#E233FF", "#FF6B00"],
-		},
-	});
+const defaultStickerBadgeComponentProps = {
+	sticker: "new",
+	text: {
+		label: "",
+		color: "#FFFFFF",
+		font: "serif",
+	},
+	background: {
+		type: "gradient",
+		color: "#ff2e6d",
+		gradient: ["#E233FF", "#FF6B00"],
+	},
+};
+
+function StickerBadgeComponent() {
+	const [data, updateField] = useDataSchema(
+		"stickerBadge",
+		defaultStickerBadgeComponentProps
+	);
 
 	return (
 		<>
@@ -137,6 +144,9 @@ export default function StickerBadgeComponent() {
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({ sticker })
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -155,3 +165,39 @@ export default function StickerBadgeComponent() {
 		</>
 	);
 }
+
+StickerBadgeComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema(
+		"stickerBadge",
+		defaultStickerBadgeComponentProps
+	);
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(new StickerBadgeDrawer().draw(data));
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default StickerBadgeComponent;

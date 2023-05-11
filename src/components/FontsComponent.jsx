@@ -77,7 +77,7 @@ export default function FontsComponent() {
 
 	useEffect(() => {
 		loadDrawer();
-		window.AddOnSdk.app.enableDragToDocument(previewRef.current, {
+		window.AddOnSdk?.app.enableDragToDocument(previewRef.current, {
 			previewCallback: (element) => {
 				return new URL(element.src);
 			},
@@ -117,11 +117,11 @@ export default function FontsComponent() {
 			<canvas
 				style={{ display: "none" }}
 				ref={canvasRef}
-				width="600px"
+				width="320px"
 				height="120px"
 			></canvas>
 
-			<div className="image-item" draggable="true">
+			<div className="image-item border-b" draggable="true">
 				<img
 					onClick={exportImage}
 					ref={previewRef}
@@ -130,12 +130,15 @@ export default function FontsComponent() {
 				/>
 			</div>
 
-			<Input
-				name="text"
-				type="text"
-				defaultValue={text}
-				onSubmit={handleSubmit}
-			/>
+			<div className="p-2">
+				<Input
+					className="p-2 w-full"
+					name="text"
+					type="text"
+					defaultValue={text}
+					onSubmit={handleSubmit}
+				/>
+			</div>
 		</>
 	);
 }

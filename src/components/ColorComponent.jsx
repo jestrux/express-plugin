@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import ComponentFields from "./tokens/ComponentFields";
-import { showPreview } from "./utils";
+import { addToDocument, showPreview } from "./utils";
 import getColorName from "./utils/get-color-name";
 import DraggableImage from "./tokens/DraggableImage";
 
@@ -305,67 +305,50 @@ class ColorComponentDrawer {
 	}
 }
 
-export default function ColorComponent() {
-	const previewRef = useRef(null);
-	const colorComponentDrawerRef = useRef((data) => {
-		if (!window.colorComponentDrawer)
-			window.colorComponentDrawer = new ColorComponentDrawer();
+const defaultColorComponentProps = {
+	type: "Color palette",
+	// type: "Single color",
+	// paletteStyle: "regular",
+	paletteStyle: "circles",
+	colorType: "card",
+	color: "#9A136F",
+	showColorCode: true,
+	showColorName: true,
+	cardSize: "regular",
+	colors: [
+		"#7ACE4F",
+		"#FEBF00",
+		"#F67E00",
+		"#2E41DC",
 
-		setUrl(window.colorComponentDrawer.draw(data));
-	});
-	const [url, setUrl] = useState();
+		// "#FD4673",
+		// "#F6D68C",
+		// "#45B3A5",
+		// "#2E6D92",
+	],
+	roundedCorners: false,
+	stroke: true,
+	// spacing: false,
+	fold: true,
+};
+
+function ColorComponent() {
 	const [data, updateField] = useDataSchema(
-		{
-			type: "Color palette",
-			// type: "Single color",
-			// paletteStyle: "regular",
-			paletteStyle: "circles",
-			colorType: "card",
-			color: "#9A136F",
-			showColorCode: true,
-			showColorName: true,
-			cardSize: "regular",
-			colors: [
-				"#7ACE4F",
-				"#FEBF00",
-				"#F67E00",
-				"#2E41DC",
-
-				// "#FD4673",
-				// "#F6D68C",
-				// "#45B3A5",
-				// "#2E6D92",
-			],
-			roundedCorners: false,
-			stroke: true,
-			// spacing: false,
-			fold: true,
-		}
-		// colorComponentDrawerRef.current
+		"color",
+		defaultColorComponentProps
 	);
-
-	useEffect(() => {
-		colorComponentDrawerRef.current(data);
-	}, []);
 
 	return (
 		<>
-			{/* <DraggableImage wrapped src={url} />
-
-			<InfoCard /> */}
-
 			<div className="px-12px mt-1">
 				<ComponentFields
 					schema={{
 						type: {
 							type: "card",
-							// label: "",
 							choices: [
 								"Single color",
 								{ label: "Palette", value: "Color palette" },
 							],
-							// noMargin: true,
-							// noBorder: true,
 							meta: {
 								renderChoice(value) {
 									return value == "Single color" ? (
@@ -512,23 +495,24 @@ export default function ColorComponent() {
 							noBorder: true,
 							meta: {
 								columns: 2,
-								// aspectRatio: "2/0.8",
 								render(type) {
+									const colorProps = {
+										cardSize: type,
+										colorType: ["regular", "tall"].includes(
+											type
+										)
+											? "card"
+											: type,
+									};
 									const url = new ColorComponentDrawer().draw(
-										{
-											...data,
-											cardSize: type,
-											colorType: [
-												"regular",
-												"tall",
-											].includes(type)
-												? "card"
-												: type,
-										}
+										{ ...data, ...colorProps }
 									);
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField(colorProps)
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -559,6 +543,9 @@ export default function ColorComponent() {
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({ paletteStyle })
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -576,3 +563,36 @@ export default function ColorComponent() {
 		</>
 	);
 }
+
+ColorComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("color", defaultColorComponentProps);
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(new ColorComponentDrawer().draw(data));
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default ColorComponent;

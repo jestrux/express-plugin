@@ -50,7 +50,7 @@ class ContourDrawer {
 		this.drawAtScale(canvas, 0.4);
 
 		ctx.clearRect(0, 0, 500, 500);
-		ctx.lineWidth = 4;
+		ctx.lineWidth = 5;
 		ctx.stroke(p);
 		this.drawAtScale(canvas, 0.2);
 

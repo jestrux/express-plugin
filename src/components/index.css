@@ -783,6 +783,10 @@ hr {
 	mix-blend-mode: screen;
 }
 
+.gray-on-hover:hover {
+	background: rgba(0, 0, 0, 0.05);
+}
+
 .hoverable {
 	cursor: pointer !important;
 }
@@ -791,7 +795,19 @@ hr {
 	opacity: 0.85 !important;
 }
 
+.group:not(:hover) .show-on-group-hover {
+	display: none !important;
+}
+
+.group:hover .hide-on-group-hover {
+	display: none !important;
+}
+
 .parent:not(:hover) .show-on-parent-hover {
+	display: none !important;
+}
+
+.parent:hover .hide-on-parent-hover {
 	display: none !important;
 }
 

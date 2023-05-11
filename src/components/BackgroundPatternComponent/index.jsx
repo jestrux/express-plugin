@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
-import { showPreview, tinyColor } from "../utils";
+import { addToDocument, showPreview, tinyColor } from "../utils";
 import * as icons from "./icons";
 import DraggableImage from "../tokens/DraggableImage";
 
@@ -96,6 +96,13 @@ class PatternEffect {
 }
 
 class BackgroundPatternDrawer {
+	shape = "star";
+	style = "filled";
+	effect = "none";
+	spacing = "loose";
+	color = "#ac1f40";
+	multiple = false;
+
 	constructor() {
 		const canvas = document.createElement("canvas");
 		this.canvas = canvas;
@@ -137,8 +144,8 @@ class BackgroundPatternDrawer {
 	}
 }
 
-export default function BackgroundPatternComponent() {
-	const [data, updateField] = useDataSchema({
+function BackgroundPatternComponent() {
+	const [data, updateField] = useDataSchema("backgroundPattern", {
 		shape: "star",
 		spacing: "loose",
 		color: "#ac1f40",
@@ -306,6 +313,13 @@ export default function BackgroundPatternComponent() {
 									return (
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
+											onClickOrDrag={() =>
+												updateField({
+													style,
+													effect,
+													spacing,
+												})
+											}
 											src={url}
 											style={{
 												objectFit: "contain",
@@ -325,3 +339,46 @@ export default function BackgroundPatternComponent() {
 		</>
 	);
 }
+
+BackgroundPatternComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("backgroundPattern", {
+		shape: "star",
+		style: "filled ",
+		effect: "none",
+		spacing: "loose",
+		color: "#ac1f40",
+		multiple: false,
+	});
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(new BackgroundPatternDrawer().draw(data));
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+		styles: {
+			transform: "scale(3.5)",
+		},
+	};
+};
+
+export default BackgroundPatternComponent;

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
-import { showPreview } from "../utils";
+import { addToDocument, showPreview } from "../utils";
 import DraggableImage from "../tokens/DraggableImage";
 import dots from "./dots";
 import mesh from "./mesh";
@@ -130,8 +130,8 @@ class GridComponentDrawer {
 	}
 }
 
-export default function GridComponent() {
-	const [data, updateField] = useDataSchema({
+function GridComponent() {
+	const [data, updateField] = useDataSchema("grid", {
 		gridType: "mesh",
 		aspectRatio: "square",
 		color: "#F09D0F", // #5258e4
@@ -196,7 +196,15 @@ export default function GridComponent() {
 										});
 
 									return (
-										<DraggableImage src={url}>
+										<DraggableImage
+											src={url}
+											onClickOrDrag={() =>
+												updateField({
+													gridType,
+													aspectRatio,
+												})
+											}
+										>
 											<div className="p-3 w-full h-full flex center-center">
 												<div className="w-full h-full flex justify-center">
 													<svg
@@ -245,3 +253,47 @@ export default function GridComponent() {
 		</>
 	);
 }
+
+GridComponent.usePreview = () => {
+	const [preview, setPreview] = useState();
+	const [data] = useDataSchema("grid", {});
+	const {
+		gridType = "mesh",
+		aspectRatio = "square",
+		color = "#F09D0F",
+	} = data;
+
+	const handleQuickAction = (e) => {
+		e.stopPropagation();
+
+		addToDocument(preview);
+	};
+
+	useEffect(() => {
+		if (preview) return;
+
+		setPreview(
+			new GridComponentDrawer().draw({
+				gridType,
+				aspectRatio,
+				color,
+			})
+		);
+	}, []);
+
+	const quickAction = (children) => (
+		<button
+			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+			onClick={handleQuickAction}
+		>
+			{children("Add to canvas")}
+		</button>
+	);
+
+	return {
+		quickAction,
+		preview,
+	};
+};
+
+export default GridComponent;

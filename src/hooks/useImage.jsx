@@ -54,13 +54,13 @@ export default function useImage(src) {
 	};
 
 	useEffect(() => {
-		if (!src) return;
+		// if (!src) return;
 
-		if (typeof src == "object") loadImages(src);
-		else {
-			loadImage(src);
-			setMultiple(false);
-		}
+		// if (typeof src == "object") loadImages(src);
+		// else {
+		// 	loadImage(src);
+		// 	setMultiple(false);
+		// }
 	}, [src]);
 
 	const picker = () => {

@@ -5,7 +5,12 @@ import ComponentFields from "./tokens/ComponentFields";
 import InfoCard from "./tokens/InfoCard";
 import DraggableImage from "./tokens/DraggableImage";
 import useImage from "../hooks/useImage";
-import { addToDocument, backgroundSpec, showPreview, solidGradientBg } from "./utils";
+import {
+	addToDocument,
+	backgroundSpec,
+	showPreview,
+	solidGradientBg,
+} from "./utils";
 
 class TornPaperDrawer {
 	cornerRadius = 20;
@@ -262,7 +267,6 @@ TornPaperComponent.usePreview = () => {
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
-		addToDocument(preview);
 	};
 
 	useEffect(() => {
@@ -274,29 +278,22 @@ TornPaperComponent.usePreview = () => {
 		});
 
 		setPreview(image);
+		addToDocument(image);
 	}, [changed, img, loading]);
 
 	const quickAction = (children) => {
-		const content = children(
-			!preview && !img ? "Upload image" : "Add to canvas"
-		);
-
 		return (
 			<button
 				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
 				onClick={handleQuickAction}
 			>
-				{preview ? (
-					content
-				) : loading ? (
+				{loading ? (
 					<>
 						<Loader small />
 						<span className="flex-1"></span>
 					</>
-				) : !img ? (
-					<Picker>{content}</Picker>
 				) : (
-					content
+					<Picker>{children("Upload image")}</Picker>
 				)}
 			</button>
 		);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { showPreview } from "../utils";
+import { addToDocument, showPreview } from "../utils";
 import DraggableImage from "../tokens/DraggableImage";
 import ComponentFields from "../tokens/ComponentFields";
 import useDataSchema from "../../hooks/useDataSchema";

@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import ImagePicker from "../components/tokens/ImagePicker";
 import { loadImageFromUrl } from "../components/utils";
 
-export default function useImage(src) {
+export default function useImage(_src) {
+	const [src, setSrc] = useState(_src);
 	const [loading, setLoading] = useState(false);
 	const [image, setImage] = useState(null);
 	const [images, setImages] = useState(null);
@@ -54,16 +55,26 @@ export default function useImage(src) {
 	};
 
 	useEffect(() => {
-		// if (!src) return;
+		// return;
 
-		// if (typeof src == "object") loadImages(src);
-		// else {
-		// 	loadImage(src);
-		// 	setMultiple(false);
-		// }
+		if (!src) return;
+
+		if (typeof src == "object") loadImages(src);
+		else {
+			loadImage(src);
+			setMultiple(false);
+		}
 	}, [src]);
 
-	const picker = () => {
+	const picker = ({ children }) => {
+		if (children) {
+			return (
+				<ImagePicker multiple={multiple} onChange={handleImagePicked}>
+					{children}
+				</ImagePicker>
+			);
+		}
+
 		return (
 			<div className="px-12px border-b mt-3 pb-3 mb-1 flex items-center">
 				<ImagePicker multiple={multiple} onChange={handleImagePicked} />
@@ -72,6 +83,7 @@ export default function useImage(src) {
 	};
 
 	return {
+		setSrc,
 		picker,
 		images,
 		image,

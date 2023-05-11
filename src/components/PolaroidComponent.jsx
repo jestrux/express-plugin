@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
-import { showPreview } from "./utils";
+import { addToDocument, showPreview } from "./utils";
 import useImage from "../hooks/useImage";
 import DraggableImage from "./tokens/DraggableImage";
 import Loader from "./tokens/Loader";

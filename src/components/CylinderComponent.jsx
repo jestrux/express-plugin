@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import useDataSchema from "../hooks/useDataSchema";
 import staticImages from "../staticImages";
 import ComponentFields from "./tokens/ComponentFields";
-import { addToDocument, backgroundSpec, resizeToAspectRatio, solidGradientBg } from "./utils";
+import {
+	addToDocument,
+	backgroundSpec,
+	resizeToAspectRatio,
+	solidGradientBg,
+} from "./utils";
 import DraggableImage from "./tokens/DraggableImage";
 import useImage from "../hooks/useImage";
 import Loader from "./tokens/Loader";
@@ -229,7 +234,6 @@ CylinderComponent.usePreview = () => {
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
-		addToDocument(preview);
 	};
 
 	useEffect(() => {
@@ -241,29 +245,22 @@ CylinderComponent.usePreview = () => {
 		});
 
 		setPreview(image);
+		addToDocument(image);
 	}, [changed, img, loading]);
 
 	const quickAction = (children) => {
-		const content = children(
-			!preview && !img ? "Upload image" : "Add to canvas"
-		);
-
 		return (
 			<button
 				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
 				onClick={handleQuickAction}
 			>
-				{preview ? (
-					content
-				) : loading ? (
+				{loading ? (
 					<>
 						<Loader small />
 						<span className="flex-1"></span>
 					</>
-				) : !img ? (
-					<Picker>{content}</Picker>
 				) : (
-					content
+					<Picker>{children("Upload image")}</Picker>
 				)}
 			</button>
 		);

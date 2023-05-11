@@ -363,7 +363,6 @@ LayoutsComponent.usePreview = () => {
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
-		addToDocument(preview);
 	};
 
 	const noImages = !Object.values(images || {})?.length;
@@ -377,29 +376,22 @@ LayoutsComponent.usePreview = () => {
 		});
 
 		setPreview(image);
+		addToDocument(image);
 	}, [changed, noImages, loading]);
 
 	const quickAction = (children) => {
-		const content = children(
-			!preview && noImages ? "Upload images" : "Add to canvas"
-		);
-
 		return (
 			<button
 				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
 				onClick={handleQuickAction}
 			>
-				{preview ? (
-					content
-				) : loading ? (
+				{loading ? (
 					<>
 						<Loader small />
 						<span className="flex-1"></span>
 					</>
-				) : noImages ? (
-					<Picker>{content}</Picker>
 				) : (
-					content
+					<Picker>{children("Upload images")}</Picker>
 				)}
 			</button>
 		);

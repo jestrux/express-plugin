@@ -196,7 +196,6 @@ PolaroidComponent.usePreview = () => {
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
-		addToDocument(preview);
 	};
 
 	useEffect(() => {
@@ -208,29 +207,22 @@ PolaroidComponent.usePreview = () => {
 		});
 
 		setPreview(image);
+		addToDocument(image);
 	}, [changed, img, loading]);
 
 	const quickAction = (children) => {
-		const content = children(
-			!preview && !img ? "Upload image" : "Add to canvas"
-		);
-
 		return (
 			<button
 				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
 				onClick={handleQuickAction}
 			>
-				{preview ? (
-					content
-				) : loading ? (
+				{loading ? (
 					<>
 						<Loader small />
 						<span className="flex-1"></span>
 					</>
-				) : !img ? (
-					<Picker>{content}</Picker>
 				) : (
-					content
+					<Picker>{children("Upload image")}</Picker>
 				)}
 			</button>
 		);

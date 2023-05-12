@@ -252,7 +252,7 @@ CylinderComponent.usePreview = () => {
 
 		setPreview(image);
 
-		if (!noData) addToDocument(image);
+		if (changed) addToDocument(image);
 	}, [changed, img, loading]);
 
 	const quickAction = noData

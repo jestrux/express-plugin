@@ -111,7 +111,6 @@ AddOnSdk.ready.then(async () => {
 		setItem: (_, value) => {
 			store = value;
 			clientStorageAPI.setItem(STORE_KEY, value);
-			console.log("New store: ", value, store);
 		},
 	};
 

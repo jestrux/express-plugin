@@ -22,7 +22,7 @@ const ColorCard = ({
 
 	return (
 		<label
-			className="block relative cursor-pointer rounded-sm border"
+			className="color-label block relative cursor-pointer rounded-sm border-2"
 			style={{
 				minWidth: fullWidth ? "100%" : height + "px",
 				height: height + "px",
@@ -68,7 +68,7 @@ const ColorList = ({
 	centerColors = false,
 	selectedColor,
 	small = false,
-	choiceSize = 22,
+	choiceHeight: choiceSize = 30,
 	spacing = 0,
 	showCustomPicker = false,
 	showTransparent,

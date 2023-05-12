@@ -98,7 +98,6 @@ function BrushComponent() {
 							children: {
 								label: {
 									label: "",
-									noMargin: true,
 									meta: {
 										placeholder: "Enter text here...",
 										className: "mb-1",
@@ -107,9 +106,9 @@ function BrushComponent() {
 								color: {
 									type: "color",
 									inline: true,
-									noMargin: true,
 									meta: {
 										singleChoice: true,
+										choiceHeight: 26,
 									},
 								},
 								font: {

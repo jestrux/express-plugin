@@ -30,6 +30,12 @@ export default function DraggableImage({
 		});
 	}, [key]);
 
+	useEffect(() => {
+		if (loading || !props.src) return;
+
+		setKey(src() + randomId());
+	}, [src()]);
+
 	const exportImage = async (e) => {
 		const fromDrag = !e?.target;
 		const blob = await fetch(src()).then((response) => response.blob());

@@ -137,7 +137,7 @@ function BrushComponent() {
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
-												updateField({brush})
+												updateField({ ...data, brush })
 											}
 											src={url}
 											style={{
@@ -160,16 +160,16 @@ function BrushComponent() {
 
 BrushComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
-	const [data] = useDataSchema("brushedBackground", {});
-	const {
-		text,
-		brush = "regular",
-		background = {
-			type: "gradient",
-			color: "#995533",
-			gradient: ["#9055FF", "#13E2DA"],
-		},
-	} = data;
+	const [data] = useDataSchema("brushedBackground", {
+		// text,
+		// brush: "regular",
+		// background: {
+		// 	type: "gradient",
+		// 	color: "#995533",
+		// 	gradient: ["#9055FF", "#13E2DA"],
+		// }
+	});
+	const noData = !data?.brush;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -177,25 +177,21 @@ BrushComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
-		setPreview(
-			new BrushDrawer().draw({
-				brush,
-				background,
-				text,
-			})
-		);
+		setPreview(new BrushDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

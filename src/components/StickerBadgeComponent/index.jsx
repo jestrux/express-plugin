@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDataSchema from "../../hooks/useDataSchema";
 import ComponentFields from "../tokens/ComponentFields";
-import {
-	addToDocument,
-	backgroundSpec,
-	solidGradientBg,
-} from "../utils";
+import { addToDocument, backgroundSpec, solidGradientBg } from "../utils";
 import * as stickers from "./stickers";
 import DraggableImage from "../tokens/DraggableImage";
 
@@ -145,7 +141,10 @@ function StickerBadgeComponent() {
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
-												updateField({ sticker })
+												updateField({
+													...data,
+													sticker,
+												})
 											}
 											src={url}
 											style={{
@@ -168,10 +167,10 @@ function StickerBadgeComponent() {
 
 StickerBadgeComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
-	const [data] = useDataSchema(
-		"stickerBadge",
-		defaultStickerBadgeComponentProps
-	);
+	const [data] = useDataSchema("stickerBadge", {
+		// ...defaultStickerBadgeComponentProps
+	});
+	const noData = !data?.sticker;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -180,19 +179,21 @@ StickerBadgeComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
 		setPreview(new StickerBadgeDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

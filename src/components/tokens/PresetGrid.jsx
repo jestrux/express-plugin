@@ -1,7 +1,11 @@
-import React from "react";
+import ReactDOMServer from "react-dom/server";
+import React, { Children, useEffect, useState } from "react";
 import staticImages from "../../staticImages";
 import { camelCaseToSentenceCase } from "../utils";
 import { componentMap, presets } from "../components";
+import { Item, TabList, TabPanels, Tabs } from "@adobe/react-spectrum";
+import Loader from "./Loader";
+import useLocalStorageState from "../../hooks/useLocalStorageState";
 
 const Preview1 = () => {
 	return (
@@ -194,7 +198,7 @@ const PlayIcon = () => {
 	);
 };
 
-const Card1 = ({ component, name, onSelect }) => {
+const Card1 = ({ component, poster, name, onSelect }) => {
 	return (
 		<div
 			className="w-full rounded-sm border cusor-pointer parent gray-on-hover relative overflow-hidden"
@@ -204,13 +208,12 @@ const Card1 = ({ component, name, onSelect }) => {
 				className="flex center-center relative"
 				style={{
 					width: "100%",
-					height: "70px",
+					height: "55px",
 				}}
 			>
 				<img
-					loading="lazy"
 					className="p-2 object-contain object-center"
-					src={staticImages.posters[name]}
+					src={staticImages.posters[poster || name]}
 					alt=""
 					style={{
 						minWidth: 0,
@@ -228,7 +231,7 @@ const Card1 = ({ component, name, onSelect }) => {
 				style={{
 					// background: "#f7f7f7",
 					textAlign: "center",
-					padding: "0.5rem 0.6rem",
+					padding: "0.25rem 0.6rem",
 					fontSize: "0.75rem",
 					lineHeight: "1.5",
 					whiteSpace: "nowrap",
@@ -242,61 +245,109 @@ const Card1 = ({ component, name, onSelect }) => {
 	);
 };
 
-const Card2 = ({ component, name, onSelect }) => {
+const Card2 = ({ component, poster, name, onSelect }) => {
 	return (
 		<div
-			className="w-full rounded-sm border cusor-pointer parent gray-on-hover relative overflow-hidden"
+			className="p-2 flex gap-3s w-full rounded border parent cursor-pointer gray-on-hover relative overflow-hidden"
 			onClick={() => onSelect(component, name)}
-			style={{
-				minWidth: 0,
-				// background:
-				// 	"linear-gradient(180deg, transparent 40%, #EEE 100%)",
-			}}
 		>
 			<div
-				className="flex center-center relative"
+				className="flex-1 flex flex-col justify-center"
 				style={{
-					width: "100%",
-					height: "70px",
-				}}
-			>
-				<img
-					loading="lazy"
-					className="p-2 object-contain object-center"
-					src={staticImages.posters[name]}
-					alt=""
-					style={{
-						minWidth: 0,
-						maxWidth: "100%",
-						maxHeight: "100%",
-						filter: "drop-shadow(0.5px 0.5px 1px rgba(0, 0, 0, 0.2))",
-					}}
-				/>
-
-				<PlayIcon />
-			</div>
-
-			<div
-				className="border-t border-light-gray flex center-center bg-black26"
-				style={{
-					height: "52px",
-					textAlign: "center",
-					padding: "0.6rem 0.6rem",
-					fontSize: "0.75rem",
-					lineHeight: "1.5",
+					padding: "0 0.65rem 0.2rem 0.5rem",
+					fontSize: "0.9rem",
+					lineHeight: 1.5,
 					overflow: "hidden",
 					textOverflow: "ellipsis",
 				}}
 			>
 				{camelCaseToSentenceCase(name.replaceAll("-", " "))}
 			</div>
+
+			<div
+				className="relative flex center-center rounded-sm overflow-hidden sbg-black26 border border-light-gray"
+				style={{
+					width: "40%",
+					// height: "100%",
+					aspectRatio: "2/1",
+				}}
+			>
+				<img
+					className="object-contain object-center"
+					src={staticImages.posters[poster || name]}
+					alt=""
+					style={{
+						padding: "0.4rem 0",
+						maxWidth: "100%",
+						maxHeight: "100%",
+						filter: "drop-shadow(0.5px 0.5px 1px rgba(0, 0, 0, 0.3))",
+					}}
+				/>
+
+				<PlayIcon />
+			</div>
 		</div>
 	);
 };
 
-const Card3 = ({ component, name, onSelect }) => {
+const Recents = ({ onSelect }) => {
+	const [init, setInit] = useState(false);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setInit(true);
+		});
+	}, []);
+
+	if (!init)
+		return (
+			<div className="my-2 py-3 flex center-center">
+				<Loader />
+			</div>
+		);
+
+	const Content = ({ children }) => {
+		const noContent = !Boolean(
+			ReactDOMServer.renderToStaticMarkup(children)
+		);
+
+		if (noContent) {
+			return (
+				<div className="py-3 flex center-center text-center">
+					No recents
+				</div>
+			);
+		}
+
+		return children;
+	};
+
+	return (
+		<div className="flex flex-col p-2 gap-2">
+			<Content>
+				{Object.entries(presets).map(([name, value], index) => {
+					const { props, component, poster, ...styles } = value;
+
+					return (
+						<Card3
+							key={index}
+							name={name}
+							poster={poster}
+							component={component}
+							onSelect={onSelect}
+						/>
+					);
+				})}
+			</Content>
+		</div>
+	);
+};
+
+const Card3 = ({ component, poster, name, onSelect }) => {
 	const { quickAction, preview, styles } =
 		componentMap[component]?.usePreview?.() || {};
+
+	if (typeof quickAction != "function") return;
 
 	return (
 		<div
@@ -369,9 +420,8 @@ const Card3 = ({ component, name, onSelect }) => {
 				}}
 			>
 				<img
-					loading="lazy"
 					className="object-contain object-center"
-					src={preview || staticImages.posters[name]}
+					src={preview}
 					alt=""
 					style={{
 						padding: "0.4rem 0",
@@ -389,8 +439,12 @@ const Card3 = ({ component, name, onSelect }) => {
 };
 
 const PresetGrid = ({ onSelect }) => {
+	const [selectedKey, setSelectedKey] = useLocalStorageState(
+		"presetsCurrentTab",
+		"Elements"
+	);
 	return (
-		<div className="flex flex-col">
+		<div>
 			{/* <a
 				className="flex flex-col"
 				href="https://www.youtube.com/watch?v=CkE6l_KIACc"
@@ -404,37 +458,82 @@ const PresetGrid = ({ onSelect }) => {
 
 			<div className="text-lg px-12px mb-1">Components</div> */}
 
-			<div
-				className="grid p-2 gap-2 border-t"
-				// style={{ gridTemplateColumns: "1fr 1fr" }}
+			<Tabs
+				aria-label="Vision Board"
+				isQuiet
+				selectedKey={selectedKey}
+				onSelectionChange={setSelectedKey}
 			>
-				{Object.entries(presets).map(([name, value], index) => {
-					const { props, component, ...styles } = value;
+				<div
+					className="bg-white flex flex-col px-12px border-b"
+					style={{ position: "sticky", top: 0, zIndex: 10 }}
+				>
+					<div style={{ marginTop: "-1rem" }}>
+						<TabList>
+							<Item key="Elements">Elements</Item>
+							<Item key="Recents">Recents</Item>
+							<Item key="Featured">Featured</Item>
+						</TabList>
+					</div>
+				</div>
 
-					return (
-						// <Card1
-						// 	key={index}
-						// 	name={name}
-						// 	component={component}
-						// 	onSelect={onSelect}
-						// />
+				<TabPanels>
+					<Item key="Elements">
+						<div
+							className="grid p-2 gap-2"
+							style={{ gridTemplateColumns: "1fr 1fr" }}
+						>
+							{Object.entries(presets).map(
+								([name, value], index) => {
+									const {
+										props,
+										poster,
+										component,
+										...styles
+									} = value;
 
-						// <Card2
-						// 	key={index}
-						// 	name={name}
-						// 	component={component}
-						// 	onSelect={onSelect}
-						// />
+									return (
+										<Card1
+											key={index}
+											name={name}
+											poster={poster}
+											component={component}
+											onSelect={onSelect}
+										/>
+									);
+								}
+							)}
+						</div>
+					</Item>
+					<Item key="Featured">
+						<div className="flex flex-col gap-2 p-2">
+							{Object.entries(presets).map(
+								([name, value], index) => {
+									const {
+										props,
+										poster,
+										component,
+										...styles
+									} = value;
 
-						<Card3
-							key={index}
-							name={name}
-							component={component}
-							onSelect={onSelect}
-						/>
-					);
-				})}
-			</div>
+									return (
+										<Card2
+											key={index}
+											name={name}
+											poster={poster}
+											component={component}
+											onSelect={onSelect}
+										/>
+									);
+								}
+							)}
+						</div>
+					</Item>
+					<Item key="Recents">
+						<Recents onSelect={onSelect} />
+					</Item>
+				</TabPanels>
+			</Tabs>
 		</div>
 	);
 };

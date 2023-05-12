@@ -57,8 +57,9 @@ export const presets = {
 		props: {},
 		component: "LayoutsComponent",
 	},
-	backgroundPatterns: {
+	patterns: {
 		props: {},
+		poster: "backgroundPatterns",
 		component: "BackgroundPatternComponent",
 	},
 	clippedImage: {
@@ -69,8 +70,9 @@ export const presets = {
 		props: {},
 		component: "MapComponent",
 	},
-	brushedBackground: {
+	brushes: {
 		props: {},
+		poster: "brushedBackground",
 		component: "BrushComponent",
 	},
 	grid: {
@@ -85,8 +87,9 @@ export const presets = {
 		props: {},
 		component: "CylinderComponent",
 	},
-	flowerHeads: {
+	flowers: {
 		props: {},
+		poster: "flowerHeads",
 		component: "FlowerHeadsComponent",
 	},
 	color: {

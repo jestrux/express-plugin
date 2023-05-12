@@ -89,6 +89,7 @@ function FlowerHeadsComponent() {
 											src={url}
 											onClickOrDrag={() =>
 												updateField({
+													...data,
 													flowerColor:
 														data.color ||
 														flowerHeads[flowerHead]
@@ -116,8 +117,12 @@ function FlowerHeadsComponent() {
 
 FlowerHeadsComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
-	const [data] = useDataSchema("flowerHeads", {});
-	const { flowerHead = "flower6", color, flowerColor = "#ed2232" } = data;
+	const [data] = useDataSchema("flowerHeads", {
+		// color,
+		// flowerHead: "flower6",
+		// flowerColor: "#ed2232",
+	});
+	const noData = !data?.flowerHead;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -126,24 +131,21 @@ FlowerHeadsComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
-		setPreview(
-			new FlowerHeadsComponentDrawer().draw({
-				flowerHead,
-				color: color || flowerColor,
-			})
-		);
+		setPreview(new FlowerHeadsComponentDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

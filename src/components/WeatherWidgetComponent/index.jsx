@@ -169,6 +169,7 @@ function WeatherWidgetComponent() {
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
 												updateField({
+													...data,
 													icon: weather,
 													temperature:
 														temperatureMap[weather],
@@ -196,9 +197,10 @@ function WeatherWidgetComponent() {
 WeatherWidgetComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("weather", {
-		colors: themes[1],
-		icon: "partlyCloudyRain",
+		// colors: themes[1],
+		// icon: "partlyCloudyRain",
 	});
+	const noData = !data?.icon;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -207,12 +209,12 @@ WeatherWidgetComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview || !data?.colors) return;
+		if (preview || noData) return;
 
 		setPreview(new WeatherWidgetDrawer().draw(data));
 	}, []);
 
-	const quickAction = !data?.colors
+	const quickAction = noData
 		? null
 		: (children) => (
 				<button

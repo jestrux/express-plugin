@@ -511,7 +511,10 @@ function ColorComponent() {
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
-												updateField(colorProps)
+												updateField({
+													...data,
+													...colorProps,
+												})
 											}
 											src={url}
 											style={{
@@ -544,7 +547,10 @@ function ColorComponent() {
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
-												updateField({ paletteStyle })
+												updateField({
+													...data,
+													paletteStyle,
+												})
 											}
 											src={url}
 											style={{
@@ -566,7 +572,10 @@ function ColorComponent() {
 
 ColorComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
-	const [data] = useDataSchema("color", defaultColorComponentProps);
+	const [data] = useDataSchema("color", {
+		// ...defaultColorComponentProps
+	});
+	const noData = !data.type;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -575,19 +584,21 @@ ColorComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
 		setPreview(new ColorComponentDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

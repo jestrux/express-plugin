@@ -109,8 +109,9 @@ function RibbonComponent() {
 RibbonComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("ribbon", {
-		color: "#ffc107"
+		// color: "#ffc107",
 	});
+	const noData = !data?.color;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -119,12 +120,12 @@ RibbonComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview || !data?.color) return;
+		if (preview || noData) return;
 
 		setPreview(new RibbonDrawer().draw(data));
 	}, []);
 
-	const quickAction = !data?.color
+	const quickAction = noData
 		? null
 		: (children) => (
 				<button

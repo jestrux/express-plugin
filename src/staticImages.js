@@ -59,8 +59,8 @@ export default {
 
 	posters: {
 		arrows: "static/images/posters/arrows.png",
-		brushBackground: "static/images/posters/brush.png",
-		backgroundPattern: "static/images/posters/background-pattern.png",
+		brushedBackground: "static/images/posters/brush.png",
+		backgroundPatterns: "static/images/posters/background-pattern.png",
 		calendar: "static/images/posters/calendar.png",
 		charts: "static/images/posters/charts.png",
 		clippedImage: "static/images/posters/crop.webp",

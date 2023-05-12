@@ -200,6 +200,7 @@ function GridComponent() {
 											src={url}
 											onClickOrDrag={() =>
 												updateField({
+													...data,
 													gridType,
 													aspectRatio,
 												})
@@ -256,12 +257,13 @@ function GridComponent() {
 
 GridComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
-	const [data] = useDataSchema("grid", {});
-	const {
-		gridType = "mesh",
-		aspectRatio = "square",
-		color = "#F09D0F",
-	} = data;
+	const [data] = useDataSchema("grid", {
+		// gridType: "mesh",
+		// aspectRatio: "square",
+		// color: "#F09D0F",
+	});
+
+	const noData = !data?.gridType;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -270,25 +272,21 @@ GridComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
-		setPreview(
-			new GridComponentDrawer().draw({
-				gridType,
-				aspectRatio,
-				color,
-			})
-		);
+		setPreview(new GridComponentDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

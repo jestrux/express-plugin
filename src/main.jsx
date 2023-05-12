@@ -7,6 +7,7 @@ import { theme } from "@react-spectrum/theme-express";
 import { ToastContainer } from "@react-spectrum/toast";
 
 import "./App.css";
+import { loadImageFromUrl, showPreview } from "./components/utils";
 
 const render = (sdk = true) => {
 	if (sdk) {
@@ -24,8 +25,17 @@ const render = (sdk = true) => {
 					return;
 				},
 				document: {
-					addImage(image) {
-						// showPreview(image);
+					async addImage(blob) {
+						fetch(URL.createObjectURL(blob))
+							.then((response) => response.blob())
+							.then((blob) => {
+								var reader = new FileReader();
+
+								reader.onload = () =>
+									showPreview(reader.result);
+
+								reader.readAsDataURL(blob);
+							});
 					},
 				},
 			},

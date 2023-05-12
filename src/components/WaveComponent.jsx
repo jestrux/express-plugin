@@ -120,7 +120,7 @@ function WaveComponent() {
 										<DraggableImage
 											className="p-2 w-full"
 											onClickOrDrag={() =>
-												updateField({ wave })
+												updateField({ ...data, wave })
 											}
 											src={url}
 											style={{
@@ -143,10 +143,11 @@ function WaveComponent() {
 WaveComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("waves", {
-		wave: "beach",
-		color: "#28a745",
-		style: "compact",
+		// wave: "beach",
+		// color: "#28a745",
+		// style: "compact",
 	});
+	const noData = !data?.wave;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -155,19 +156,21 @@ WaveComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
 		setPreview(new WaveDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

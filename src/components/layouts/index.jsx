@@ -284,7 +284,10 @@ function LayoutsComponent() {
 											className="h-full w-full"
 											src={url}
 											onClickOrDrag={() =>
-												updateField({ template })
+												updateField({
+													...data,
+													template,
+												})
 											}
 											style={{
 												height:
@@ -357,8 +360,11 @@ function LayoutsComponent() {
 }
 
 LayoutsComponent.usePreview = () => {
-	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("layouts");
+	const noData = !data?.template;
+	const [preview, setPreview] = useState(
+		!noData && staticImages.layouts[data.template]
+	);
 	const { changed, images, picker: Picker, loading } = useImage([]);
 
 	const handleQuickAction = (e) => {
@@ -368,34 +374,36 @@ LayoutsComponent.usePreview = () => {
 	const noImages = !Object.values(images || {})?.length;
 
 	useEffect(() => {
-		if (!changed || noImages || loading) return;
+		if (noData || !changed || noImages || loading) return;
 
 		const image = new LayoutsComponentDrawer().draw({
+			...data,
 			images,
-			template: data.template || "heart",
 		});
 
 		setPreview(image);
 		addToDocument(image);
 	}, [changed, noImages, loading]);
 
-	const quickAction = (children) => {
-		return (
-			<button
-				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-				onClick={handleQuickAction}
-			>
-				{loading ? (
-					<>
-						<Loader small />
-						<span className="flex-1"></span>
-					</>
-				) : (
-					<Picker>{children("Upload images")}</Picker>
-				)}
-			</button>
-		);
-	};
+	const quickAction = noData
+		? null
+		: (children) => {
+				return (
+					<button
+						className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+						onClick={handleQuickAction}
+					>
+						{loading ? (
+							<>
+								<Loader small />
+								<span className="flex-1"></span>
+							</>
+						) : (
+							<Picker>{children("Upload images")}</Picker>
+						)}
+					</button>
+				);
+		  };
 
 	return {
 		quickAction,

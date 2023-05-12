@@ -170,7 +170,10 @@ function SpiralComponent() {
 										<DraggableImage
 											className="p-2 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
-												updateField({ infinite })
+												updateField({
+													...data,
+													infinite,
+												})
 											}
 											src={url}
 											style={{
@@ -194,9 +197,10 @@ function SpiralComponent() {
 SpiralComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("spiral", {
-		color: "#7129F4",
-		compact: true,
+		// color: "#7129F4",
+		// compact: true,
 	});
+	const noData = !data?.color;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -205,12 +209,12 @@ SpiralComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview || !data?.color) return;
+		if (preview || noData) return;
 
 		setPreview(new SpiralDrawer().draw(data));
 	}, []);
 
-	const quickAction = !data?.color
+	const quickAction = noData
 		? null
 		: (children) => (
 				<button

@@ -67,8 +67,6 @@ export const showPreview = (url) => {
 };
 
 export const addToDocument = (url) => {
-	showPreview(url);
-
 	fetch(url)
 		.then((response) => response.blob())
 		.then(window.AddOnSdk?.app.document.addImage);

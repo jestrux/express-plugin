@@ -75,7 +75,7 @@ function ArrowComponent() {
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
-												updateField({ arrow })
+												updateField({ ...data, arrow })
 											}
 											src={url}
 											style={{
@@ -99,9 +99,10 @@ function ArrowComponent() {
 ArrowComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("arrows", {
-		arrow: "swimmingTopRight",
-		color: "#ac1f40",
+		// arrow: "swimmingTopRight",
+		// color: "#ac1f40",
 	});
+	const noData = !data?.arrow;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -110,19 +111,21 @@ ArrowComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
 		setPreview(new ArrowComponentDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

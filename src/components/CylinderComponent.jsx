@@ -199,7 +199,7 @@ function CylinderComponent() {
 										<DraggableImage
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
-												updateField({ half })
+												updateField({ ...data, half })
 											}
 											src={url}
 											style={{
@@ -223,21 +223,27 @@ function CylinderComponent() {
 CylinderComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("cylinder", {
-		border: "#aaaaaa",
-		background: {
-			type: "gradient",
-			color: "#ffc107",
-			gradient: ["#BF953F", "#FCF6BA", "#AA771C"],
-		},
+		// border: "#aaaaaa",
+		// background: {
+		// 	type: "gradient",
+		// 	color: "#ffc107",
+		// 	gradient: ["#BF953F", "#FCF6BA", "#AA771C"],
+		// },
 	});
-	const { changed, image: img, loading, picker: Picker } = useImage();
+	const {
+		changed,
+		image: img,
+		loading,
+		picker: Picker,
+	} = useImage(staticImages.presets.cylinder);
+	const noData = !data?.border;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
 	};
 
 	useEffect(() => {
-		if (!changed || !img || loading) return;
+		if (!img || loading) return;
 
 		const image = new CylinderDrawer().draw({
 			...data,
@@ -245,26 +251,29 @@ CylinderComponent.usePreview = () => {
 		});
 
 		setPreview(image);
-		addToDocument(image);
+
+		if (!noData) addToDocument(image);
 	}, [changed, img, loading]);
 
-	const quickAction = (children) => {
-		return (
-			<button
-				className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-				onClick={handleQuickAction}
-			>
-				{loading ? (
-					<>
-						<Loader small />
-						<span className="flex-1"></span>
-					</>
-				) : (
-					<Picker>{children("Upload image")}</Picker>
-				)}
-			</button>
-		);
-	};
+	const quickAction = noData
+		? null
+		: (children) => {
+				return (
+					<button
+						className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+						onClick={handleQuickAction}
+					>
+						{loading ? (
+							<>
+								<Loader small />
+								<span className="flex-1"></span>
+							</>
+						) : (
+							<Picker>{children("Upload image")}</Picker>
+						)}
+					</button>
+				);
+		  };
 
 	return {
 		quickAction,

@@ -387,7 +387,7 @@ function MapComponent() {
 											className="h-full max-w-full object-fit"
 											src={images[shape].src}
 											onClickOrDrag={() =>
-												updateField({shape})
+												updateField({ ...data, shape })
 											}
 											style={{
 												objectFit: "contain",
@@ -408,12 +408,18 @@ function MapComponent() {
 }
 
 MapComponent.usePreview = () => {
-	const [data] = useDataSchema("map", {});
-	const { theme = "regular", shape = "folded", showMarker = true } = data;
+	const [data] = useDataSchema("map", {
+		// theme: "regular",
+		// shape: "folded",
+		// showMarker: true,
+	});
+	const noData = !data?.theme;
 	const { loading, image } = useImage(
-		showMarker
-			? staticImages.maps.withMarker[theme][shape]
-			: staticImages.maps[theme][shape]
+		noData
+			? null
+			: data.showMarker
+			? staticImages.maps.withMarker[data.theme][data.shape]
+			: staticImages.maps[data.theme][data.shape]
 	);
 
 	const handleQuickAction = (e) => {
@@ -422,21 +428,23 @@ MapComponent.usePreview = () => {
 		addToDocument(image?.src);
 	};
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{loading || !image ? (
-				<>
-					<Loader small />
-					<span className="flex-1"></span>
-				</>
-			) : (
-				children("Add to canvas")
-			)}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{loading || !image ? (
+						<>
+							<Loader small />
+							<span className="flex-1"></span>
+						</>
+					) : (
+						children("Add to canvas")
+					)}
+				</button>
+		  );
 
 	return {
 		quickAction,

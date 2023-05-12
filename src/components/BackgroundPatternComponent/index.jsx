@@ -138,7 +138,7 @@ class BackgroundPatternDrawer {
 
 		const res = this.canvas.toDataURL();
 
-		showPreview(res);
+		// showPreview(res);
 
 		return res;
 	}
@@ -315,6 +315,7 @@ function BackgroundPatternComponent() {
 											className="p-3 h-full max-w-full object-fit"
 											onClickOrDrag={() =>
 												updateField({
+													...data,
 													style,
 													effect,
 													spacing,
@@ -343,13 +344,14 @@ function BackgroundPatternComponent() {
 BackgroundPatternComponent.usePreview = () => {
 	const [preview, setPreview] = useState();
 	const [data] = useDataSchema("backgroundPattern", {
-		shape: "star",
-		style: "filled ",
-		effect: "none",
-		spacing: "loose",
-		color: "#ac1f40",
-		multiple: false,
+		// shape: "star",
+		// style: "filled ",
+		// effect: "none",
+		// spacing: "loose",
+		// color: "#ac1f40",
+		// multiple: false,
 	});
+	const noData = !data?.shape;
 
 	const handleQuickAction = (e) => {
 		e.stopPropagation();
@@ -358,19 +360,21 @@ BackgroundPatternComponent.usePreview = () => {
 	};
 
 	useEffect(() => {
-		if (preview) return;
+		if (preview || noData) return;
 
 		setPreview(new BackgroundPatternDrawer().draw(data));
 	}, []);
 
-	const quickAction = (children) => (
-		<button
-			className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
-			onClick={handleQuickAction}
-		>
-			{children("Add to canvas")}
-		</button>
-	);
+	const quickAction = noData
+		? null
+		: (children) => (
+				<button
+					className="flex items-center cursor-pointer bg-transparent border border-transparent p-0"
+					onClick={handleQuickAction}
+				>
+					{children("Add to canvas")}
+				</button>
+		  );
 
 	return {
 		quickAction,

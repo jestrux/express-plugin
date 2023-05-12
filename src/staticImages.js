@@ -51,6 +51,12 @@ export default {
 		},
 	},
 
+	layouts: {
+		heart: "static/images//layouts/heart.webp",
+		honeycomb: "static/images//layouts/honeycomb.webp",
+		scattered: "static/images//layouts/scattered.webp",
+	},
+
 	posters: {
 		arrows: "static/images/posters/arrows.png",
 		brushBackground: "static/images/posters/brush.png",

@@ -73,6 +73,10 @@ import mapDarkWithMarker from "./images/maps/with-marker/dark.webp";
 
 import videoPoster from "./images/video-poster.webp";
 
+import heartLayout from "./images/layouts/heart.webp";
+import honeycombLayout from "./images/layouts/honeycomb.webp";
+import scatteredLayout from "./images/layouts/scattered.webp";
+
 export default {
 	videoPoster,
 	transparency,
@@ -123,6 +127,11 @@ export default {
 		template7,
 		template8,
 	],
+	layouts: {
+		heart: heartLayout,
+		honeycomb: honeycombLayout,
+		scattered: scatteredLayout,
+	},
 	posters: {
 		arrows: arrowPoster,
 		brushedBackground: brushPoster,

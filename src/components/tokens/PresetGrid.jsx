@@ -6,6 +6,26 @@ import { componentMap, presets } from "../components";
 import { Item, TabList, TabPanels, Tabs } from "@adobe/react-spectrum";
 import Loader from "./Loader";
 import useLocalStorageState from "../../hooks/useLocalStorageState";
+import arrows from "../ArrowComponent/arrows";
+import ColorList from "./ColorList";
+import flowerHeads from "../FlowerHeadsComponent/flower-heads";
+import * as brushes from "../BrushComponent/brushes/index";
+const brushColors = [
+	"#ed2232",
+	"#8143f3",
+	"#795548",
+	"#379b98",
+	"#555555",
+	"#2196F3",
+	"#ebd913",
+	"#555555",
+	"#607D8B",
+	"#f13bff",
+	"#f25629",
+	"#555555",
+	"#BCAAA4",
+	"#9CCC65",
+];
 
 const Preview1 = () => {
 	return (
@@ -245,51 +265,6 @@ const Card1 = ({ component, poster, name, onSelect }) => {
 	);
 };
 
-const Card2 = ({ component, poster, name, onSelect }) => {
-	return (
-		<div
-			className="p-2 flex gap-3s w-full rounded border parent cursor-pointer gray-on-hover relative overflow-hidden"
-			onClick={() => onSelect(component, name)}
-		>
-			<div
-				className="flex-1 flex flex-col justify-center"
-				style={{
-					padding: "0 0.65rem 0.2rem 0.5rem",
-					fontSize: "0.9rem",
-					lineHeight: 1.5,
-					overflow: "hidden",
-					textOverflow: "ellipsis",
-				}}
-			>
-				{camelCaseToSentenceCase(name.replaceAll("-", " "))}
-			</div>
-
-			<div
-				className="relative flex center-center rounded-sm overflow-hidden sbg-black26 border border-light-gray"
-				style={{
-					width: "40%",
-					// height: "100%",
-					aspectRatio: "2/1",
-				}}
-			>
-				<img
-					className="object-contain object-center"
-					src={staticImages.posters[poster || name]}
-					alt=""
-					style={{
-						padding: "0.4rem 0",
-						maxWidth: "100%",
-						maxHeight: "100%",
-						filter: "drop-shadow(0.5px 0.5px 1px rgba(0, 0, 0, 0.3))",
-					}}
-				/>
-
-				<PlayIcon />
-			</div>
-		</div>
-	);
-};
-
 const Recents = ({ onSelect }) => {
 	const [init, setInit] = useState(false);
 
@@ -438,6 +413,249 @@ const Card3 = ({ component, poster, name, onSelect }) => {
 	);
 };
 
+const FeaturedCard = ({
+	label = "Arrows",
+	children,
+	fit,
+	columns,
+	columnSize,
+}) => {
+	const windowWidth = 280;
+	const _columnSize = !columnSize
+		? 52
+		: columnSize == "auto"
+		? windowWidth / 3
+		: columnSize;
+	const autColumns = Children.count(children);
+
+	return (
+		<div
+			className="flex flex-col w-full rounded border parent relative overflow-hidden"
+			// onClick={() => onSelect(component, name)}
+		>
+			<div
+				className="bg-black26 py-2 px-3 flex-1 flex items-center justify-between"
+				style={{
+					// margin: "0 0 0.45rem 0.1rem",
+					fontSize: "0.85rem",
+					lineHeight: 1,
+					overflow: "hidden",
+					textOverflow: "ellipsis",
+				}}
+			>
+				<span>{label}</span>
+
+				<div className="opacity-0">
+					<ColorList
+						singleChoice
+						value="transparent"
+						choiceHeight={24}
+						onChange={(v) => console.log(v)}
+					/>
+				</div>
+			</div>
+
+			<div className="border-t p-2 overflow-auto">
+				<div
+					className="grid gap-2"
+					style={{
+						display:
+							columnSize == "auto" || (columnSize && !fit)
+								? "flex"
+								: "grid",
+						flexWrap: fit ? "wrap" : "nowrap",
+						width:
+							columnSize == "auto"
+								? `${
+										(windowWidth / 3 + 6) *
+										(columns || autColumns)
+								  }px`
+								: columns || fit
+								? ""
+								: columnSize
+								? `${
+										(columnSize + 6) *
+										(columns || autColumns)
+								  }px`
+								: `${
+										((_columnSize + 6) * autColumns) / 2 - 8
+								  }px`,
+						gridTemplateColumns: columns
+							? Array(columns)
+									.fill("")
+									.map((_) => "1fr")
+									.join(" ")
+							: `repeat(auto-fit, minmax(${
+									_columnSize - 2
+							  }px, 1fr))`,
+					}}
+				>
+					{children}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+const FeaturedButton = ({ children, label, fill, aspectRatio = "1/0.88" }) => {
+	return (
+		<button
+			className="parent rounded bg-transparent overflow-hidden relative border cursor-pointer"
+			style={{
+				padding: "0.4rem 0.7rem",
+				aspectRatio,
+			}}
+		>
+			<span
+				className="absolute inset-0 show-on-parent-hover"
+				style={{ background: fill, opacity: 0.05 }}
+			></span>
+
+			<div className="h-full relative flex flex-col justify-between">
+				{children}
+
+				{label && (
+					<span class="text-sm flex-shrink-0 mb-1">{label}</span>
+				)}
+			</div>
+		</button>
+	);
+};
+
+const Featured = ({ onSelect }) => {
+	const [init, setInit] = useState(false);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setInit(true);
+		});
+	}, []);
+
+	if (!init)
+		return (
+			<div className="my-2 py-3 flex center-center">
+				<Loader />
+			</div>
+		);
+
+	const style = {
+		maxHeight: "100%",
+		maxHeight: "calc(100% - 20px)",
+		maxWidth: "100%",
+		objectFit: "contain",
+		objectPosition: "center",
+		padding: "0.5rem",
+		filter: "drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.4))",
+	};
+
+	return (
+		<div className="flex flex-col p-2 gap-3">
+			<FeaturedCard label="Picture Wrappers" fit columnSize={85}>
+				<FeaturedButton aspectRatio="1/0.8" label="Pill">
+					<img style={style} src={staticImages.posters.pill} />
+				</FeaturedButton>
+				<FeaturedButton aspectRatio="1/0.8" label="Paper Clip">
+					<img
+						style={style}
+						src={staticImages.posters.clippedImage}
+					/>
+				</FeaturedButton>
+				<FeaturedButton aspectRatio="1/0.8" label="Polaroid">
+					<img style={style} src={staticImages.posters.polaroid} />
+				</FeaturedButton>
+				<FeaturedButton aspectRatio="1/0.8" label="Frame">
+					<img style={style} src={staticImages.posters.frame} />
+				</FeaturedButton>
+			</FeaturedCard>
+
+			<FeaturedCard
+				label="Brushes"
+				// sizing="fit"
+				// columns={3}
+				// columnSize="auto"
+				columnSize={58}
+			>
+				{Object.keys(brushes).map((brush, index) => {
+					const { width, height, path } = brushes[brush];
+					const fill = brushColors[index];
+
+					if (index == 0) return null;
+
+					return (
+						<FeaturedButton key={index} fill={fill}>
+							<svg
+								className="w-full h-full"
+								viewBox={`0 0 ${width} ${height}`}
+								fill={fill}
+							>
+								<path d={path} />
+							</svg>
+						</FeaturedButton>
+					);
+				})}
+			</FeaturedCard>
+
+			<FeaturedCard label="Arrows">
+				{Object.keys(arrows).map((arrow, index) => {
+					const { width, height, fill, path } = arrows[arrow];
+
+					return (
+						<FeaturedButton key={index} fill={fill}>
+							<svg
+								className="w-full h-full"
+								viewBox={`0 0 ${width} ${height}`}
+								fill={fill}
+							>
+								<path d={path} />
+							</svg>
+						</FeaturedButton>
+					);
+				})}
+			</FeaturedCard>
+
+			<FeaturedCard label="Flowers">
+				{Object.keys(flowerHeads).map((flower, index) => {
+					const { width, height, fill, path } = flowerHeads[flower];
+
+					return (
+						<FeaturedButton key={index} fill={fill}>
+							<svg
+								className="w-full h-full"
+								viewBox={`0 0 ${width} ${height}`}
+								fill={fill}
+							>
+								<path d={path} />
+							</svg>
+						</FeaturedButton>
+					);
+				})}
+			</FeaturedCard>
+		</div>
+	);
+};
+
+const Card2 = ({ component, poster, name, onSelect }) => {
+	return (
+		<div
+			className="p-2 flex gap-3s w-full rounded border parent cursor-pointer gray-on-hover relative overflow-hidden"
+			onClick={() => onSelect(component, name)}
+		>
+			<div
+				className="flex-1 flex flex-col justify-center"
+				style={{
+					padding: "0 0.65rem 0.2rem 0.5rem",
+					fontSize: "0.9rem",
+					lineHeight: 1.5,
+					overflow: "hidden",
+					textOverflow: "ellipsis",
+				}}
+			>
+				{camelCaseToSentenceCase(name.replaceAll("-", " "))}
+			</div>
+		</div>
+	);
+};
+
 const PresetGrid = ({ onSelect }) => {
 	const [selectedKey, setSelectedKey] = useLocalStorageState(
 		"presetsCurrentTab",
@@ -506,28 +724,7 @@ const PresetGrid = ({ onSelect }) => {
 						</div>
 					</Item>
 					<Item key="Featured">
-						<div className="flex flex-col gap-2 p-2">
-							{Object.entries(presets).map(
-								([name, value], index) => {
-									const {
-										props,
-										poster,
-										component,
-										...styles
-									} = value;
-
-									return (
-										<Card2
-											key={index}
-											name={name}
-											poster={poster}
-											component={component}
-											onSelect={onSelect}
-										/>
-									);
-								}
-							)}
-						</div>
+						<Featured onSelect={onSelect} />
 					</Item>
 					<Item key="Recents">
 						<Recents onSelect={onSelect} />

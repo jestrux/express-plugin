@@ -1,6 +1,6 @@
 ## Inspiration
 
-[This project has been created with _@adobe-ccwebext/create-ccweb-add-on_. As an example, this Add-on demonstrates how to get started with Add-on development using React and JavaScript.](https://www.fotor.com/moodboard-maker/)
+[Moodboard Maker](https://www.fotor.com/moodboard-maker/)
 
 ## Setup
 
